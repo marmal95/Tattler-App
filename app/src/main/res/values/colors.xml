@@ -8,4 +8,11 @@
     <color name="colorSecondaryGradient">#FF4B5980</color>
 
     <color name="colorMaterialGray">#424242</color>
+    <color name="colorMaterialLightGray">#e0e0e0</color>
+
+    <!-- Toast's text colors -->
+    <color name="colorInfo">#29B6F6</color>
+    <color name="colorSuccess">#66BB6A</color>
+    <color name="colorWarning">#FFA726</color>
+    <color name="colorError">#EF5350</color>
 </resources>

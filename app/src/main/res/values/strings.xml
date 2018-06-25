@@ -3,4 +3,10 @@
 
     <!--Labels-->
     <string name="touchFingerSensorToAppLogin">Touch the sensor with your finger to login to Tattler application</string>
+
+    <!--Toasts-->
+    <string name="authenticationError">Authentication error: %1$s</string>
+    <string name="authenticationFail">Authentication failed</string>
+    <string name="authenticationHelp">Authentication help: %1$s</string>
+    <string name="authenticationSuccess">Authentication succeeded</string>
 </resources>
