@@ -4,14 +4,8 @@
     <color name="colorPrimaryDark">#3f4a68</color>
     <color name="colorAccent">#fc3768</color>
 
-    <color name="colorTextBlack">#333333</color>
-    <color name="colorTextHint">#e1e1e1</color>
-    <color name="colorTextInfo">#9b9b9b</color>
-
     <color name="colorPrimaryGradient">#FF7B4F7D</color>
     <color name="colorSecondaryGradient">#FF4B5980</color>
 
-    <color name="colorGreen">#a5de40</color>
-    <color name="navColor">#80ffffff</color>
-    <color name="white">#ffffff</color>
+    <color name="colorMaterialGray">#424242</color>
 </resources>
