@@ -1,15 +1,14 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/colorPrimaryText</item>
         <item name="android:textColorSecondary">@color/colorSecondaryText</item>
-        <item name="android:windowBackground">@android:color/white</item>
     </style>
 
-    <style name="AppTheme.FullScreen" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme.FullScreen" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
@@ -19,10 +18,23 @@
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
-    <style name="activityTextViewInfoLabel">
+    <style name="textViewInfoLabel">
         <item name="android:layout_marginBottom">@dimen/space10</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/colorPrimaryText</item>
+    </style>
+
+    <style name="editTextDefault">
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textColorHint">@color/colorHintText</item>
+        <item name="android:padding">@dimen/space20</item>
+        <item name="android:background">@drawable/edit_text_background_selector</item>
+    </style>
+
+    <style name="textViewDefault" parent="editTextDefault" />
+
+    <style name="PrimaryButton" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
 </resources>

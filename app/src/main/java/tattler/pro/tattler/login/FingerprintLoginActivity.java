@@ -82,7 +82,7 @@ public class FingerprintLoginActivity extends MvpActivity<FingerprintLoginView, 
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
             fingerprintIcon.setColorFilter(ContextCompat.getColor(
-                    FingerprintLoginActivity.this, R.color.colorIcon));
+                    FingerprintLoginActivity.this, R.color.colorPrimaryText));
             infoLabel.setText(getString(R.string.touchFingerSensorToAppLogin));
             infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryText));
         }, 3000);

@@ -4,6 +4,11 @@
     <!--Labels-->
     <string name="touchFingerSensorToAppLogin">Touch the sensor with your finger to login to Tattler application</string>
 
+    <string name="polishLanguageCountyCode">(+48) Poland</string>
+    <string name="phoneNumber">Phone number</string>
+    <string name="startMessaging">Start Messaging</string>
+    <string name="yourPhone">Your phone</string>
+
     <!--Toasts-->
     <string name="authenticationError">Authentication error: %1$s</string>
     <string name="authenticationFail">Authentication failed</string>

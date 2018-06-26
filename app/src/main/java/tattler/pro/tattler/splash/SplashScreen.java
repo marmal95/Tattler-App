@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
-import tattler.pro.tattler.login.FingerprintLoginActivity;
+import tattler.pro.tattler.register.RegisterActivity;
 
 
 public class SplashScreen extends AppCompatActivity {
@@ -16,7 +16,7 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Logger.addLogAdapter(new AndroidLogAdapter());
-        startActivity(new Intent(this, FingerprintLoginActivity.class));
+        startActivity(new Intent(this, RegisterActivity.class));
         finish();
     }
 }

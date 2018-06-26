@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/infoLabel"
-        style="@style/activityTextViewInfoLabel"
+        style="@style/textViewInfoLabel"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:text="@string/touchFingerSensorToAppLogin" />
