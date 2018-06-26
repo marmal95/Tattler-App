@@ -6,24 +6,17 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
-import android.widget.Toast;
 
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
+import com.orhanobut.logger.Logger;
+
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+
+import tattler.pro.tattler.R;
 
 import static android.content.Context.FINGERPRINT_SERVICE;
 import static android.content.Context.KEYGUARD_SERVICE;
@@ -31,10 +24,12 @@ import static android.content.Context.KEYGUARD_SERVICE;
 
 public class FingerprintAuthenticator {
     private static final String KEY_NAME = "TATTLER_FINGERPRINT_KEY";
+    private static final String SENSOR_OK = "FingerSensor_OK";
 
     private Cipher cipher;
     private KeyStore keyStore;
 
+    private KeyguardManager keyguardManager;
     private FingerprintManager fingerprintManager;
     private FingerprintHandler fingerprintHandler;
 
@@ -42,99 +37,82 @@ public class FingerprintAuthenticator {
 
     public FingerprintAuthenticator(Context context) {
         this.context = context;
-
-        KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(KEYGUARD_SERVICE);
+        keyguardManager = (KeyguardManager) context.getSystemService(KEYGUARD_SERVICE);
         fingerprintManager = (FingerprintManager) context.getSystemService(FINGERPRINT_SERVICE);
-
-        // TODO: String / Toast - remove
-        if (fingerprintManager != null && !fingerprintManager.isHardwareDetected()) {
-            Toast.makeText(context, "Your device doesn't support fingerprint authentication", Toast.LENGTH_LONG).show();
-        }
-
-        if (context.checkSelfPermission(Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(context, "Please enable the fingerprint permission", Toast.LENGTH_LONG).show();
-        }
-
-        if (!fingerprintManager.hasEnrolledFingerprints()) {
-            Toast.makeText(context, "No fingerprint configured. Please register at least one fingerprint in your device's Settings", Toast.LENGTH_LONG).show();
-        }
-
-        if (keyguardManager != null && !keyguardManager.isKeyguardSecure()) {
-            Toast.makeText(context, "Please enable lockscreen security in your device's Settings", Toast.LENGTH_LONG).show();
-        }
     }
 
     public void startAuthentication(FingerprintSensorCallback callback) {
-        try {
-            generateKey();
-        } catch (FingerprintException e) {
-            e.printStackTrace();
+        String sensorStatus = checkFingerSensorStatus();
+        Logger.d("FingerprintAuthenticator status: " + sensorStatus);
+
+        if (isSensorReadyToUse(sensorStatus)) {
+            try {
+                generateKey();
+                initCipher();
+
+                FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(cipher);
+                fingerprintHandler = new FingerprintHandler(context, callback);
+                fingerprintHandler.startAuthentication(fingerprintManager, cryptoObject);
+            } catch (Exception e) {
+                Logger.d("FingerprintAuthenticator exception: " + e.getMessage());
+                callback.onAuthenticationError(context.getString(R.string.fingerSensorError));
+            }
+        } else {
+            callback.onAuthenticationError(sensorStatus);
         }
 
-        if (initCipher()) {
-            FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(cipher);
-            fingerprintHandler = new FingerprintHandler(context, callback);
-            fingerprintHandler.startAuthentication(fingerprintManager, cryptoObject);
-        }
     }
 
     public void stopAuthentication() {
-        fingerprintHandler.stopAuthentication();
-    }
-
-    private void generateKey() throws FingerprintException {
-        try {
-            keyStore = KeyStore.getInstance("AndroidKeyStore");
-            KeyGenerator keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
-            keyStore.load(null);
-            keyGenerator.init(new KeyGenParameterSpec.Builder(KEY_NAME, KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
-                    .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
-                    .setUserAuthenticationRequired(true)
-                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
-                    .build());
-            keyGenerator.generateKey();
-        } catch (KeyStoreException
-                | NoSuchAlgorithmException
-                | NoSuchProviderException
-                | InvalidAlgorithmParameterException
-                | CertificateException
-                | IOException exc) {
-            exc.printStackTrace();
-            throw new FingerprintException(exc);
+        if (fingerprintHandler != null) {
+            fingerprintHandler.stopAuthentication();
+            fingerprintHandler = null;
         }
     }
 
-    private boolean initCipher() {
-        try {
-            cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/" +
-                    KeyProperties.BLOCK_MODE_CBC + "/" +
-                    KeyProperties.ENCRYPTION_PADDING_PKCS7);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            throw new RuntimeException("Failed to get Cipher", e);
+    private String checkFingerSensorStatus() {
+        if (fingerprintManager != null && !fingerprintManager.isHardwareDetected()) {
+            return context.getString(R.string.fingerprintNotSupported);
         }
 
-        try {
-            keyStore.load(null);
-            SecretKey key = (SecretKey) keyStore.getKey(KEY_NAME, null);
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            return true;
-        } catch (KeyPermanentlyInvalidatedException e) {
-            e.printStackTrace();
-            return false;
-        } catch (KeyStoreException
-                | CertificateException
-                | UnrecoverableKeyException
-                | IOException
-                | NoSuchAlgorithmException
-                | InvalidKeyException e) {
-            throw new RuntimeException("Failed to init Cipher", e);
+        if (context.checkSelfPermission(Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+            return context.getString(R.string.fingerprintNoPermission);
         }
+
+        if (!fingerprintManager.hasEnrolledFingerprints()) {
+            return context.getString(R.string.fingerprintNotConfigured);
+        }
+
+        if (keyguardManager != null && !keyguardManager.isKeyguardSecure()) {
+            return context.getString(R.string.lockScreenNotEnabled);
+        }
+
+        return SENSOR_OK;
     }
 
-    private class FingerprintException extends Exception {
-        FingerprintException(Exception e) {
-            super(e);
-        }
+    private boolean isSensorReadyToUse(String sensorStatus) {
+        return sensorStatus.equals(SENSOR_OK);
     }
 
+    private void generateKey() throws Exception {
+        keyStore = KeyStore.getInstance("AndroidKeyStore");
+        KeyGenerator keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
+        keyStore.load(null);
+        keyGenerator.init(new KeyGenParameterSpec.Builder(KEY_NAME, KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
+                .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+                .setUserAuthenticationRequired(true)
+                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
+                .build());
+        keyGenerator.generateKey();
+    }
+
+    private void initCipher() throws Exception {
+        cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/" +
+                KeyProperties.BLOCK_MODE_CBC + "/" +
+                KeyProperties.ENCRYPTION_PADDING_PKCS7);
+
+        keyStore.load(null);
+        SecretKey key = (SecretKey) keyStore.getKey(KEY_NAME, null);
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+    }
 }
