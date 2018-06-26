@@ -51,30 +51,30 @@ public class FingerprintLoginActivity extends MvpActivity<FingerprintLoginView, 
 
     @Override
     public void indicateFingerprintAuthFail() {
-        fingerprintIcon.setColorFilter(ContextCompat.getColor(this, R.color.colorError));
-        infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorError));
+        fingerprintIcon.setColorFilter(ContextCompat.getColor(this, R.color.colorTextError));
+        infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorTextError));
         infoLabel.setText(getString(R.string.authenticationFail));
         indicateToNormalWithDelay();
     }
 
     @Override
     public void indicateFingerprintAuthSuccess() {
-        fingerprintIcon.setColorFilter(ContextCompat.getColor(this, R.color.colorSuccess));
-        infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorSuccess));
+        fingerprintIcon.setColorFilter(ContextCompat.getColor(this, R.color.colorTextSuccess));
+        infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorTextSuccess));
         infoLabel.setText(getString(R.string.authenticationSuccess));
     }
 
     @Override
     public void indicateFingerprintAuthHelp(String message) {
         infoLabel.setText(message);
-        infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorInfo));
+        infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorTextHelp));
         indicateToNormalWithDelay();
     }
 
     @Override
     public void indicateFingerprintAuthError(String message) {
-        fingerprintIcon.setColorFilter(ContextCompat.getColor(this, R.color.colorError));
-        infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorError));
+        fingerprintIcon.setColorFilter(ContextCompat.getColor(this, R.color.colorTextError));
+        infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorTextError));
         infoLabel.setText(message);
     }
 
@@ -82,7 +82,7 @@ public class FingerprintLoginActivity extends MvpActivity<FingerprintLoginView, 
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
             fingerprintIcon.setColorFilter(ContextCompat.getColor(
-                    FingerprintLoginActivity.this, R.color.colorPrimaryDark));
+                    FingerprintLoginActivity.this, R.color.colorIcon));
             infoLabel.setText(getString(R.string.touchFingerSensorToAppLogin));
             infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryText));
         }, 3000);
