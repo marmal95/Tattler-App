@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4b5980</color>
-    <color name="colorPrimaryDark">#3f4a68</color>
-    <color name="colorAccent">#fc3768</color>
 
+    <!--Light Theme Palette -->
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryLight">#BBDEFB</color>
+    <color name="colorAccent">#FF9800</color>
+
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#757575</color>
+    <color name="colorDivider">#BDBDBD</color>
+
+    <!--Splash Screen Palette-->
     <color name="colorPrimaryGradient">#FF7B4F7D</color>
     <color name="colorSecondaryGradient">#FF4B5980</color>
-
-    <color name="colorMaterialGray">#424242</color>
-    <color name="colorMaterialLightGray">#e0e0e0</color>
 
     <!-- Toast's text colors -->
     <color name="colorInfo">#29B6F6</color>

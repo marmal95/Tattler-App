@@ -84,7 +84,7 @@ public class FingerprintLoginActivity extends MvpActivity<FingerprintLoginView, 
             fingerprintIcon.setColorFilter(ContextCompat.getColor(
                     FingerprintLoginActivity.this, R.color.colorPrimaryDark));
             infoLabel.setText(getString(R.string.touchFingerSensorToAppLogin));
-            infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorMaterialGray));
+            infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryText));
         }, 3000);
     }
 }
