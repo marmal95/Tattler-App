@@ -17,7 +17,7 @@ public class FingerprintLoginPresenter extends MvpBasePresenter<FingerprintLogin
     @SuppressWarnings("ConstantConditions")
     public void onAuthenticationSucceeded() {
         if (isViewAttached()) {
-            getView().showAuthSucceedToast();
+            getView().indicateFingerprintAuthSuccess();
         }
     }
 
@@ -25,7 +25,7 @@ public class FingerprintLoginPresenter extends MvpBasePresenter<FingerprintLogin
     @SuppressWarnings("ConstantConditions")
     public void onAuthenticationFailed() {
         if (isViewAttached()) {
-            getView().showAuthFailToast();
+            getView().indicateFingerprintAuthFail();
         }
     }
 
@@ -33,7 +33,7 @@ public class FingerprintLoginPresenter extends MvpBasePresenter<FingerprintLogin
     @SuppressWarnings("ConstantConditions")
     public void onAuthenticationError(String errorMessage) {
         if (isViewAttached()) {
-            getView().showAuthErrorToast(errorMessage);
+            getView().indicateFingerprintAuthError(errorMessage);
         }
     }
 
@@ -41,7 +41,7 @@ public class FingerprintLoginPresenter extends MvpBasePresenter<FingerprintLogin
     @SuppressWarnings("ConstantConditions")
     public void onAuthenticationHelp(String helpMessage) {
         if (isViewAttached()) {
-            getView().showAuthHelpToast(helpMessage);
+            getView().indicateFingerprintAuthHelp(helpMessage);
         }
     }
 

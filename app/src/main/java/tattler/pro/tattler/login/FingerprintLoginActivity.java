@@ -1,23 +1,34 @@
 package tattler.pro.tattler.login;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
+import android.support.v4.content.ContextCompat;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.security.FingerprintAuthenticator;
-import tattler.pro.tattler.util.MaterialToast;
 
 public class FingerprintLoginActivity extends MvpActivity<FingerprintLoginView, FingerprintLoginPresenter>
         implements FingerprintLoginView {
+
+    @BindView(R.id.fingerprintIcon)
+    ImageView fingerprintIcon;
+
+    @BindView(R.id.infoLabel)
+    TextView infoLabel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fingerprint_login);
+        ButterKnife.bind(this);
     }
 
     @NonNull
@@ -39,26 +50,41 @@ public class FingerprintLoginActivity extends MvpActivity<FingerprintLoginView, 
     }
 
     @Override
-    public void showAuthSucceedToast() {
-        MaterialToast.makeText(
-                this, getString(R.string.authenticationSuccess), Toast.LENGTH_SHORT, MaterialToast.TYPE_SUCCESS).show();
+    public void indicateFingerprintAuthFail() {
+        fingerprintIcon.setColorFilter(ContextCompat.getColor(this, R.color.colorError));
+        infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorError));
+        infoLabel.setText(getString(R.string.authenticationFail));
+        indicateToNormalWithDelay();
     }
 
     @Override
-    public void showAuthFailToast() {
-        MaterialToast.makeText(
-                this, getString(R.string.authenticationFail), Toast.LENGTH_SHORT, MaterialToast.TYPE_WARNING).show();
+    public void indicateFingerprintAuthSuccess() {
+        fingerprintIcon.setColorFilter(ContextCompat.getColor(this, R.color.colorSuccess));
+        infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorSuccess));
+        infoLabel.setText(getString(R.string.authenticationSuccess));
     }
 
     @Override
-    public void showAuthErrorToast(String message) {
-        MaterialToast.makeText(
-                this, getString(R.string.authenticationError, message), Toast.LENGTH_SHORT, MaterialToast.TYPE_ERROR).show();
+    public void indicateFingerprintAuthHelp(String message) {
+        infoLabel.setText(message);
+        infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorInfo));
+        indicateToNormalWithDelay();
     }
 
     @Override
-    public void showAuthHelpToast(String message) {
-        MaterialToast.makeText(
-                this, getString(R.string.authenticationHelp, message), Toast.LENGTH_SHORT, MaterialToast.TYPE_INFO).show();
+    public void indicateFingerprintAuthError(String message) {
+        fingerprintIcon.setColorFilter(ContextCompat.getColor(this, R.color.colorError));
+        infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorError));
+        infoLabel.setText(message);
+    }
+
+    private void indicateToNormalWithDelay() {
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            fingerprintIcon.setColorFilter(ContextCompat.getColor(
+                    FingerprintLoginActivity.this, R.color.colorPrimaryDark));
+            infoLabel.setText(getString(R.string.touchFingerSensorToAppLogin));
+            infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorMaterialGray));
+        }, 3000);
     }
 }
