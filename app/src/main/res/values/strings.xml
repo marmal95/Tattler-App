@@ -8,6 +8,8 @@
     <string name="phoneNumber">Phone number</string>
     <string name="startMessaging">Start Messaging</string>
     <string name="yourPhone">Your phone</string>
+    <string name="verificationCode">Verification code</string>
+    <string name="verifyPhoneNumber">Verify phone number</string>
 
     <!--Toasts-->
     <string name="authenticationError">Authentication error: %1$s</string>
