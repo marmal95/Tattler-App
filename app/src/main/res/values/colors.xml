@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Light Theme Palette -->
+    <color name="colorPrimaryLight">#82b1ff</color>
     <color name="colorPrimaryDark">#01579B</color>
     <color name="colorPrimary">#0288D1</color>
     <color name="colorAccent">#f57f17</color>
@@ -9,7 +10,7 @@
     <color name="colorBackground">#e0e0e0</color>
 
     <color name="colorHintText">#9e9e9e</color>
-    <color name="colorDivider">#BDBDBD</color>
+    <color name="colorDivider">#bdbdbd</color>
 
     <!--Splash Screen Palette-->
     <color name="colorPrimaryGradient">#FF7B4F7D</color>
