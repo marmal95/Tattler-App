@@ -39,12 +39,11 @@
 
         <Button
             android:id="@+id/startButton"
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@style/PrimaryButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/space20"
-            android:text="@string/startMessaging"
-            android:theme="@style/PrimaryButtonStyle" />
+            android:text="@string/startMessaging" />
 
     </LinearLayout>
 
