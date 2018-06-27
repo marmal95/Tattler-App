@@ -24,7 +24,7 @@
 
         <EditText
             android:id="@+id/phoneNumberEditText"
-            style="@style/editTextDefault"
+            style="@style/PrimaryEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/phoneNumber"
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/space20"
             android:text="@string/startMessaging"
-            android:theme="@style/PrimaryButton" />
+            android:theme="@style/PrimaryButtonStyle" />
 
     </LinearLayout>
 

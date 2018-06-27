@@ -20,31 +20,25 @@
             style="@style/textViewDefault"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space10"
             android:text="@string/polishLanguageCountyCode" />
 
         <EditText
             android:id="@+id/phoneNumberEditText"
-            style="@style/editTextDefault"
+            style="@style/PrimaryEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space10"
             android:hint="@string/phoneNumber"
             android:inputType="phone" />
 
-        <TextView
-            android:id="@+id/infoLabel"
-            style="@style/textViewInfoLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal" />
-
         <Button
             android:id="@+id/verifyPhoneButton"
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@style/PrimaryButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/space20"
-            android:text="@string/verifyPhoneNumber"
-            android:theme="@style/PrimaryButton" />
+            android:layout_marginBottom="@dimen/space10"
+            android:text="@string/verifyPhoneNumber" />
 
     </LinearLayout>
 

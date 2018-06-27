@@ -6,6 +6,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/colorPrimaryText</item>
         <item name="android:textColorSecondary">@color/colorSecondaryText</item>
+        <item name="android:windowBackground">@color/colorBackground</item>
     </style>
 
     <style name="AppTheme.FullScreen" parent="AppTheme">
@@ -19,22 +20,24 @@
     </style>
 
     <style name="textViewInfoLabel">
-        <item name="android:layout_marginBottom">@dimen/space10</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
 
-    <style name="editTextDefault">
+    <style name="PrimaryEditText">
         <item name="android:textColor">@color/colorPrimaryText</item>
         <item name="android:textColorHint">@color/colorHintText</item>
-        <item name="android:padding">@dimen/space20</item>
-        <item name="android:background">@drawable/edit_text_background_selector</item>
+        <item name="android:background">@drawable/rounded_edit_text_primary</item>
+        <item name="android:padding">@dimen/space16</item>
+        <item name="android:elevation">@dimen/space4</item>
     </style>
 
-    <style name="textViewDefault" parent="editTextDefault" />
+    <style name="textViewDefault" parent="PrimaryEditText" />
 
-    <style name="PrimaryButton" parent="Theme.AppCompat.Light">
-        <item name="colorAccent">@color/colorPrimary</item>
+    <style name="PrimaryButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/rounded_button_primary</item>
+        <item name="android:padding">@dimen/space16</item>
+        <item name="android:elevation">@dimen/space4</item>
     </style>
 
 </resources>
