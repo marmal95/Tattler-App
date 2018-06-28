@@ -1,4 +1,4 @@
-package tattler.pro.tattler.security;
+package tattler.pro.tattler.authentication;
 
 public interface FingerprintSensorCallback {
     void onAuthenticationSucceeded();

@@ -13,7 +13,7 @@ import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tattler.pro.tattler.R;
-import tattler.pro.tattler.security.FingerprintAuthenticator;
+import tattler.pro.tattler.authentication.FingerprintAuthenticator;
 
 public class FingerprintLoginActivity extends MvpActivity<FingerprintLoginView, FingerprintLoginPresenter>
         implements FingerprintLoginView {

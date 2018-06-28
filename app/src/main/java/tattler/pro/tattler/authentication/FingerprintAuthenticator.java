@@ -1,4 +1,4 @@
-package tattler.pro.tattler.security;
+package tattler.pro.tattler.authentication;
 
 import android.Manifest;
 import android.app.KeyguardManager;

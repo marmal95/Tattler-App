@@ -3,8 +3,8 @@ package tattler.pro.tattler.login;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.orhanobut.logger.Logger;
 
-import tattler.pro.tattler.security.FingerprintAuthenticator;
-import tattler.pro.tattler.security.FingerprintSensorCallback;
+import tattler.pro.tattler.authentication.FingerprintAuthenticator;
+import tattler.pro.tattler.authentication.FingerprintSensorCallback;
 
 public class FingerprintLoginPresenter extends MvpBasePresenter<FingerprintLoginView> implements FingerprintSensorCallback {
     private FingerprintAuthenticator authenticator;

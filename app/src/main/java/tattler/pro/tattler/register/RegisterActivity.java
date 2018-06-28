@@ -1,18 +1,23 @@
 package tattler.pro.tattler.register;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
+
+import com.hannesdorfmann.mosby.mvp.MvpActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.authentication.PhoneAuthenticator;
+import tattler.pro.tattler.util.MaterialToast;
 
-public class RegisterActivity extends FragmentActivity {
+public class RegisterActivity extends MvpActivity<RegisterView, RegisterPresenter> implements RegisterView {
     private static final int NUM_PAGES = 2;
     private static final int PHONE_AUTH_FRAGMENT_IDX = 0;
     private static final int CODE_VERIFY_FRAGMENT_IDX = 1;
@@ -28,15 +33,32 @@ public class RegisterActivity extends FragmentActivity {
 
         PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
-
     }
 
+    @NonNull
+    @Override
+    public RegisterPresenter createPresenter() {
+        return new RegisterPresenter(new PhoneAuthenticator(this));
+    }
+
+    @Override
     public void launchPhoneAuthenticationFragment() {
         mPager.setCurrentItem(PHONE_AUTH_FRAGMENT_IDX);
     }
 
+    @Override
     public void launchCodeVerificationFragment() {
-        mPager.setCurrentItem(CODE_VERIFY_FRAGMENT_IDX);
+        runOnUiThread(() -> mPager.setCurrentItem(CODE_VERIFY_FRAGMENT_IDX));
+    }
+
+    @Override
+    public void onPhoneAuthenticationCompleted() {
+        MaterialToast.makeText(this, "Phone Authentication Completed", Toast.LENGTH_LONG, MaterialToast.TYPE_SUCCESS).show();
+    }
+
+    @Override
+    public void onPhoneAuthenticationFailed() {
+        MaterialToast.makeText(this, "Phone Authentication Failed", Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show();
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

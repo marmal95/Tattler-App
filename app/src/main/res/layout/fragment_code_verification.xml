@@ -16,16 +16,16 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/verificationCode"
+            android:id="@+id/verificationCodeArea"
+            style="@style/PrimaryEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/PrimaryEditText"
-            android:hint="@string/verificationCode"
             android:layout_marginBottom="@dimen/space10"
+            android:hint="@string/verificationCode"
             android:inputType="number" />
 
         <Button
-            android:id="@+id/startButton"
+            android:id="@+id/verifyCodeButton"
             style="@style/PrimaryButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
