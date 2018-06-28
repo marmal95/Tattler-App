@@ -7,16 +7,13 @@ import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
-
 import com.orhanobut.logger.Logger;
-
-import java.security.KeyStore;
+import tattler.pro.tattler.R;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-
-import tattler.pro.tattler.R;
+import java.security.KeyStore;
 
 import static android.content.Context.FINGERPRINT_SERVICE;
 import static android.content.Context.KEYGUARD_SERVICE;
@@ -26,14 +23,13 @@ public class FingerprintAuthenticator {
     private static final String KEY_NAME = "TATTLER_FINGERPRINT_KEY";
     private static final String SENSOR_OK = "FingerSensor_OK";
 
+    private Context context;
     private Cipher cipher;
     private KeyStore keyStore;
 
     private KeyguardManager keyguardManager;
     private FingerprintManager fingerprintManager;
     private FingerprintHandler fingerprintHandler;
-
-    private Context context;
 
     public FingerprintAuthenticator(Context context) {
         this.context = context;
@@ -46,6 +42,7 @@ public class FingerprintAuthenticator {
         Logger.d("FingerprintAuthenticator status: " + sensorStatus);
 
         if (isSensorReadyToUse(sensorStatus)) {
+            Logger.d("Starting fingerprint authentication.");
             try {
                 generateKey();
                 initCipher();
@@ -55,18 +52,21 @@ public class FingerprintAuthenticator {
                 fingerprintHandler.startAuthentication(fingerprintManager, cryptoObject);
             } catch (Exception e) {
                 Logger.d("FingerprintAuthenticator exception: " + e.getMessage());
+                e.printStackTrace();
                 callback.onAuthenticationError(context.getString(R.string.fingerSensorError));
             }
         } else {
             callback.onAuthenticationError(sensorStatus);
         }
-
     }
 
     public void stopAuthentication() {
         if (fingerprintHandler != null) {
+            Logger.d("Stopping fingerprint authentication.");
             fingerprintHandler.stopAuthentication();
             fingerprintHandler = null;
+        } else {
+            Logger.d("Trying to stop finger print authentication but it's null.");
         }
     }
 
@@ -98,18 +98,13 @@ public class FingerprintAuthenticator {
         keyStore = KeyStore.getInstance("AndroidKeyStore");
         KeyGenerator keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
         keyStore.load(null);
-        keyGenerator.init(new KeyGenParameterSpec.Builder(KEY_NAME, KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
-                .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
-                .setUserAuthenticationRequired(true)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
-                .build());
+        keyGenerator.init(new KeyGenParameterSpec.Builder(KEY_NAME, KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT).setBlockModes(KeyProperties.BLOCK_MODE_CBC).setUserAuthenticationRequired(true).setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7).build());
         keyGenerator.generateKey();
     }
 
     private void initCipher() throws Exception {
         cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/" +
-                KeyProperties.BLOCK_MODE_CBC + "/" +
-                KeyProperties.ENCRYPTION_PADDING_PKCS7);
+                KeyProperties.BLOCK_MODE_CBC + "/" + KeyProperties.ENCRYPTION_PADDING_PKCS7);
 
         keyStore.load(null);
         SecretKey key = (SecretKey) keyStore.getKey(KEY_NAME, null);

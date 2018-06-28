@@ -2,28 +2,20 @@ package tattler.pro.tattler.register;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-
-import com.hannesdorfmann.mosby.mvp.MvpFragment;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import tattler.pro.tattler.R;
 
 public class PhoneAuthenticationFragment extends MvpFragment<PhoneAuthenticationView, PhoneAuthenticationPresenter> {
 
     @BindView(R.id.phoneNumberEditText)
     EditText phoneNumberArea;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @NonNull
     @Override

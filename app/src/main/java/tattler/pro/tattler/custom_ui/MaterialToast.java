@@ -1,4 +1,4 @@
-package tattler.pro.tattler.util;
+package tattler.pro.tattler.custom_ui;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import tattler.pro.tattler.R;
 
 
@@ -28,7 +27,7 @@ public class MaterialToast extends Toast {
     private View view;
     private int type;
 
-    public MaterialToast(Context context) {
+    private MaterialToast(Context context) {
         super(context);
         this.context = context;
     }
@@ -45,6 +44,7 @@ public class MaterialToast extends Toast {
         MaterialToast MaterialToast = new MaterialToast(context);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        assert inflater != null;
         View view = inflater.inflate(R.layout.custom_toast_container, null);
 
         ImageView icon = view.findViewById(R.id.icon);

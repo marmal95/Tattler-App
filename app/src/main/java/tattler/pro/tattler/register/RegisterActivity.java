@@ -8,14 +8,12 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.widget.Toast;
-
-import com.hannesdorfmann.mosby.mvp.MvpActivity;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.authentication.PhoneAuthenticator;
-import tattler.pro.tattler.util.MaterialToast;
+import tattler.pro.tattler.custom_ui.MaterialToast;
 
 public class RegisterActivity extends MvpActivity<RegisterView, RegisterPresenter> implements RegisterView {
     private static final int NUM_PAGES = 2;
@@ -43,7 +41,7 @@ public class RegisterActivity extends MvpActivity<RegisterView, RegisterPresente
 
     @Override
     public void launchPhoneAuthenticationFragment() {
-        mPager.setCurrentItem(PHONE_AUTH_FRAGMENT_IDX);
+        runOnUiThread(() -> mPager.setCurrentItem(PHONE_AUTH_FRAGMENT_IDX));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package tattler.pro.tattler.custom_ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -19,17 +20,10 @@ public class CustomViewPager extends ViewPager {
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return this.isPagingEnabled && super.onTouchEvent(event);
 
-    }
-
-    public void enablePaging() {
-        isPagingEnabled = true;
-    }
-
-    public void disablePaging() {
-        isPagingEnabled = false;
     }
 }

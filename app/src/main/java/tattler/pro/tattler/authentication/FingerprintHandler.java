@@ -6,11 +6,9 @@ import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.CancellationSignal;
 import android.support.v4.app.ActivityCompat;
-
 import com.orhanobut.logger.Logger;
 
 public class FingerprintHandler extends FingerprintManager.AuthenticationCallback {
-
     private Context context;
     private FingerprintSensorCallback callback;
     private CancellationSignal cancellationSignal;
@@ -50,7 +48,7 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
         }
 
         manager.authenticate(cryptoObject, cancellationSignal, 0, this, null);
-        Logger.d("Authentication started.");
+        Logger.d("Fingerprint authentication started.");
     }
 
     public void stopAuthentication() {

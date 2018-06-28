@@ -1,8 +1,6 @@
 package tattler.pro.tattler.login;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
-import com.orhanobut.logger.Logger;
-
 import tattler.pro.tattler.authentication.FingerprintAuthenticator;
 import tattler.pro.tattler.authentication.FingerprintSensorCallback;
 
@@ -47,19 +45,13 @@ public class FingerprintLoginPresenter extends MvpBasePresenter<FingerprintLogin
 
     public void startAuthentication() {
         if (authenticator != null) {
-            Logger.d("Starting authentication.");
             authenticator.startAuthentication(this);
-        } else {
-            Logger.d("FingerprintAuthenticator is null and won't be started.");
         }
     }
 
     public void stopAuthentication() {
         if (authenticator != null) {
-            Logger.d("Stopping authentication.");
             authenticator.stopAuthentication();
-        } else {
-            Logger.d("FingerprintAuthenticator is null and won't be stopped.");
         }
     }
 }
