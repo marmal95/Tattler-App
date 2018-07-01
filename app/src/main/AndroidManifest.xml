@@ -25,6 +25,11 @@
 
         <activity android:name=".register.RegisterActivity" />
         <activity android:name=".login.FingerprintLoginActivity" />
+
+        <service
+                android:name=".tcp.TcpConnectionService"
+                android:exported="false"/>
+
     </application>
 
 </manifest>
