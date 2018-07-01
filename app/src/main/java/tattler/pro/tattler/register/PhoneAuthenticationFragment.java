@@ -13,9 +13,11 @@ import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import tattler.pro.tattler.R;
 
 public class PhoneAuthenticationFragment extends MvpFragment<PhoneAuthenticationView, PhoneAuthenticationPresenter> {
-
     @BindView(R.id.phoneNumberEditText)
     EditText phoneNumberArea;
+
+    @BindView(R.id.userNameEditText)
+    EditText userNameArea;
 
     @NonNull
     @Override
@@ -35,6 +37,8 @@ public class PhoneAuthenticationFragment extends MvpFragment<PhoneAuthentication
     @OnClick(R.id.verifyPhoneButton)
     public void verifyPhoneNumber() {
         String phoneNumber = phoneNumberArea.getText().toString().trim();
+        String userName = userNameArea.getText().toString().trim();
+        getPresenter().rememberUserData(phoneNumber, userName);
         getPresenter().verifyPhoneNumber(phoneNumber);
     }
 }

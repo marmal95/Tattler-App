@@ -12,4 +12,8 @@ public class PhoneAuthenticationPresenter extends MvpBasePresenter<PhoneAuthenti
     public void verifyPhoneNumber(String phoneNumber) {
         registerPresenter.verifyPhoneNumber(phoneNumber);
     }
+
+    public void rememberUserData(String phoneNumber, String userName) {
+        registerPresenter.rememberUserData(new UserRegisterData(userName, phoneNumber));
+    }
 }

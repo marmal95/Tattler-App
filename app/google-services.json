@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "912907126481",
+    "firebase_url": "https://tattler-b4012.firebaseio.com",
+    "project_id": "tattler-b4012",
+    "storage_bucket": "tattler-b4012.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912907126481:android:c1273ae9dba75105",
+        "android_client_info": {
+          "package_name": "tattler.pro.tattler"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "912907126481-oaqt5m80shot96n119u71k5m72occu0s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tattler.pro.tattler",
+            "certificate_hash": "b6a838ed0f3fca638bc2075e1b4845f113b234d3"
+          }
+        },
+        {
+          "client_id": "912907126481-u14srk3p21lrbni9sd43ah54itt87qgs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdsf_b3T5uB5hgQ0rc2F0cvPmEMYuvta4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "912907126481-u14srk3p21lrbni9sd43ah54itt87qgs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

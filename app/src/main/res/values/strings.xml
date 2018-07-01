@@ -6,8 +6,8 @@
 
     <string name="polishLanguageCountyCode">(+48) Poland</string>
     <string name="phoneNumber">Phone number</string>
+    <string name="userName">User name</string>
     <string name="startMessaging">Start Messaging</string>
-    <string name="yourPhone">Your phone</string>
     <string name="verificationCode">Verification code</string>
     <string name="verifyPhoneNumber">Verify phone number</string>
 
