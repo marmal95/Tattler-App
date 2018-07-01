@@ -1,5 +1,6 @@
 package tattler.pro.tattler.register;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,8 @@ import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.authentication.PhoneAuthenticator;
 import tattler.pro.tattler.custom_ui.MaterialToast;
+import tattler.pro.tattler.login.FingerprintLoginActivity;
+import tattler.pro.tattler.util.AppPreferences;
 
 public class RegisterActivity extends MvpActivity<RegisterView, RegisterPresenter> implements RegisterView {
     private static final int NUM_PAGES = 2;
@@ -36,17 +39,25 @@ public class RegisterActivity extends MvpActivity<RegisterView, RegisterPresente
     @NonNull
     @Override
     public RegisterPresenter createPresenter() {
-        return new RegisterPresenter(new PhoneAuthenticator(this));
+        return new RegisterPresenter(
+                new PhoneAuthenticator(this),
+                AppPreferences.getInstance(this));
     }
 
     @Override
-    public void launchPhoneAuthenticationFragment() {
+    public void startPhoneAuthenticationFragment() {
         runOnUiThread(() -> mPager.setCurrentItem(PHONE_AUTH_FRAGMENT_IDX));
     }
 
     @Override
-    public void launchCodeVerificationFragment() {
+    public void startCodeVerificationFragment() {
         runOnUiThread(() -> mPager.setCurrentItem(CODE_VERIFY_FRAGMENT_IDX));
+    }
+
+    @Override
+    public void startFingerAuthActivity() {
+        Intent intent = new Intent(this, FingerprintLoginActivity.class);
+        startActivity(intent);
     }
 
     @Override

@@ -1,22 +1,25 @@
 package tattler.pro.tattler.register;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
-
 import tattler.pro.tattler.authentication.PhoneAuthenticator;
+import tattler.pro.tattler.util.AppPreferences;
 
 public class RegisterPresenter extends MvpBasePresenter<RegisterView> implements PhoneAuthCallback {
     private PhoneAuthenticator phoneAuthenticator;
+    private AppPreferences appPreferences;
 
-    public RegisterPresenter(PhoneAuthenticator phoneAuthenticator) {
+    public RegisterPresenter(PhoneAuthenticator phoneAuthenticator, AppPreferences appPreferences) {
         this.phoneAuthenticator = phoneAuthenticator;
+        this.appPreferences = appPreferences;
     }
 
     @Override
     @SuppressWarnings("ConstantConditions")
     public void onVerificationCompleted(String phoneNumber) {
-        //TODO: Save in shared preferences
+        appPreferences.put(AppPreferences.Key.USER_PHONE_NUMBER, phoneNumber);
         if (isViewAttached()) {
             getView().onPhoneAuthenticationCompleted();
+            getView().startFingerAuthActivity();
         }
     }
 
@@ -32,7 +35,7 @@ public class RegisterPresenter extends MvpBasePresenter<RegisterView> implements
     @SuppressWarnings("ConstantConditions")
     public void onVerificationCodeSent() {
         if (isViewAttached()) {
-            getView().launchCodeVerificationFragment();
+            getView().startCodeVerificationFragment();
         }
     }
 
