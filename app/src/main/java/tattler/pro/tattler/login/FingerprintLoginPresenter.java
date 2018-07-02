@@ -16,6 +16,7 @@ public class FingerprintLoginPresenter extends MvpBasePresenter<FingerprintLogin
     public void onAuthenticationSucceeded() {
         if (isViewAttached()) {
             getView().indicateFingerprintAuthSuccess();
+            getView().startMainActivity();
         }
     }
 

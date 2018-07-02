@@ -1,5 +1,6 @@
 package tattler.pro.tattler.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -7,13 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.hannesdorfmann.mosby.mvp.MvpActivity;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.authentication.FingerprintAuthenticator;
+import tattler.pro.tattler.main.MainActivity;
 
 public class FingerprintLoginActivity extends MvpActivity<FingerprintLoginView, FingerprintLoginPresenter>
         implements FingerprintLoginView {
@@ -76,6 +76,12 @@ public class FingerprintLoginActivity extends MvpActivity<FingerprintLoginView, 
         fingerprintIcon.setColorFilter(ContextCompat.getColor(this, R.color.colorTextError));
         infoLabel.setTextColor(ContextCompat.getColor(this, R.color.colorTextError));
         infoLabel.setText(message);
+    }
+
+    @Override
+    public void startMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     private void indicateToNormalWithDelay() {

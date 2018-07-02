@@ -1,5 +1,7 @@
 package tattler.pro.tattler.main;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,9 +16,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.tcp.TcpConnectionService;
+import tattler.pro.tattler.tcp.TcpServiceConnector;
+import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
+import tattler.pro.tattler.tcp.TcpServiceManager;
+
+import java.util.Objects;
 
 public class MainActivity extends MvpActivity<MainView, MainPresenter> implements MainView {
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -39,6 +46,18 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        getPresenter().onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        getPresenter().onStop();
+    }
+
+    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
@@ -53,7 +72,9 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
     @NonNull
     @Override
     public MainPresenter createPresenter() {
-        return new MainPresenter();
+        return new MainPresenter(
+                new TcpServiceManager(),
+                new TcpServiceConnectorFactory());
     }
 
     @Override
@@ -64,6 +85,18 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void startTcpConnectionService(TcpServiceConnector serviceConnector) {
+        Intent intent = new Intent(this, TcpConnectionService.class);
+        startService(intent);
+        bindService(intent, serviceConnector, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void stopTcpConnectionService(TcpServiceConnector serviceConnector) {
+        unbindService(serviceConnector);
     }
 
     private void setNavigationItemSelectedListener() {
@@ -77,7 +110,7 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
         drawerToggle = setupDrawerToggle();

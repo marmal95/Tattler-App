@@ -7,4 +7,5 @@ interface FingerprintLoginView extends MvpView {
     void indicateFingerprintAuthSuccess();
     void indicateFingerprintAuthHelp(String message);
     void indicateFingerprintAuthError(String message);
+    void startMainActivity();
 }
