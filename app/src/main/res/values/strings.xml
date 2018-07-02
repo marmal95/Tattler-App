@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Tattler</string>
+    <string name="drawerOpen">Open navigation drawer</string>
+    <string name="drawerClose">Close navigation drawer</string>
 
     <!--Labels-->
     <string name="touchFingerSensorToAppLogin">Touch the sensor with your finger to login to Tattler application</string>

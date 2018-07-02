@@ -62,12 +62,14 @@ public class RegisterActivity extends MvpActivity<RegisterView, RegisterPresente
 
     @Override
     public void onPhoneAuthenticationCompleted() {
-        MaterialToast.makeText(this, "Phone Authentication Completed", Toast.LENGTH_LONG, MaterialToast.TYPE_SUCCESS).show();
+        runOnUiThread(() -> MaterialToast.makeText(
+                RegisterActivity.this, "Phone Authentication Completed", Toast.LENGTH_LONG, MaterialToast.TYPE_SUCCESS).show());
     }
 
     @Override
     public void onPhoneAuthenticationFailed() {
-        MaterialToast.makeText(this, "Phone Authentication Failed", Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show();
+        runOnUiThread(() -> MaterialToast.makeText(
+                RegisterActivity.this, "Phone Authentication Failed", Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show());
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

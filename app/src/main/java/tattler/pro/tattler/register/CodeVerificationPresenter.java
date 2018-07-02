@@ -10,6 +10,7 @@ public class CodeVerificationPresenter extends MvpBasePresenter<CodeVerification
     }
 
     public void checkVerificationCode(String code) {
+        // TODO: Check code
         registerPresenter.verifyAuthCode(code);
     }
 }
