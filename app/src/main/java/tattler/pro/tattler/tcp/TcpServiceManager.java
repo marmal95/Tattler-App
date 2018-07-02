@@ -10,7 +10,7 @@ public class TcpServiceManager {
     }
 
     public boolean isServiceBound() {
-        return isServiceBound;
+        return isServiceBound && tcpConnectionService != null;
     }
 
     public void bindService(TcpConnectionService.TcpServiceBinder serviceBinder) {

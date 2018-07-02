@@ -46,21 +46,16 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        getPresenter().onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        getPresenter().onStop();
-    }
-
-    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
+        getPresenter().onCreate();
+    }
+
+    @Override
+    protected void onDestroy() {
+        getPresenter().onDestroy();
+        super.onDestroy();
     }
 
     @Override
