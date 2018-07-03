@@ -7,6 +7,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import com.orhanobut.logger.Logger;
+import tattler.pro.tattler.messages.LoginRequestFactory;
 import tattler.pro.tattler.messages.Message;
 
 import java.io.IOException;
@@ -53,13 +54,6 @@ public class TcpConnectionService extends Service {
             establishConnection();
             tcpReceiver.start();
             tcpSender.start();
-
-            try {
-                Thread.sleep(5000);
-                stopSelf();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }).start();
     }
 
@@ -119,6 +113,7 @@ public class TcpConnectionService extends Service {
         }
 
         logConnectionStatus();
+        sendMessage(new LoginRequestFactory().create(this));
     }
 
     private void logConnectionStatus() {
@@ -128,7 +123,6 @@ public class TcpConnectionService extends Service {
             Logger.d("Connection to the server has been established.");
         }
     }
-
 
     public class TcpServiceBinder extends Binder {
         public TcpConnectionService getService() {
