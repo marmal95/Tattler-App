@@ -1,24 +1,26 @@
 package tattler.pro.tattler.tcp;
 
 
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import com.orhanobut.logger.Logger;
 import tattler.pro.tattler.messages.Message;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 
-public class TcpConnectionService extends IntentService {
-    final static private String SERVICE_NAME = "TCP_CONNECTION_SERVICE";
+public class TcpConnectionService extends Service {
     private static final String SERVER_IP = "10.2.14.101";
     private static final int SERVER_PORT = 50000;
+    private static final int SLEEP_MS = 5000;
 
     private Socket socket;
     private ObjectInputStream inputStream;
@@ -30,13 +32,8 @@ public class TcpConnectionService extends IntentService {
     private TcpServiceBinder tcpServiceBinder;
     private MessageHandler messageHandler;
 
-    @SuppressWarnings("unused")
     public TcpConnectionService() {
-        this(SERVICE_NAME);
-    }
-
-    public TcpConnectionService(String name) {
-        super(name);
+        super();
         socket = null;
         inputStream = null;
         outputStream = null;
@@ -46,6 +43,31 @@ public class TcpConnectionService extends IntentService {
 
         tcpServiceBinder = new TcpServiceBinder();
         messageHandler = new MessageHandler(this);
+    }
+
+    @Override
+    public void onCreate() {
+        Logger.d("Creating TcpConnectionService.");
+        super.onCreate();
+        new Thread(() -> {
+            establishConnection();
+            tcpReceiver.start();
+            tcpSender.start();
+
+            try {
+                Thread.sleep(5000);
+                stopSelf();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    @Override
+    public void onDestroy() {
+        Logger.d("Destroying TcpConnectionService.");
+        super.onDestroy();
+        closeConnection();
     }
 
     @Nullable
@@ -64,32 +86,12 @@ public class TcpConnectionService extends IntentService {
         return true;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        closeConnection();
-    }
-
-    @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-        establishConnection();
-
-        tcpReceiver.start();
-        tcpSender.start();
-
-        try {
-            tcpSender.join();
-            tcpReceiver.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void sendMessage(Message message) {
         tcpSender.queueMessage(message);
     }
 
-    private void closeConnection() {
+    private synchronized void closeConnection() {
+        Logger.d("Closing connection with server.");
         try {
             tcpReceiver.interrupt();
             tcpReceiver.interrupt();
@@ -106,6 +108,7 @@ public class TcpConnectionService extends IntentService {
     }
 
     private synchronized void establishConnection() {
+        Logger.d("Trying to establish connection with server.");
         try {
             socket = new Socket(SERVER_IP, SERVER_PORT);
             outputStream = new ObjectOutputStream(socket.getOutputStream());
@@ -113,6 +116,16 @@ public class TcpConnectionService extends IntentService {
             inputStream = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        logConnectionStatus();
+    }
+
+    private void logConnectionStatus() {
+        if (!isConnected()) {
+            Logger.w("Could not connect to the server.");
+        } else {
+            Logger.d("Connection to the server has been established.");
         }
     }
 
@@ -144,8 +157,9 @@ public class TcpConnectionService extends IntentService {
         private void sendMessages() {
             Message message = messages.poll();
             if (message != null) {
-                if (!isConnected())
+                if (!isConnected()) {
                     establishConnection(); // TODO: Needs sending LoginRequest to reestablish connection
+                }
                 sendMessage(message);
             }
 
@@ -170,10 +184,11 @@ public class TcpConnectionService extends IntentService {
                     try {
                         message = (Message) inputStream.readObject();
                         messageHandler.handleReceivedMessage(message);
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
+                    } catch (SocketException e) {
                         trySleep();
                         establishConnection();
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
                 } else {
                     trySleep();
@@ -184,7 +199,7 @@ public class TcpConnectionService extends IntentService {
 
         private void trySleep() {
             try {
-                Thread.sleep(10000);
+                Thread.sleep(SLEEP_MS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

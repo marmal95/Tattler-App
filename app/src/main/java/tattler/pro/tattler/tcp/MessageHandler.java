@@ -1,5 +1,6 @@
 package tattler.pro.tattler.tcp;
 
+import com.orhanobut.logger.Logger;
 import tattler.pro.tattler.messages.LoginResponse;
 import tattler.pro.tattler.messages.Message;
 
@@ -19,6 +20,6 @@ public class MessageHandler {
     }
 
     private void handleReceivedLoginResponse(LoginResponse loginResponse) {
-
+        Logger.d("Received Message: LoginResponse. [Status: " + loginResponse.status + "].");
     }
 }

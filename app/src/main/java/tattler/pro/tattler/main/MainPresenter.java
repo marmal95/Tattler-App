@@ -17,29 +17,29 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
 
     public void onCreate() {
         if (!tcpServiceManager.isServiceBound()) {
-            startTcpConnectionService();
+            bindTcpConnectionService();
         }
     }
 
     public void onDestroy() {
         if (tcpServiceManager.isServiceBound()) {
-            stopTcpConnectionService();
+            unbindTcpConnectionService();
         }
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void startTcpConnectionService() {
+    private void bindTcpConnectionService() {
         if (isViewAttached()) {
-            Logger.d("Starting TcpConnectionService.");
-            getView().startTcpConnectionService(tcpServiceConnector);
+            Logger.d("Binding TcpConnectionService.");
+            getView().bindTcpConnectionService(tcpServiceConnector);
         }
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void stopTcpConnectionService() {
+    private void unbindTcpConnectionService() {
         if (isViewAttached()) {
-            Logger.d("Stopping TcpConnectionService.");
-            getView().stopTcpConnectionService(tcpServiceConnector);
+            Logger.d("Unbinding TcpConnectionService.");
+            getView().unbindTcpConnectionService(tcpServiceConnector);
         }
     }
 
