@@ -46,4 +46,8 @@
         <item name="android:elevation">@dimen/space4</item>
     </style>
 
+    <style name="PrimaryToolbarStyle" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@color/colorLightText</item>
+    </style>
+
 </resources>

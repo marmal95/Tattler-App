@@ -12,6 +12,7 @@
     <string name="startMessaging">Start Messaging</string>
     <string name="verificationCode">Verification code</string>
     <string name="verifyPhoneNumber">Verify phone number</string>
+    <string name="contacts">Contacts</string>
 
     <!--Toasts-->
     <string name="authenticationError">Authentication error: %1$s</string>

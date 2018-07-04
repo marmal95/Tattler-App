@@ -28,6 +28,13 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
     }
 
     @SuppressWarnings("ConstantConditions")
+    public void handleNavContactsClick() {
+        if (isViewAttached()) {
+            getView().startContactsFragment();
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
     private void bindTcpConnectionService() {
         if (isViewAttached()) {
             Logger.d("Binding TcpConnectionService.");

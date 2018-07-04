@@ -6,6 +6,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -16,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.main.contacts.ContactsFragment;
 import tattler.pro.tattler.tcp.TcpConnectionService;
 import tattler.pro.tattler.tcp.TcpServiceConnector;
 import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
@@ -23,7 +26,8 @@ import tattler.pro.tattler.tcp.TcpServiceManager;
 
 import java.util.Objects;
 
-public class MainActivity extends MvpActivity<MainView, MainPresenter> implements MainView {
+public class MainActivity extends MvpActivity<MainView, MainPresenter>
+        implements MainView, NavigationView.OnNavigationItemSelectedListener {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -34,6 +38,7 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
     NavigationView navigationView;
 
     private ActionBarDrawerToggle drawerToggle;
+    private Fragment activeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +46,7 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        setNavigationItemSelectedListener();
+        navigationView.setNavigationItemSelectedListener(this);
         setUpToolbar();
     }
 
@@ -83,6 +88,17 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
     }
 
     @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.navContactsFragment:
+                getPresenter().handleNavContactsClick();
+                break;
+        }
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
     public void bindTcpConnectionService(TcpServiceConnector serviceConnector) {
         Intent intent = new Intent(this, TcpConnectionService.class);
         startService(intent);
@@ -94,12 +110,14 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
         unbindService(serviceConnector);
     }
 
-    private void setNavigationItemSelectedListener() {
-        navigationView.setNavigationItemSelectedListener(item -> {
-            item.setCheckable(true);
-            drawerLayout.closeDrawers();
-            return true;
-        });
+    @Override
+    public void startContactsFragment() {
+        FragmentTransaction fragmentTransaction;
+        activeFragment = new ContactsFragment();
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction = fragmentTransaction.replace(R.id.contentFrame, activeFragment);
+        fragmentTransaction = fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     private void setUpToolbar() {
