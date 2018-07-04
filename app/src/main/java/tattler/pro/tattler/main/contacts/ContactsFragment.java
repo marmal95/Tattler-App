@@ -45,12 +45,12 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
     @Override
     public ContactsPresenter createPresenter() {
         return new ContactsPresenter(
-                new ContactsAdapter<ContactsAdapter.ViewHolder>(getActivity(), new ArrayList<>()));
+                new ContactsAdapter(getActivity(), new ArrayList<>()));
     }
 
     @OnClick(R.id.addContactFab)
     public void addContactsButtonClick() {
-
+        // TODO: Implement
     }
 
     @Override

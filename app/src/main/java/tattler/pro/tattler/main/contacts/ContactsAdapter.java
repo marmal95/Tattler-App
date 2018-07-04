@@ -1,37 +1,48 @@
 package tattler.pro.tattler.main.contacts;
 
+import agency.tango.android.avatarview.loader.PicassoLoader;
+import agency.tango.android.avatarview.views.AvatarView;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import tattler.pro.tattler.R;
 import tattler.pro.tattler.models.Contact;
 
 import java.util.List;
 
-public class ContactsAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
     private Context context;
     private List<Contact> contacts;
 
-    public ContactsAdapter(Context context, List<Contact> contacts) {
+    ContactsAdapter(Context context, List<Contact> contacts) {
         this.context = context;
         this.contacts = contacts;
     }
 
     @NonNull
     @Override
-    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.recycler_view_contact_item, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VH holder, int position) {
-
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        PicassoLoader picassoLoader = new PicassoLoader();
+        Contact contact = getContact(position);
+        holder.userName.setText(contact.userName);
+        picassoLoader.loadImage(holder.userAvatar, (String) null, contact.userName);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return contacts.size();
     }
 
     public void addContact(Contact contact) {
@@ -48,10 +59,16 @@ public class ContactsAdapter<VH extends RecyclerView.ViewHolder> extends Recycle
         return contacts.get(position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.userAvatar)
+        AvatarView userAvatar;
 
-        public ViewHolder(View itemView) {
+        @BindView(R.id.userName)
+        TextView userName;
+
+        ViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }
