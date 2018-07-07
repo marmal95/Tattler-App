@@ -13,6 +13,9 @@
     <string name="verificationCode">Verification code</string>
     <string name="verifyPhoneNumber">Verify phone number</string>
     <string name="contacts">Contacts</string>
+    <string name="tattlerNumber">Tattler number</string>
+    <string name="addContact">Add contact</string>
+    <string name="addNewContact">Add new contact</string>
 
     <!--Toasts-->
     <string name="authenticationError">Authentication error: %1$s</string>

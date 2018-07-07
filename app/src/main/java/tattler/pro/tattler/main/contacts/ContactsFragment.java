@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.main.MainActivity;
 
 import java.util.ArrayList;
 
@@ -44,17 +45,24 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
     @NonNull
     @Override
     public ContactsPresenter createPresenter() {
-        return new ContactsPresenter(
-                new ContactsAdapter(getActivity(), new ArrayList<>()));
+        return new ContactsPresenter(new ContactsAdapter(getActivity(), new ArrayList<>()));
     }
 
     @OnClick(R.id.addContactFab)
     public void addContactsButtonClick() {
-        // TODO: Implement
+        getPresenter().handleAddContactButtonClick();
     }
 
     @Override
     public void setContactsAdapter(ContactsAdapter adapter) {
         contactsView.setAdapter(adapter);
+    }
+
+    @Override
+    public void startAddContactDialog() {
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity != null) {
+            new AddContactDialog(activity).show();
+        }
     }
 }

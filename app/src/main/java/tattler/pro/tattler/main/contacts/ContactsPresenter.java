@@ -19,4 +19,11 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
         contactsAdapter.addContact(new Contact("Noob", "123456", 22));
         contactsAdapter.addContact(new Contact("Brzydkie kaczątko", "123456", 23));
     }
+
+    @SuppressWarnings("ConstantConditions")
+    public void handleAddContactButtonClick() {
+        if (isViewAttached()) {
+            getView().startAddContactDialog();
+        }
+    }
 }
