@@ -14,17 +14,24 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
+import com.hannesdorfmann.mosby.mvp.MvpActivity;
+
+import java.util.Objects;
+
+import agency.tango.android.avatarview.loader.PicassoLoader;
+import agency.tango.android.avatarview.views.AvatarView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.main.contacts.ContactsFragment;
 import tattler.pro.tattler.tcp.TcpConnectionService;
 import tattler.pro.tattler.tcp.TcpServiceConnector;
 import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
 import tattler.pro.tattler.tcp.TcpServiceManager;
-
-import java.util.Objects;
 
 public class MainActivity extends MvpActivity<MainView, MainPresenter>
         implements MainView, NavigationView.OnNavigationItemSelectedListener {
@@ -74,8 +81,7 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter>
     @Override
     public MainPresenter createPresenter() {
         return new MainPresenter(
-                new TcpServiceManager(),
-                new TcpServiceConnectorFactory());
+                new TcpServiceManager(), new TcpServiceConnectorFactory(), AppPreferences.getInstance(this));
     }
 
     @Override
@@ -119,6 +125,19 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter>
         fragmentTransaction = fragmentTransaction.replace(R.id.contentFrame, activeFragment);
         fragmentTransaction = fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void displayUserData(String userName, String userNumber) {
+        View headerView = navigationView.getHeaderView(0);
+        AvatarView userAvatar = headerView.findViewById(R.id.userAvatar);
+        TextView userNameArea = headerView.findViewById(R.id.userName);
+        TextView userNumberArea = headerView.findViewById(R.id.userNumber);
+
+        PicassoLoader picassoLoader = new PicassoLoader();
+        picassoLoader.loadImage(userAvatar, (String) null, userName);
+        userNameArea.setText(userName);
+        userNumberArea.setText(userNumber);
     }
 
     private void setUpToolbar() {

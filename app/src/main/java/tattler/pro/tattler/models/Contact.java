@@ -12,34 +12,23 @@ public class Contact implements Serializable {
     @DatabaseField(generatedId = true, columnName = "contact_id")
     public int contactId;
 
-    @DatabaseField(columnName = "user_name")
-    public String userName;
+    @DatabaseField(columnName = "contact_name")
+    public String contactName;
 
-    @DatabaseField(columnName = "phone_number")
-    public String phoneNumber;
-
-    @DatabaseField(columnName = "user_number", unique = true)
-    public int userNumber;
+    @DatabaseField(columnName = "contact_number", unique = true)
+    public int contactNumber;
 
     public Contact() {}
 
-    public Contact(String userName, int userNumber) {
-        this(userName, "", userNumber);
-    }
-
-    public Contact(String userName, String phoneNumber, int userNumber) {
-        this.userName = userName;
-        this.phoneNumber = phoneNumber;
-        this.userNumber = userNumber;
+    public Contact(String contactName, int contactNumber) {
+        this.contactName = contactName;
+        this.contactNumber = contactNumber;
     }
 
     @Override
     public String toString() {
         return "Contact{" +
-                "contactId=" + contactId +
-                ", userName='" + userName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", userNumber=" + userNumber +
+                "contactId=" + contactId + ", contactName='" + contactName + '\'' + ", contactNumber=" + contactNumber +
                 '}';
     }
 }

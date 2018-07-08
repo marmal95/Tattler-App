@@ -22,4 +22,8 @@ public class TcpServiceManager {
         tcpConnectionService = null;
         isServiceBound = false;
     }
+
+    public TcpConnectionService getTcpService() {
+        return tcpConnectionService;
+    }
 }

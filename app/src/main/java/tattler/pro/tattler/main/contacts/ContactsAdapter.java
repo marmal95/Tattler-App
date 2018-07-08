@@ -1,7 +1,5 @@
 package tattler.pro.tattler.main.contacts;
 
-import agency.tango.android.avatarview.loader.PicassoLoader;
-import agency.tango.android.avatarview.views.AvatarView;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,12 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.util.List;
+
+import agency.tango.android.avatarview.loader.PicassoLoader;
+import agency.tango.android.avatarview.views.AvatarView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.models.Contact;
-
-import java.util.List;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
     private Context context;
@@ -36,8 +37,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PicassoLoader picassoLoader = new PicassoLoader();
         Contact contact = getContact(position);
-        holder.userName.setText(contact.userName);
-        picassoLoader.loadImage(holder.userAvatar, (String) null, contact.userName);
+        holder.userName.setText(contact.contactName);
+        picassoLoader.loadImage(holder.userAvatar, (String) null, contact.contactName);
     }
 
     @Override

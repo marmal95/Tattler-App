@@ -10,9 +10,4 @@ public class LoginRequest extends Message {
         this.phoneNumber = phoneNumber;
         this.userName = userName;
     }
-
-    public LoginRequest(String phoneNumber, String userName, int phoneId) {
-        this(phoneNumber, userName);
-        senderId = phoneId;
-    }
 }

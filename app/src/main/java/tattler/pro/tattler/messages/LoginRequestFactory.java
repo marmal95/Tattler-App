@@ -1,9 +1,10 @@
 package tattler.pro.tattler.messages;
 
 import android.content.Context;
-import tattler.pro.tattler.common.AppPreferences;
 
 import java.io.Serializable;
+
+import tattler.pro.tattler.common.AppPreferences;
 
 public class LoginRequestFactory implements Serializable {
     private static final long serialVersionUID = 5812262185067188602L;
@@ -12,7 +13,6 @@ public class LoginRequestFactory implements Serializable {
         AppPreferences appPreferences = AppPreferences.getInstance(context);
         String phoneNumber = appPreferences.getString(AppPreferences.Key.USER_NUMBER, "");
         String userName = appPreferences.getString(AppPreferences.Key.USER_NAME, "");
-        int phoneId = appPreferences.getInt(AppPreferences.Key.USER_NUMBER, 0);
-        return new LoginRequest(phoneNumber, userName, phoneId);
+        return new LoginRequest(phoneNumber, userName);
     }
 }

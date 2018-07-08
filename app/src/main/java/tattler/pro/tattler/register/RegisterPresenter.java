@@ -2,6 +2,7 @@ package tattler.pro.tattler.register;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.orhanobut.logger.Logger;
+
 import tattler.pro.tattler.authentication.PhoneAuthenticator;
 import tattler.pro.tattler.common.AppPreferences;
 
@@ -19,6 +20,7 @@ public class RegisterPresenter extends MvpBasePresenter<RegisterView> implements
     @SuppressWarnings("ConstantConditions")
     public void onVerificationCompleted(String phoneNumber) {
         logWhenPhoneNumberNotEqual(phoneNumber);
+        // FIXME: Improve concept to retrieve first LoginResponse then open AuthActivity
         appPreferences.put(AppPreferences.Key.USER_PHONE_NUMBER, phoneNumber);
         appPreferences.put(AppPreferences.Key.USER_NAME, userRegisterData.userName);
         if (isViewAttached()) {

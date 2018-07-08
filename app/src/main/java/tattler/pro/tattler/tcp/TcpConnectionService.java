@@ -6,9 +6,8 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+
 import com.orhanobut.logger.Logger;
-import tattler.pro.tattler.messages.LoginRequestFactory;
-import tattler.pro.tattler.messages.Message;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,6 +15,10 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import tattler.pro.tattler.common.AppPreferences;
+import tattler.pro.tattler.messages.LoginRequestFactory;
+import tattler.pro.tattler.messages.Message;
 
 
 public class TcpConnectionService extends Service {
@@ -43,7 +46,7 @@ public class TcpConnectionService extends Service {
         tcpSender = new ServerWriter();
 
         tcpServiceBinder = new TcpServiceBinder();
-        messageHandler = new MessageHandler(this);
+        messageHandler = new MessageHandler(this, AppPreferences.getInstance(this));
     }
 
     @Override

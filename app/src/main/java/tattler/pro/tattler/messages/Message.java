@@ -22,5 +22,7 @@ public abstract class Message implements Serializable {
         public static final int NULL_MESSAGE = 0;
         public static final int LOGIN_REQUEST = 1;
         public static final int LOGIN_RESPONSE = 2;
+        public static final int ADD_CONTACT_REQUEST = 3;
+        public static final int ADD_CONTACT_RESPONSE = 4;
     }
 }
