@@ -38,6 +38,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         PicassoLoader picassoLoader = new PicassoLoader();
         Contact contact = getContact(position);
         holder.userName.setText(contact.contactName);
+        holder.contactNumber.setText(String.valueOf(contact.contactNumber));
         picassoLoader.loadImage(holder.userAvatar, (String) null, contact.contactName);
     }
 
@@ -71,6 +72,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
         @BindView(R.id.userName)
         TextView userName;
+
+        @BindView(R.id.userNumber)
+        TextView contactNumber;
 
         ViewHolder(View itemView) {
             super(itemView);

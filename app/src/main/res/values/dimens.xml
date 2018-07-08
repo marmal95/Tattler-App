@@ -7,6 +7,7 @@
     <dimen name="space20">20dp</dimen>
     <dimen name="space32">32dp</dimen>
 
+    <dimen name="activity_padding">16dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
@@ -14,6 +15,10 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="primaryTitleFontSize">16dp</dimen>
+    <dimen name="primaryTitleFontSize">24sp</dimen>
+    <dimen name="secondaryTitleFontSize">18sp</dimen>
     <dimen name="primaryTitleViewHeight">64dp</dimen>
+
+    <dimen name="contactItemAvatarSize">48dp</dimen>
+    <dimen name="contactsRecyclerItemSize">64dp</dimen>
 </resources>
