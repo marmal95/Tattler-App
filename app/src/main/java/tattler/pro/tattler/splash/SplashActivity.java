@@ -25,12 +25,14 @@ public class SplashActivity extends MvpActivity<SplashView, SplashPresenter> imp
 
     @Override
     public void startRegisterActivity() {
+        // TODO: Change to RegisterActivity after tests
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void startFingerAuthActivity() {
+        // TODO: Change to FingerAuthActivity after tests
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

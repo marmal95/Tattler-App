@@ -3,7 +3,7 @@ package tattler.pro.tattler.register;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.orhanobut.logger.Logger;
 import tattler.pro.tattler.authentication.PhoneAuthenticator;
-import tattler.pro.tattler.util.AppPreferences;
+import tattler.pro.tattler.common.AppPreferences;
 
 public class RegisterPresenter extends MvpBasePresenter<RegisterView> implements PhoneAuthCallback {
     private PhoneAuthenticator phoneAuthenticator;

@@ -50,6 +50,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         notifyDataSetChanged();
     }
 
+    public void addContacts(List<Contact> contacts) {
+        this.contacts.addAll(contacts);
+        notifyDataSetChanged();
+    }
+
     public void removeContact(int position) {
         contacts.remove(position);
         notifyItemRemoved(position);

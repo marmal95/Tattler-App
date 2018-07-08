@@ -1,14 +1,15 @@
 package tattler.pro.tattler.main.contacts;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.Button;
 import android.widget.EditText;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import tattler.pro.tattler.R;
-import tattler.pro.tattler.main.MainActivity;
 
 public class AddContactDialog extends Dialog {
     @BindView(R.id.tattlerNumberArea)
@@ -20,21 +21,25 @@ public class AddContactDialog extends Dialog {
     @BindView(R.id.addContactButton)
     Button addContactButton;
 
-    private MainActivity activity;
+    private ContactsPresenter presenter;
 
-    AddContactDialog(@NonNull MainActivity activity) {
-        super(activity, R.style.PrimaryDialogStyle);
-        this.activity = activity;
+    AddContactDialog(@NonNull Context context, ContactsPresenter presenter) {
+        super(context, R.style.PrimaryDialogStyle);
+        this.presenter = presenter;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_add_contact);
+        ButterKnife.bind(this);
     }
 
     @OnClick(R.id.addContactButton)
     public void addContactButtonClick() {
-
+        String userNumber = tattlerNumberArea.getText().toString().trim();
+        String userName = userNameArea.getText().toString().trim();
+        presenter.handleAddNewContact(userNumber, userName);
+        dismiss();
     }
 }

@@ -1,7 +1,7 @@
 package tattler.pro.tattler.messages;
 
 import android.content.Context;
-import tattler.pro.tattler.util.AppPreferences;
+import tattler.pro.tattler.common.AppPreferences;
 
 import java.io.Serializable;
 

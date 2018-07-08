@@ -13,13 +13,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.main.MainActivity;
 
 import java.util.ArrayList;
 
 public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresenter> implements ContactsView {
-
     @BindView(R.id.recyclerView)
     RecyclerView contactsView;
 
@@ -45,7 +46,15 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
     @NonNull
     @Override
     public ContactsPresenter createPresenter() {
-        return new ContactsPresenter(new ContactsAdapter(getActivity(), new ArrayList<>()));
+        return new ContactsPresenter(
+                new ContactsAdapter(getActivity(), new ArrayList<>()),
+                OpenHelperManager.getHelper(getActivity(), DatabaseManager.class));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getPresenter().onDestroy();
     }
 
     @OnClick(R.id.addContactFab)
@@ -62,7 +71,7 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
     public void startAddContactDialog() {
         MainActivity activity = (MainActivity) getActivity();
         if (activity != null) {
-            new AddContactDialog(activity).show();
+            new AddContactDialog(activity, getPresenter()).show();
         }
     }
 }

@@ -1,4 +1,4 @@
-package tattler.pro.tattler.util;
+package tattler.pro.tattler.common;
 
 import android.content.Context;
 import android.content.SharedPreferences;

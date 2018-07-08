@@ -48,6 +48,7 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter>
 
         navigationView.setNavigationItemSelectedListener(this);
         setUpToolbar();
+        startContactsFragment();
     }
 
     @Override

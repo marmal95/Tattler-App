@@ -1,7 +1,7 @@
 package tattler.pro.tattler.splash;
 
 import android.content.Context;
-import tattler.pro.tattler.util.AppPreferences;
+import tattler.pro.tattler.common.AppPreferences;
 
 public class UserLoginStatusChecker {
     private AppPreferences appPreferences;

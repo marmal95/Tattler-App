@@ -1,4 +1,4 @@
-package tattler.pro.tattler.util;
+package tattler.pro.tattler.common;
 
 public enum IntentKey {
     BROADCAST_MESSAGE,

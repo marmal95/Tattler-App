@@ -14,9 +14,9 @@ import butterknife.ButterKnife;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.authentication.PhoneAuthenticator;
+import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.custom_ui.MaterialToast;
 import tattler.pro.tattler.login.FingerprintLoginActivity;
-import tattler.pro.tattler.util.AppPreferences;
 
 public class RegisterActivity extends MvpActivity<RegisterView, RegisterPresenter> implements RegisterView {
     private static final int NUM_PAGES = 2;
