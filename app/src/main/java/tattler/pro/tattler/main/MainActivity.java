@@ -1,5 +1,7 @@
 package tattler.pro.tattler.main;
 
+import agency.tango.android.avatarview.loader.PicassoLoader;
+import agency.tango.android.avatarview.views.AvatarView;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -16,22 +18,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
-import com.hannesdorfmann.mosby.mvp.MvpActivity;
-
-import java.util.Objects;
-
-import agency.tango.android.avatarview.loader.PicassoLoader;
-import agency.tango.android.avatarview.views.AvatarView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.main.contacts.ContactsFragment;
-import tattler.pro.tattler.tcp.TcpConnectionService;
-import tattler.pro.tattler.tcp.TcpServiceConnector;
-import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
-import tattler.pro.tattler.tcp.TcpServiceManager;
+import tattler.pro.tattler.tcp.*;
+
+import java.util.Objects;
 
 public class MainActivity extends MvpActivity<MainView, MainPresenter>
         implements MainView, NavigationView.OnNavigationItemSelectedListener {
@@ -81,7 +76,10 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter>
     @Override
     public MainPresenter createPresenter() {
         return new MainPresenter(
-                new TcpServiceManager(), new TcpServiceConnectorFactory(), AppPreferences.getInstance(this));
+                new TcpServiceManager(),
+                new TcpServiceConnectorFactory(),
+                AppPreferences.getInstance(this),
+                new MessageBroadcastReceiver());
     }
 
     @Override
@@ -138,6 +136,16 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter>
         picassoLoader.loadImage(userAvatar, (String) null, userName);
         userNameArea.setText(userName);
         userNumberArea.setText(userNumber);
+    }
+
+    @Override
+    public void registerReceiver(MessageBroadcastReceiver receiver) {
+        super.registerReceiver(receiver, receiver.createBroadcastMessageIntentFilter());
+    }
+
+    @Override
+    public void unregisterReceiver(MessageBroadcastReceiver receiver) {
+        super.unregisterReceiver(receiver);
     }
 
     private void setUpToolbar() {

@@ -137,6 +137,7 @@ public class AppPreferences {
     }
 
     public enum Key {
+        IS_FIRST_LAUNCH,
         USER_PHONE_NUMBER,
         USER_NAME,
         USER_NUMBER

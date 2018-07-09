@@ -1,7 +1,7 @@
 package tattler.pro.tattler.main;
 
 import com.hannesdorfmann.mosby.mvp.MvpView;
-
+import tattler.pro.tattler.tcp.MessageBroadcastReceiver;
 import tattler.pro.tattler.tcp.TcpServiceConnector;
 
 interface MainView extends MvpView {
@@ -9,4 +9,6 @@ interface MainView extends MvpView {
     void unbindTcpConnectionService(TcpServiceConnector serviceConnector);
     void startContactsFragment();
     void displayUserData(String userName, String userNumber);
+    void registerReceiver(MessageBroadcastReceiver receiver);
+    void unregisterReceiver(MessageBroadcastReceiver receiver);
 }

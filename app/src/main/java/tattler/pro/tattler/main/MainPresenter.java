@@ -2,9 +2,9 @@ package tattler.pro.tattler.main;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.orhanobut.logger.Logger;
-
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.messages.Message;
+import tattler.pro.tattler.tcp.MessageBroadcastReceiver;
 import tattler.pro.tattler.tcp.TcpServiceConnector;
 import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
 import tattler.pro.tattler.tcp.TcpServiceManager;
@@ -13,11 +13,16 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
     private TcpServiceManager tcpServiceManager;
     private TcpServiceConnector tcpServiceConnector;
     private AppPreferences appPreferences;
+    private MessageBroadcastReceiver broadcastReceiver;
 
-    MainPresenter(TcpServiceManager tcpManager, TcpServiceConnectorFactory serviceConnectorFactory, AppPreferences appPreferences) {
+    MainPresenter(TcpServiceManager tcpManager,
+                  TcpServiceConnectorFactory serviceConnectorFactory,
+                  AppPreferences appPreferences,
+                  MessageBroadcastReceiver broadcastReceiver) {
         this.tcpServiceManager = tcpManager;
         this.tcpServiceConnector = serviceConnectorFactory.create(tcpServiceManager);
         this.appPreferences = appPreferences;
+        this.broadcastReceiver = broadcastReceiver;
     }
 
     public void onCreate() {
@@ -26,12 +31,15 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
         }
 
         displayUserData();
+        registerReceiver();
     }
 
     public void onDestroy() {
         if (tcpServiceManager.isServiceBound()) {
             unbindTcpConnectionService();
         }
+
+        unregisterReceiver();
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -70,4 +78,19 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
+    private void registerReceiver() {
+        if (isViewAttached()) {
+            Logger.d("Registering BroadcastReceiver.");
+            getView().registerReceiver(broadcastReceiver);
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void unregisterReceiver() {
+        if (isViewAttached()) {
+            Logger.d("Unregistering BroadcastReceiver.");
+            getView().unregisterReceiver(broadcastReceiver);
+        }
+    }
 }

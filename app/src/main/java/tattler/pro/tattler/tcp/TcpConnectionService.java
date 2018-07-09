@@ -6,8 +6,12 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.orhanobut.logger.Logger;
+import tattler.pro.tattler.common.AppPreferences;
+import tattler.pro.tattler.common.DatabaseManager;
+import tattler.pro.tattler.messages.LoginRequestFactory;
+import tattler.pro.tattler.messages.Message;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -15,10 +19,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import tattler.pro.tattler.common.AppPreferences;
-import tattler.pro.tattler.messages.LoginRequestFactory;
-import tattler.pro.tattler.messages.Message;
 
 
 public class TcpConnectionService extends Service {
@@ -34,10 +34,18 @@ public class TcpConnectionService extends Service {
     private ServerReader tcpReceiver;
 
     private TcpServiceBinder tcpServiceBinder;
+    private DatabaseManager databaseManager;
     private MessageHandler messageHandler;
 
     public TcpConnectionService() {
         super();
+    }
+
+    @Override
+    public void onCreate() {
+        Logger.d("Creating TcpConnectionService.");
+        super.onCreate();
+
         socket = null;
         inputStream = null;
         outputStream = null;
@@ -46,13 +54,9 @@ public class TcpConnectionService extends Service {
         tcpSender = new ServerWriter();
 
         tcpServiceBinder = new TcpServiceBinder();
-        messageHandler = new MessageHandler(this, AppPreferences.getInstance(this));
-    }
+        databaseManager = OpenHelperManager.getHelper(this, DatabaseManager.class);
+        messageHandler = new MessageHandler(this, AppPreferences.getInstance(this), databaseManager);
 
-    @Override
-    public void onCreate() {
-        Logger.d("Creating TcpConnectionService.");
-        super.onCreate();
         new Thread(() -> {
             establishConnection();
             tcpReceiver.start();
@@ -64,6 +68,7 @@ public class TcpConnectionService extends Service {
     public void onDestroy() {
         Logger.d("Destroying TcpConnectionService.");
         super.onDestroy();
+        OpenHelperManager.releaseHelper();
         closeConnection();
     }
 
@@ -155,7 +160,7 @@ public class TcpConnectionService extends Service {
             Message message = messages.poll();
             if (message != null) {
                 if (!isConnected()) {
-                    establishConnection(); // TODO: Needs sending LoginRequest to reestablish connection
+                    establishConnection();
                 }
                 sendMessage(message);
             }

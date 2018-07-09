@@ -2,17 +2,15 @@ package tattler.pro.tattler.common;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.orhanobut.logger.Logger;
+import tattler.pro.tattler.models.Contact;
 
 import java.sql.SQLException;
 import java.util.List;
-
-import tattler.pro.tattler.models.Contact;
 
 public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "tattler.db";

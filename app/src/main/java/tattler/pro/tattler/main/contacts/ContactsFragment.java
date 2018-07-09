@@ -9,19 +9,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.hannesdorfmann.mosby.mvp.MvpFragment;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.hannesdorfmann.mosby.mvp.MvpFragment;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.main.MainActivity;
+
+import java.util.ArrayList;
 
 public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresenter> implements ContactsView {
     @BindView(R.id.recyclerView)
@@ -52,7 +50,10 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
         MainActivity activity = (MainActivity) getActivity();
         assert activity != null;
         return new ContactsPresenter(
-                new ContactsAdapter(getActivity(), new ArrayList<>()), OpenHelperManager.getHelper(getActivity(), DatabaseManager.class), activity.getPresenter(), AppPreferences.getInstance(getActivity()));
+                new ContactsAdapter(getActivity(), new ArrayList<>()),
+                OpenHelperManager.getHelper(getActivity(), DatabaseManager.class),
+                activity.getPresenter(),
+                AppPreferences.getInstance(getActivity()));
     }
 
     @Override
