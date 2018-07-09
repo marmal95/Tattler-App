@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.Button;
 import android.widget.EditText;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -15,9 +14,6 @@ import tattler.pro.tattler.R;
 public class AddContactDialog extends Dialog {
     @BindView(R.id.tattlerNumberArea)
     EditText tattlerNumberArea;
-
-    @BindView(R.id.userNameArea)
-    EditText userNameArea;
 
     @BindView(R.id.addContactButton)
     Button addContactButton;
@@ -38,9 +34,8 @@ public class AddContactDialog extends Dialog {
 
     @OnClick(R.id.addContactButton)
     public void addContactButtonClick() {
-        String userName = userNameArea.getText().toString().trim();
         String userNumber = tattlerNumberArea.getText().toString().trim();
-        presenter.handleAddNewContact(userName, userNumber);
+        presenter.handleAddNewContact(userNumber);
         dismiss();
     }
 }

@@ -10,4 +10,17 @@ public class LoginRequest extends Message {
         this.phoneNumber = phoneNumber;
         this.userName = userName;
     }
+
+    @Override
+    public String toString() {
+        return "LoginRequest{" +
+                "phoneNumber='" + phoneNumber + '\'' +
+                ", userName='" + userName + '\'' +
+                ", messageType=" + messageType +
+                ", messageTime=" + messageTime +
+                ", messageId=" + messageId +
+                ", senderId=" + senderId +
+                ", receiverId=" + receiverId +
+                '}';
+    }
 }

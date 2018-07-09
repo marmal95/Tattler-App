@@ -30,16 +30,6 @@
             android:layout_marginBottom="@dimen/space10"
             android:maxLength="9"/>
 
-        <EditText
-            android:id="@+id/userNameArea"
-            style="@style/PrimaryEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="true"
-            android:hint="@string/userName"
-            android:layout_marginBottom="@dimen/space10"
-            android:inputType="text"/>
-
         <Button
             android:id="@+id/addContactButton"
             style="@style/PrimaryButtonStyle"

@@ -12,6 +12,21 @@ public class LoginResponse extends MessageResponse implements Serializable {
         this.receiverId = phoneId;
     }
 
+    @Override
+    public String toString() {
+        return "LoginResponse{" +
+                "phoneId=" + phoneId +
+                ", acknowledgedMessageId=" + acknowledgedMessageId +
+                ", status=" + status +
+                ", messageType=" + messageType +
+                ", messageTime=" + messageTime +
+                ", messageId=" + messageId +
+                ", senderId=" + senderId +
+                ", receiverId=" + receiverId +
+                '}';
+    }
+
+
     public class Status {
         public static final int LOGIN_SUCCESSFUL = 0;
         public static final int INCORRECT_DATA = 1;
