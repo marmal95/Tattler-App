@@ -3,6 +3,8 @@ package tattler.pro.tattler.main;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.orhanobut.logger.Logger;
 import tattler.pro.tattler.common.AppPreferences;
+import tattler.pro.tattler.main.contacts.ContactsPresenter;
+import tattler.pro.tattler.messages.AddContactResponse;
 import tattler.pro.tattler.messages.Message;
 import tattler.pro.tattler.tcp.MessageBroadcastReceiver;
 import tattler.pro.tattler.tcp.TcpServiceConnector;
@@ -12,17 +14,29 @@ import tattler.pro.tattler.tcp.TcpServiceManager;
 public class MainPresenter extends MvpBasePresenter<MainView> {
     private TcpServiceManager tcpServiceManager;
     private TcpServiceConnector tcpServiceConnector;
-    private AppPreferences appPreferences;
+
+    private MessageHandler messageHandler;
     private MessageBroadcastReceiver broadcastReceiver;
+    private AppPreferences appPreferences;
+
+    private ContactsPresenter contactsPresenter;
 
     MainPresenter(TcpServiceManager tcpManager,
                   TcpServiceConnectorFactory serviceConnectorFactory,
-                  AppPreferences appPreferences,
-                  MessageBroadcastReceiver broadcastReceiver) {
+                  MessageHandler messageHandler,
+                  MessageBroadcastReceiver broadcastReceiver,
+                  AppPreferences appPreferences) {
         this.tcpServiceManager = tcpManager;
         this.tcpServiceConnector = serviceConnectorFactory.create(tcpServiceManager);
         this.appPreferences = appPreferences;
+        this.messageHandler = messageHandler;
+        this.messageHandler.setPresenter(this);
         this.broadcastReceiver = broadcastReceiver;
+        this.broadcastReceiver.setReceivedMessageCallback(messageHandler);
+    }
+
+    public void setContactsPresenter(ContactsPresenter contactsPresenter) {
+        this.contactsPresenter = contactsPresenter;
     }
 
     public void onCreate() {
@@ -51,6 +65,10 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
 
     public void sendMessage(Message message) {
         tcpServiceManager.getTcpService().sendMessage(message);
+    }
+
+    public void handleAddContactResponse(AddContactResponse message) {
+        contactsPresenter.handleAddContactResponse(message);
     }
 
     @SuppressWarnings("ConstantConditions")

@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import com.orhanobut.logger.Logger;
 import tattler.pro.tattler.common.IntentKey;
+import tattler.pro.tattler.common.ReceivedMessageCallback;
 import tattler.pro.tattler.messages.Message;
 
 public class MessageBroadcastReceiver extends BroadcastReceiver {
+    private ReceivedMessageCallback receivedMessageCallback;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -17,7 +19,12 @@ public class MessageBroadcastReceiver extends BroadcastReceiver {
         if (intentAction != null && intentAction.equals(IntentKey.BROADCAST_MESSAGE.name())) {
             Message message = (Message) intent.getSerializableExtra(IntentKey.MESSAGE.name());
             Logger.d("Received message: " + message.toString());
+            receivedMessageCallback.onMessageReceived(message);
         }
+    }
+
+    public void setReceivedMessageCallback(ReceivedMessageCallback messageCallback) {
+        receivedMessageCallback = messageCallback;
     }
 
     public IntentFilter createBroadcastMessageIntentFilter() {

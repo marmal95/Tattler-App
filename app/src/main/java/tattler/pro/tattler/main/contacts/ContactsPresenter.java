@@ -6,6 +6,7 @@ import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.main.MainPresenter;
 import tattler.pro.tattler.messages.AddContactRequest;
+import tattler.pro.tattler.messages.AddContactResponse;
 import tattler.pro.tattler.models.Contact;
 
 import java.sql.SQLException;
@@ -22,6 +23,8 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
         this.databaseManager = databaseManager;
         this.mainPresenter = mainPresenter;
         this.appPreferences = appPreferences;
+
+        this.mainPresenter.setContactsPresenter(this);
     }
 
     @Override
@@ -45,6 +48,11 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
     public void handleAddNewContact(String contactNumber) {
         int contactPhoneId = Integer.parseInt(contactNumber);
         sendAddContactRequest(contactPhoneId);
+    }
+
+    public void handleAddContactResponse(AddContactResponse message) {
+        Contact contact = new Contact(message.userName, message.userNumber);
+        contactsAdapter.addContact(contact);
     }
 
     private void initUserContacts() {

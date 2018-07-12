@@ -35,7 +35,7 @@ public class TcpConnectionService extends Service {
 
     private TcpServiceBinder tcpServiceBinder;
     private DatabaseManager databaseManager;
-    private MessageHandler messageHandler;
+    private TcpMessageHandler tcpMessageHandler;
 
     public TcpConnectionService() {
         super();
@@ -55,7 +55,7 @@ public class TcpConnectionService extends Service {
 
         tcpServiceBinder = new TcpServiceBinder();
         databaseManager = OpenHelperManager.getHelper(this, DatabaseManager.class);
-        messageHandler = new MessageHandler(this, AppPreferences.getInstance(this), databaseManager);
+        tcpMessageHandler = new TcpMessageHandler(this, AppPreferences.getInstance(this), databaseManager);
 
         new Thread(() -> {
             establishConnection();
@@ -185,7 +185,7 @@ public class TcpConnectionService extends Service {
                 if (isConnected()) {
                     try {
                         message = (Message) inputStream.readObject();
-                        messageHandler.handleReceivedMessage(message);
+                        tcpMessageHandler.onMessageReceived(message);
                     } catch (SocketException e) {
                         trySleep();
                         establishConnection();
