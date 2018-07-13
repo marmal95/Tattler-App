@@ -44,9 +44,10 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
     private void handleReceivedAddContactResponse(AddContactResponse message) {
         Logger.d("Received Message: " + message.toString());
         try {
-            // TODO: Check status first
-            Contact contact = new Contact(message.userName, message.userNumber);
-            databaseManager.insertContact(contact);
+            if (message.status == AddContactResponse.Status.CONTACT_ADDED) {
+                Contact contact = new Contact(message.userName, message.userNumber);
+                databaseManager.insertContact(contact);
+            }
             broadcastMessage(message);
         } catch (SQLException e) {
             e.printStackTrace();

@@ -78,7 +78,7 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter>
         return new MainPresenter(
                 new TcpServiceManager(),
                 new TcpServiceConnectorFactory(),
-                new MessageHandler(),
+                new MainMessageHandler(),
                 new MessageBroadcastReceiver(),
                 AppPreferences.getInstance(this));
     }

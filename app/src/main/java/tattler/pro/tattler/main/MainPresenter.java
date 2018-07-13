@@ -15,7 +15,7 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
     private TcpServiceManager tcpServiceManager;
     private TcpServiceConnector tcpServiceConnector;
 
-    private MessageHandler messageHandler;
+    private MainMessageHandler messageHandler;
     private MessageBroadcastReceiver broadcastReceiver;
     private AppPreferences appPreferences;
 
@@ -23,7 +23,7 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
 
     MainPresenter(TcpServiceManager tcpManager,
                   TcpServiceConnectorFactory serviceConnectorFactory,
-                  MessageHandler messageHandler,
+                  MainMessageHandler messageHandler,
                   MessageBroadcastReceiver broadcastReceiver,
                   AppPreferences appPreferences) {
         this.tcpServiceManager = tcpManager;

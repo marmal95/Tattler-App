@@ -27,5 +27,6 @@ public class AddContactResponse extends MessageResponse {
     public class Status {
         public static final int CONTACT_ADDED = 0;
         public static final int CONTACT_NOT_EXIST = 1;
+        public static final int CONTACT_ALREADY_ADDED = 2;
     }
 }
