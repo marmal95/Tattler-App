@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "tattler.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     public DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -49,6 +49,17 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         Dao<Contact, Integer> contacts = getContactsDao();
         contacts.create(contact);
         Logger.d("Inserted " + contact.toString());
+    }
+
+    public void updateContacts(List<tattler.pro.tattler.messages.models.Contact> contacts) {
+        try {
+            TableUtils.clearTable(connectionSource, Contact.class);
+            for (tattler.pro.tattler.messages.models.Contact contact : contacts) {
+                insertContact(new Contact(contact.contactName, contact.contactNumber));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private Dao<Contact, Integer> getContactsDao() throws SQLException {

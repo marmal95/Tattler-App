@@ -12,6 +12,7 @@ public class LoginRequestFactory implements Serializable {
         AppPreferences appPreferences = AppPreferences.getInstance(context);
         String phoneNumber = appPreferences.getString(AppPreferences.Key.USER_PHONE_NUMBER, "");
         String userName = appPreferences.getString(AppPreferences.Key.USER_NAME, "");
-        return new LoginRequest(phoneNumber, userName);
+        boolean areContactsRequested = appPreferences.getBoolean(AppPreferences.Key.IS_FIRST_LAUNCH, true);
+        return new LoginRequest(phoneNumber, userName, areContactsRequested);
     }
 }

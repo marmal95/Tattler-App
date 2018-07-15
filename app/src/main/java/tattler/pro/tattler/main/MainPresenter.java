@@ -5,6 +5,7 @@ import com.orhanobut.logger.Logger;
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.main.contacts.ContactsPresenter;
 import tattler.pro.tattler.messages.AddContactResponse;
+import tattler.pro.tattler.messages.LoginResponse;
 import tattler.pro.tattler.messages.Message;
 import tattler.pro.tattler.tcp.MessageBroadcastReceiver;
 import tattler.pro.tattler.tcp.TcpServiceConnector;
@@ -65,6 +66,10 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
 
     public void sendMessage(Message message) {
         tcpServiceManager.getTcpService().sendMessage(message);
+    }
+
+    public void handleLoginResponse(LoginResponse loginResponse) {
+        contactsPresenter.handleLoginResponse(loginResponse);
     }
 
     public void handleAddContactResponse(AddContactResponse message) {

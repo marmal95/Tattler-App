@@ -38,7 +38,17 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
 
     private void handleReceivedLoginResponse(LoginResponse message) {
         Logger.d("Received Message: " + message.toString());
-        appPreferences.put(AppPreferences.Key.USER_NUMBER, message.phoneId);
+        if (message.status == LoginResponse.Status.LOGIN_SUCCESSFUL) {
+            appPreferences.put(AppPreferences.Key.USER_NUMBER, message.phoneId);
+            appPreferences.put(AppPreferences.Key.IS_FIRST_LAUNCH, false);
+
+            if (!message.contacts.isEmpty()) {
+                Logger.d("Received contacts from Server, size: " + message.contacts.size());
+                databaseManager.updateContacts(message.contacts);
+            }
+
+            broadcastMessage(message);
+        }
     }
 
     private void handleReceivedAddContactResponse(AddContactResponse message) {

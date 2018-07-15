@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 public class TcpConnectionService extends Service {
-    private static final String SERVER_IP = "10.2.14.101";
+    private static final String SERVER_IP = "192.168.43.70";
     private static final int SERVER_PORT = 50000;
     private static final int SLEEP_MS = 5000;
 

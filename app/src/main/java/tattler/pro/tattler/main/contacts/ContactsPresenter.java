@@ -7,6 +7,7 @@ import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.main.MainPresenter;
 import tattler.pro.tattler.messages.AddContactRequest;
 import tattler.pro.tattler.messages.AddContactResponse;
+import tattler.pro.tattler.messages.LoginResponse;
 import tattler.pro.tattler.models.Contact;
 
 import java.sql.SQLException;
@@ -50,6 +51,12 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
         sendAddContactRequest(contactPhoneId);
     }
 
+    public void handleLoginResponse(LoginResponse message) {
+        if (!message.contacts.isEmpty()) {
+            initUserContacts();
+        }
+    }
+
     public void handleAddContactResponse(AddContactResponse message) {
         Contact contact = new Contact(message.userName, message.userNumber);
         contactsAdapter.addContact(contact);
@@ -58,6 +65,7 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
     private void initUserContacts() {
         try {
             List<Contact> contacts = databaseManager.selectContacts();
+            contactsAdapter.clearContacts();
             contactsAdapter.addContacts(contacts);
         } catch (SQLException e) {
             e.printStackTrace();
