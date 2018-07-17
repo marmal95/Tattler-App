@@ -64,6 +64,20 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
+    public void handleNavChatsClick() {
+        if (isViewAttached()) {
+            getView().startChatsFragment();
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public void handleNavInvitationsClick() {
+        if (isViewAttached()) {
+            getView().startInvitationsFragment();
+        }
+    }
+
     public void sendMessage(Message message) {
         tcpServiceManager.getTcpService().sendMessage(message);
     }

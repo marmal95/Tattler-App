@@ -23,7 +23,9 @@ import butterknife.ButterKnife;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.common.AppPreferences;
+import tattler.pro.tattler.main.chats.ChatsFragment;
 import tattler.pro.tattler.main.contacts.ContactsFragment;
+import tattler.pro.tattler.main.invitations.InvitationsFragment;
 import tattler.pro.tattler.tcp.*;
 
 import java.util.Objects;
@@ -99,6 +101,11 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter>
             case R.id.navContactsFragment:
                 getPresenter().handleNavContactsClick();
                 break;
+            case R.id.navChatsFragment:
+                getPresenter().handleNavChatsClick();
+                break;
+            case R.id.navInvitationsFragment:
+                getPresenter().handleNavInvitationsClick();
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
@@ -120,6 +127,26 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter>
     public void startContactsFragment() {
         FragmentTransaction fragmentTransaction;
         activeFragment = new ContactsFragment();
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction = fragmentTransaction.replace(R.id.contentFrame, activeFragment);
+        fragmentTransaction = fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void startChatsFragment() {
+        FragmentTransaction fragmentTransaction;
+        activeFragment = new ChatsFragment();
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction = fragmentTransaction.replace(R.id.contentFrame, activeFragment);
+        fragmentTransaction = fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void startInvitationsFragment() {
+        FragmentTransaction fragmentTransaction;
+        activeFragment = new InvitationsFragment();
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction = fragmentTransaction.replace(R.id.contentFrame, activeFragment);
         fragmentTransaction = fragmentTransaction.addToBackStack(null);
