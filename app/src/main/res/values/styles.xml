@@ -27,7 +27,7 @@
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
-    <style name="textViewInfoLabel">
+    <style name="PrimaryTextViewActivityInfoLabel">
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
@@ -38,6 +38,16 @@
         <item name="android:background">@drawable/rounded_edit_text_primary</item>
         <item name="android:padding">@dimen/space16</item>
         <item name="android:elevation">@dimen/space4</item>
+    </style>
+
+    <style name="PrimaryTextViewLabel">
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textSize">@dimen/primaryLabelFontSize</item>
+    </style>
+
+    <style name="SecondaryTextViewLabel">
+        <item name="android:textColor">@color/colorSecondaryText</item>
+        <item name="android:textSize">@dimen/secondaryLabelFontSize</item>
     </style>
 
     <style name="PrimaryButtonStyle" parent="Widget.AppCompat.Button.Colored">
@@ -53,7 +63,7 @@
 
     <style name="PrimaryTitleStyle" parent="Theme.AppCompat.Light">
         <item name="android:textColor">@color/colorPrimaryLightText</item>
-        <item name="android:textSize">@dimen/primaryTitleFontSize</item>
+        <item name="android:textSize">@dimen/primaryRecyclerItemFontSize</item>
         <item name="android:textAlignment">center</item>
         <item name="android:gravity">center</item>
         <item name="android:textAllCaps">true</item>
@@ -63,5 +73,8 @@
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 </resources>

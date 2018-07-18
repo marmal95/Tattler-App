@@ -8,10 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.common.OnItemClickListener;
 import tattler.pro.tattler.models.Contact;
 
 import java.util.List;
@@ -19,10 +22,15 @@ import java.util.List;
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
     private Context context;
     private List<Contact> contacts;
+    private OnItemClickListener clickListener;
 
-    ContactsAdapter(Context context, List<Contact> contacts) {
+    private int lastPosition;
+
+    ContactsAdapter(Context context, List<Contact> contacts, OnItemClickListener clickListener) {
         this.context = context;
         this.contacts = contacts;
+        this.clickListener = clickListener;
+        this.lastPosition = -1;
     }
 
     @NonNull
@@ -39,6 +47,13 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         holder.userName.setText(contact.contactName);
         holder.contactNumber.setText(String.valueOf(contact.contactNumber));
         picassoLoader.loadImage(holder.userAvatar, (String) null, contact.contactName);
+        setAnimation(holder.itemView, position);
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        holder.itemView.clearAnimation();
     }
 
     @Override
@@ -70,6 +85,14 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         return contacts.get(position);
     }
 
+    private void setAnimation(View viewToAnimate, int position) {
+        if (position > lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.item_animation_from_right);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.userAvatar)
         AvatarView userAvatar;
@@ -83,6 +106,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(v -> clickListener.onItemClick(getAdapterPosition()));
         }
     }
 }

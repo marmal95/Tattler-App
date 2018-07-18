@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                            xmlns:tools="http://schemas.android.com/tools"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                                            tools:context=".contact.ContactActivity"
+                                            tools:showIn="@layout/activity_contact">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/space16"
+            android:theme="@style/PrimaryTextViewLabel"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/colorDivider"/>
+
+        <TextView
+            android:id="@+id/userNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/space16"
+            android:drawablePadding="@dimen/space10"
+            android:drawableStart="@drawable/ic_phone"
+            android:drawableTint="@color/colorPrimary"
+            android:theme="@style/SecondaryTextViewLabel"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/colorDivider"/>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

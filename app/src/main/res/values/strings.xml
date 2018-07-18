@@ -4,7 +4,8 @@
     <string name="drawerClose">Close navigation drawer</string>
 
     <!--Labels-->
-    <string name="touchFingerSensorToAppLogin">Touch the sensor with your finger to login to Tattler application</string>
+    <string name="touchFingerSensorToAppLogin">Touch the sensor with your finger to login to Tattler application
+    </string>
 
     <string name="polishLanguageCountyCode">(+48) Poland</string>
     <string name="phoneNumber">Phone number</string>
@@ -26,11 +27,14 @@
     <string name="authenticationSuccess">Authentication succeeded</string>
     <string name="fingerprintNotSupported">Your device does not support fingerprint authentication</string>
     <string name="fingerprintNoPermission">Please enable the fingerprint permission</string>
-    <string name="fingerprintNotConfigured">No fingerprint configured. Please register at least one fingerprint in your device settings</string>
+    <string name="fingerprintNotConfigured">No fingerprint configured. Please register at least one fingerprint in your
+        device settings
+    </string>
     <string name="lockScreenNotEnabled">Please enable screen lock security in your device settings</string>
     <string name="fingerSensorError">A fingerprint sensor error occurred</string>
     <string name="verificationCodeIncorrect">Verification code is incorrect</string>
     <string name="phoneAuthenticationFail">Phone number authentication failed</string>
     <string name="noLastAuthenticationRequest">Phone authentication request not found</string>
     <string name="phoneAuthentication">Phone authentication is already running</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
 </resources>

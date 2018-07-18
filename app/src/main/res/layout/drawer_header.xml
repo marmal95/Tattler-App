@@ -25,14 +25,14 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/space10"
             android:textColor="@color/colorPrimaryLightText"
-            android:textSize="@dimen/primaryTitleFontSize" />
+            android:textSize="@dimen/primaryRecyclerItemFontSize"/>
 
         <TextView
             android:id="@+id/userNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorSecondaryLightText"
-            android:textSize="@dimen/secondaryTitleFontSize" />
+            android:textSize="@dimen/secondaryRecyclerItemFontSize"/>
 
     </LinearLayout>
 

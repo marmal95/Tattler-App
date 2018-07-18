@@ -128,6 +128,7 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter>
         FragmentTransaction fragmentTransaction;
         activeFragment = new ContactsFragment();
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         fragmentTransaction = fragmentTransaction.replace(R.id.contentFrame, activeFragment);
         fragmentTransaction = fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -138,6 +139,7 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter>
         FragmentTransaction fragmentTransaction;
         activeFragment = new ChatsFragment();
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         fragmentTransaction = fragmentTransaction.replace(R.id.contentFrame, activeFragment);
         fragmentTransaction = fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -148,6 +150,7 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter>
         FragmentTransaction fragmentTransaction;
         activeFragment = new InvitationsFragment();
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         fragmentTransaction = fragmentTransaction.replace(R.id.contentFrame, activeFragment);
         fragmentTransaction = fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();

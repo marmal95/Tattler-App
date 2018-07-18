@@ -33,6 +33,13 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
         super.attachView(view);
         view.setContactsAdapter(contactsAdapter);
         initUserContacts();
+
+        // TODO: Remove and uncomment after tests`
+        contactsAdapter.addContact(new Contact("Andrzej", 1));
+        contactsAdapter.addContact(new Contact("Stefan", 2));
+        contactsAdapter.addContact(new Contact("Ziomek", 2));
+        contactsAdapter.addContact(new Contact("Yolo", 2));
+        contactsAdapter.addContact(new Contact("Typek", 2));
     }
 
     public void onDestroy() {
@@ -41,9 +48,11 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
 
     @SuppressWarnings("ConstantConditions")
     public void handleAddContactButtonClick() {
-        if (isViewAttached()) {
-            getView().startAddContactDialog();
-        }
+        // TODO: Remove and uncomment after tests`
+        contactsAdapter.addContact(new Contact("Andrzej", 1));
+//        if (isViewAttached()) {
+//            getView().startAddContactDialog();
+//        }
     }
 
     public void handleAddNewContact(String contactNumber) {

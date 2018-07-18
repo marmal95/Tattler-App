@@ -1,9 +1,13 @@
 package tattler.pro.tattler.main.contacts;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,11 +21,13 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
+import tattler.pro.tattler.common.OnItemClickListener;
 import tattler.pro.tattler.main.MainActivity;
 
 import java.util.ArrayList;
 
-public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresenter> implements ContactsView {
+public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresenter>
+        implements ContactsView, OnItemClickListener {
     @BindView(R.id.recyclerView)
     RecyclerView contactsView;
 
@@ -39,8 +45,7 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
         ButterKnife.bind(this, view);
-        contactsView.setHasFixedSize(true);
-        contactsView.setLayoutManager(new LinearLayoutManager(getContext()));
+        setUpContactsView();
         return view;
     }
 
@@ -50,7 +55,7 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
         MainActivity activity = (MainActivity) getActivity();
         assert activity != null;
         return new ContactsPresenter(
-                new ContactsAdapter(getActivity(), new ArrayList<>()),
+                new ContactsAdapter(getActivity(), new ArrayList<>(), this),
                 OpenHelperManager.getHelper(getActivity(), DatabaseManager.class),
                 activity.getPresenter(),
                 AppPreferences.getInstance(getActivity()));
@@ -78,5 +83,24 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
         if (activity != null) {
             new AddContactDialog(activity, getPresenter()).show();
         }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        // TODO: Implement
+    }
+
+    private void setUpContactsView() {
+        Context context = getContext();
+        assert context != null;
+        Drawable dividerDrawable = ContextCompat.getDrawable(context, R.drawable.recycler_view_divider);
+        assert dividerDrawable != null;
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, layoutManager.getOrientation());
+        dividerItemDecoration.setDrawable(dividerDrawable);
+        contactsView.setHasFixedSize(true);
+        contactsView.addItemDecoration(dividerItemDecoration);
+        contactsView.setLayoutManager(new LinearLayoutManager(context));
     }
 }
