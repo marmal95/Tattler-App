@@ -4,6 +4,8 @@ package tattler.pro.tattler.main;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -24,8 +26,10 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.common.AppPreferences;
+import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.main.chats.ChatsFragment;
 import tattler.pro.tattler.main.contacts.ContactsFragment;
 import tattler.pro.tattler.main.invitations.InvitationsFragment;
@@ -35,8 +39,7 @@ import tattler.pro.tattler.tcp.TcpServiceConnector;
 import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
 import tattler.pro.tattler.tcp.TcpServiceManager;
 
-public class MainActivity extends MvpActivity<MainView, MainPresenter>
-        implements MainView, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends MvpActivity<MainView, MainPresenter> implements MainView, NavigationView.OnNavigationItemSelectedListener {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -82,12 +85,7 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter>
     @NonNull
     @Override
     public MainPresenter createPresenter() {
-        return new MainPresenter(
-                new TcpServiceManager(),
-                new TcpServiceConnectorFactory(),
-                new MainMessageHandler(),
-                new MessageBroadcastReceiver(),
-                AppPreferences.getInstance(this));
+        return new MainPresenter(new TcpServiceManager(), new TcpServiceConnectorFactory(), new MainMessageHandler(), new MessageBroadcastReceiver(), AppPreferences.getInstance(this));
     }
 
     @Override
@@ -164,12 +162,15 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter>
     @Override
     public void displayUserData(String userName, String userNumber) {
         View headerView = navigationView.getHeaderView(0);
-        //  AvatarView userAvatar = headerView.findViewById(R.id.userAvatar);
+        ColorDrawable userNameColorDrawable = new ColorDrawable(Color.parseColor(Util.pickHexColor(this, userName)));
+
+        CircleImageView userAvatar = headerView.findViewById(R.id.userAvatar);
+        TextView userInitials = headerView.findViewById(R.id.userInitials);
         TextView userNameArea = headerView.findViewById(R.id.userName);
         TextView userNumberArea = headerView.findViewById(R.id.userNumber);
 
-        // PicassoLoader picassoLoader = new PicassoLoader();
-        //  picassoLoader.loadImage(userAvatar, (String) null, userName);
+        userAvatar.setImageDrawable(userNameColorDrawable);
+        userInitials.setText(Util.extractUserInitials(userName));
         userNameArea.setText(userName);
         userNumberArea.setText(userNumber);
     }

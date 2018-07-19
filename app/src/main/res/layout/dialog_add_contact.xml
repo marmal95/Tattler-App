@@ -8,7 +8,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/primaryTitleViewHeight"
+        android:layout_height="@dimen/primaryDialogTitleViewHeight"
         android:background="@color/colorPrimary"
         android:theme="@style/PrimaryTitleStyle"
         android:text="@string/addNewContact"/>

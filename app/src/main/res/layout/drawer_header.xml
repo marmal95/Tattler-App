@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
     android:background="?attr/colorPrimary"
@@ -7,11 +8,34 @@
     android:orientation="horizontal"
     android:padding="@dimen/space16">
 
-    <!--<agency.tango.android.avatarview.views.AvatarView-->
-    <!--android:id="@+id/userAvatar"-->
-    <!--android:layout_width="64dp"-->
-    <!--android:layout_height="64dp"-->
-    <!--android:layout_marginEnd="@dimen/space10" />-->
+    <RelativeLayout
+        android:layout_width="@dimen/contactsNavHeaderAvatarSize"
+        android:layout_height="@dimen/contactsNavHeaderAvatarSize"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/space16">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:transitionName="@string/contactAvatar"
+            app:civ_border_color="@android:color/white"
+            app:civ_border_width="@dimen/space2" />
+
+        <TextView
+            android:id="@+id/userInitials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/userAvatar"
+            android:layout_alignEnd="@+id/userAvatar"
+            android:layout_alignStart="@+id/userAvatar"
+            android:layout_alignTop="@+id/userAvatar"
+            android:layout_margin="1dp"
+            android:gravity="center"
+            android:textColor="@color/colorPrimaryLightText"
+            android:textSize="@dimen/contactUserAvatarInitialsFontSize" />
+    </RelativeLayout>
+
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -25,14 +49,14 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/space10"
             android:textColor="@color/colorPrimaryLightText"
-            android:textSize="@dimen/primaryRecyclerItemFontSize"/>
+            android:textSize="@dimen/primaryRecyclerItemFontSize" />
 
         <TextView
             android:id="@+id/userNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorSecondaryLightText"
-            android:textSize="@dimen/secondaryRecyclerItemFontSize"/>
+            android:textSize="@dimen/secondaryRecyclerItemFontSize" />
 
     </LinearLayout>
 
