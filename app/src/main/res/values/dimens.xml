@@ -22,9 +22,10 @@
     <dimen name="primaryLabelFontSize">28sp</dimen>
     <dimen name="secondaryLabelFontSize">22sp</dimen>
 
-    <dimen name="contactItemAvatarSize">48dp</dimen>
+    <dimen name="contactsRecyclerItemAvatarSize">48dp</dimen>
     <dimen name="contactsRecyclerItemSize">64dp</dimen>
     <dimen name="contactUserAvatarSize">96dp</dimen>
+    <dimen name="contactUserAvatarInitialsFontSize">48sp</dimen>
 
     <dimen name="app_bar_height">180dp</dimen>
 </resources>

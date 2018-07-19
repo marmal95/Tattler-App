@@ -1,7 +1,6 @@
 package tattler.pro.tattler.main;
 
-import agency.tango.android.avatarview.loader.PicassoLoader;
-import agency.tango.android.avatarview.views.AvatarView;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -18,17 +17,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import com.hannesdorfmann.mosby.mvp.MvpActivity;
+
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.main.chats.ChatsFragment;
 import tattler.pro.tattler.main.contacts.ContactsFragment;
 import tattler.pro.tattler.main.invitations.InvitationsFragment;
-import tattler.pro.tattler.tcp.*;
-
-import java.util.Objects;
+import tattler.pro.tattler.tcp.MessageBroadcastReceiver;
+import tattler.pro.tattler.tcp.TcpConnectionService;
+import tattler.pro.tattler.tcp.TcpServiceConnector;
+import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
+import tattler.pro.tattler.tcp.TcpServiceManager;
 
 public class MainActivity extends MvpActivity<MainView, MainPresenter>
         implements MainView, NavigationView.OnNavigationItemSelectedListener {
@@ -159,12 +164,12 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter>
     @Override
     public void displayUserData(String userName, String userNumber) {
         View headerView = navigationView.getHeaderView(0);
-        AvatarView userAvatar = headerView.findViewById(R.id.userAvatar);
+        //  AvatarView userAvatar = headerView.findViewById(R.id.userAvatar);
         TextView userNameArea = headerView.findViewById(R.id.userName);
         TextView userNumberArea = headerView.findViewById(R.id.userNumber);
 
-        PicassoLoader picassoLoader = new PicassoLoader();
-        picassoLoader.loadImage(userAvatar, (String) null, userName);
+        // PicassoLoader picassoLoader = new PicassoLoader();
+        //  picassoLoader.loadImage(userAvatar, (String) null, userName);
         userNameArea.setText(userName);
         userNumberArea.setText(userNumber);
     }

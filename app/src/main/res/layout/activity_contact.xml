@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 android:fitsSystemWindows="true"
-                                                 tools:context=".contact.ContactActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".contact.ContactActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -22,16 +22,37 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <agency.tango.android.avatarview.views.AvatarView
-                android:id="@+id/userAvatar"
+            <RelativeLayout
                 android:layout_width="@dimen/contactUserAvatarSize"
                 android:layout_height="@dimen/contactUserAvatarSize"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/userAvatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:transitionName="@string/contactAvatar"
+                    app:civ_border_color="@android:color/white"
+                    app:civ_border_width="@dimen/space5" />
+
+                <TextView
+                    android:id="@+id/userInitials"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/userAvatar"
+                    android:layout_alignEnd="@+id/userAvatar"
+                    android:layout_alignStart="@+id/userAvatar"
+                    android:layout_alignTop="@+id/userAvatar"
+                    android:layout_margin="1dp"
+                    android:gravity="center"
+                    android:textColor="@color/colorPrimaryLightText"
+                    android:textSize="@dimen/contactUserAvatarInitialsFontSize" />
+            </RelativeLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_activity_contact"/>
+    <include layout="@layout/content_activity_contact" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -40,6 +61,6 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_dialog_email"/>
+        app:srcCompat="@android:drawable/ic_dialog_email" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -8,11 +8,30 @@
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
-    <agency.tango.android.avatarview.views.AvatarView
-        android:id="@+id/userAvatar"
-        android:layout_width="@dimen/contactItemAvatarSize"
-        android:layout_height="@dimen/contactItemAvatarSize"
-        android:layout_marginEnd="@dimen/space16" />
+    <RelativeLayout
+        android:layout_width="@dimen/contactsRecyclerItemAvatarSize"
+        android:layout_height="@dimen/contactsRecyclerItemAvatarSize"
+        android:layout_marginEnd="@dimen/space16">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:transitionName="@string/contactAvatar" />
+
+        <TextView
+            android:id="@+id/userInitials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/userAvatar"
+            android:layout_alignEnd="@+id/userAvatar"
+            android:layout_alignStart="@+id/userAvatar"
+            android:layout_alignTop="@+id/userAvatar"
+            android:layout_margin="1dp"
+            android:gravity="center"
+            android:textColor="@color/colorPrimaryLightText" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -24,13 +43,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/space5"
-            android:textSize="@dimen/primaryRecyclerItemFontSize"/>
+            android:textSize="@dimen/primaryRecyclerItemFontSize"
+            android:transitionName="@string/contactName" />
 
         <TextView
             android:id="@+id/userNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/secondaryRecyclerItemFontSize"/>
+            android:textSize="@dimen/secondaryRecyclerItemFontSize"
+            android:transitionName="@string/contactNumber" />
 
     </LinearLayout>
 

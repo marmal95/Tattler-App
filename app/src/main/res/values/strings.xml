@@ -3,6 +3,12 @@
     <string name="drawerOpen">Open navigation drawer</string>
     <string name="drawerClose">Close navigation drawer</string>
 
+    <!--Transitions-->
+    <string name="contactAvatar">contactAvatar</string>
+    <string name="contactName">contactName</string>
+    <string name="contactNumber">contactNumber</string>
+
+
     <!--Labels-->
     <string name="touchFingerSensorToAppLogin">Touch the sensor with your finger to login to Tattler application
     </string>
@@ -27,9 +33,7 @@
     <string name="authenticationSuccess">Authentication succeeded</string>
     <string name="fingerprintNotSupported">Your device does not support fingerprint authentication</string>
     <string name="fingerprintNoPermission">Please enable the fingerprint permission</string>
-    <string name="fingerprintNotConfigured">No fingerprint configured. Please register at least one fingerprint in your
-        device settings
-    </string>
+    <string name="fingerprintNotConfigured">No fingerprint configured. Please register at least one fingerprint in your device settings</string>
     <string name="lockScreenNotEnabled">Please enable screen lock security in your device settings</string>
     <string name="fingerSensorError">A fingerprint sensor error occurred</string>
     <string name="verificationCodeIncorrect">Verification code is incorrect</string>
@@ -37,4 +41,17 @@
     <string name="noLastAuthenticationRequest">Phone authentication request not found</string>
     <string name="phoneAuthentication">Phone authentication is already running</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
+
+    <string-array name="avatarsColors">
+        <item>#F8B195</item>
+        <item>#F67280</item>
+        <item>#C06C84</item>
+        <item>#6C5B7B</item>
+        <item>#355C7D</item>
+        <item>#F26B38</item>
+        <item>#2F9599</item>
+        <item>#A7226E</item>
+        <item>#EC2049</item>
+        <item>#A8CD1B</item>
+    </string-array>
 </resources>

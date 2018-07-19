@@ -1,30 +1,39 @@
 package tattler.pro.tattler.main.contacts;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.hannesdorfmann.mosby.mvp.MvpFragment;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.hannesdorfmann.mosby.mvp.MvpFragment;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
+import tattler.pro.tattler.common.IntentKey;
 import tattler.pro.tattler.common.OnItemClickListener;
+import tattler.pro.tattler.contact.ContactActivity;
 import tattler.pro.tattler.main.MainActivity;
-
-import java.util.ArrayList;
+import tattler.pro.tattler.models.Contact;
 
 public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresenter>
         implements ContactsView, OnItemClickListener {
@@ -86,8 +95,22 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
     }
 
     @Override
+    public void startContactActivity(Contact contact, int position) {
+        FragmentActivity activity = getActivity();
+        assert activity != null;
+
+        View clickedView = contactsView.getChildAt(position);
+
+        Intent intent = new Intent(activity, ContactActivity.class);
+        intent.putExtra(IntentKey.CONTACT.name(), contact);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, Pair.create(clickedView.findViewById(R.id.userAvatar), getString(R.string.contactAvatar)), Pair.create(clickedView.findViewById(R.id.userName), getString(R.string.contactName)), Pair.create(clickedView.findViewById(R.id.userNumber), getString(R.string.contactNumber)));
+
+        startActivity(intent, options.toBundle());
+    }
+
+    @Override
     public void onItemClick(int position) {
-        // TODO: Implement
+        getPresenter().handleContactClick(position);
     }
 
     private void setUpContactsView() {

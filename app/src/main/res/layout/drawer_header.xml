@@ -7,11 +7,11 @@
     android:orientation="horizontal"
     android:padding="@dimen/space16">
 
-    <agency.tango.android.avatarview.views.AvatarView
-        android:id="@+id/userAvatar"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginEnd="@dimen/space10" />
+    <!--<agency.tango.android.avatarview.views.AvatarView-->
+    <!--android:id="@+id/userAvatar"-->
+    <!--android:layout_width="64dp"-->
+    <!--android:layout_height="64dp"-->
+    <!--android:layout_marginEnd="@dimen/space10" />-->
 
     <LinearLayout
         android:layout_width="wrap_content"
