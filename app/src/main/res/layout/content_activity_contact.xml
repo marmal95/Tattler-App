@@ -18,8 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space16"
-            android:transitionName="@string/contactName"
-            android:theme="@style/PrimaryTextViewLabel"/>
+            android:theme="@style/PrimaryTextViewLabel"
+            android:transitionName="@string/contactName"/>
 
         <View
             android:layout_width="match_parent"
@@ -32,10 +32,61 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space16"
             android:drawablePadding="@dimen/space10"
-            android:transitionName="@string/contactNumber"
             android:drawableStart="@drawable/ic_phone"
             android:drawableTint="@color/colorPrimary"
-            android:theme="@style/SecondaryTextViewLabel"/>
+            android:theme="@style/SecondaryTextViewLabel"
+            android:transitionName="@string/contactNumber"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/colorDivider"/>
+
+        <TextView
+            android:id="@+id/sendMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/space16"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:drawablePadding="@dimen/space10"
+            android:drawableStart="@drawable/ic_message"
+            android:drawableTint="@color/colorPrimary"
+            android:text="@string/sendMessage"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/colorDivider"/>
+
+        <TextView
+            android:id="@+id/muteContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/space16"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:drawablePadding="@dimen/space10"
+            android:drawableStart="@drawable/ic_speaker_notes"
+            android:drawableTint="@color/colorPrimary"
+            android:text="@string/mute"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/colorDivider"/>
+
+        <TextView
+            android:id="@+id/blockContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/space16"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:drawablePadding="@dimen/space10"
+            android:drawableStart="@drawable/ic_block"
+            android:drawableTint="@color/colorPrimary"
+            android:text="@string/block"/>
 
         <View
             android:layout_width="match_parent"

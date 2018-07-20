@@ -25,6 +25,9 @@
     <string name="tattlerNumber">Tattler number</string>
     <string name="addContact">Add contact</string>
     <string name="addNewContact">Add new contact</string>
+    <string name="sendMessage">Send message</string>
+    <string name="mute">Mute</string>
+    <string name="block">Block</string>
 
     <!--Toasts-->
     <string name="authenticationError">Authentication error: %1$s</string>
