@@ -15,7 +15,18 @@ public class Chat implements Serializable {
     @DatabaseField(columnName = "is_group")
     public boolean isGroupChat;
 
-    public Chat() {
+    public Chat() {}
 
+    public Chat(int chatId, boolean isGroupChat) {
+        this.chatId = chatId;
+        this.isGroupChat = isGroupChat;
+    }
+
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "chatId=" + chatId +
+                ", isGroupChat=" + isGroupChat +
+                '}';
     }
 }

@@ -1,5 +1,7 @@
 package tattler.pro.tattler.contact;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -17,6 +19,12 @@ import tattler.pro.tattler.common.IntentKey;
 import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.custom_ui.MaterialToast;
 import tattler.pro.tattler.models.Contact;
+import tattler.pro.tattler.tcp.TcpConnectionService;
+import tattler.pro.tattler.tcp.TcpServiceConnector;
+import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
+import tattler.pro.tattler.tcp.TcpServiceManager;
+
+import java.util.Objects;
 
 public class ContactActivity extends MvpActivity<ContactView, ContactPresenter> implements ContactView {
     @BindView(R.id.toolbar)
@@ -54,10 +62,18 @@ public class ContactActivity extends MvpActivity<ContactView, ContactPresenter> 
         getPresenter().onCreate(contact);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getPresenter().onDestroy();
+    }
+
     @NonNull
     @Override
     public ContactPresenter createPresenter() {
-        return new ContactPresenter();
+        return new ContactPresenter(
+                new TcpServiceManager(),
+                new TcpServiceConnectorFactory());
     }
 
     @Override
@@ -67,6 +83,18 @@ public class ContactActivity extends MvpActivity<ContactView, ContactPresenter> 
         userInitials.setText(Util.extractUserInitials(contact.contactName));
         userName.setText(contact.contactName);
         userNumber.setText(String.valueOf(contact.contactNumber));
+    }
+
+    @Override
+    public void bindTcpConnectionService(TcpServiceConnector serviceConnector) {
+        Intent intent = new Intent(this, TcpConnectionService.class);
+        startService(intent);
+        bindService(intent, serviceConnector, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void unbindTcpConnectionService(TcpServiceConnector serviceConnector) {
+        unbindService(serviceConnector);
     }
 
     @OnClick(R.id.sendMessage)
@@ -89,7 +117,7 @@ public class ContactActivity extends MvpActivity<ContactView, ContactPresenter> 
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
     }
 

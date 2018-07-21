@@ -2,10 +2,6 @@ package tattler.pro.tattler.main.contacts;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-
-import java.sql.SQLException;
-import java.util.List;
-
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.main.MainPresenter;
@@ -13,6 +9,9 @@ import tattler.pro.tattler.messages.AddContactRequest;
 import tattler.pro.tattler.messages.AddContactResponse;
 import tattler.pro.tattler.messages.LoginResponse;
 import tattler.pro.tattler.models.Contact;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
     private ContactsAdapter contactsAdapter;
@@ -72,6 +71,7 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
         contactsAdapter.addContact(contact);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void handleContactClick(int position) {
         if (isViewAttached()) {
             getView().startContactActivity(contactsAdapter.getContact(position), position);
