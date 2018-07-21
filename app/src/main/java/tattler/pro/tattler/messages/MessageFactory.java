@@ -29,6 +29,6 @@ public class MessageFactory {
         List<Integer> chatContacts = new ArrayList<>();
         chatContacts.add(contact.contactNumber);
 
-        return new CreateChatRequest(userNumber, chatContacts, contact.contactName);
+        return new CreateChatRequest(userNumber, chatContacts, contact.contactName, false);
     }
 }
