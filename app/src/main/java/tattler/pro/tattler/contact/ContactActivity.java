@@ -13,11 +13,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.common.ChatsManager;
+import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.IntentKey;
 import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.custom_ui.MaterialToast;
+import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Contact;
 import tattler.pro.tattler.tcp.TcpConnectionService;
 import tattler.pro.tattler.tcp.TcpServiceConnector;
@@ -42,7 +46,7 @@ public class ContactActivity extends MvpActivity<ContactView, ContactPresenter> 
     @BindView(R.id.userNumber)
     TextView userNumber;
 
-    @BindView(R.id.sendMessage)
+    @BindView(R.id.startChat)
     TextView userSendMessage;
 
     @BindView(R.id.muteContact)
@@ -64,8 +68,8 @@ public class ContactActivity extends MvpActivity<ContactView, ContactPresenter> 
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         getPresenter().onDestroy();
+        super.onDestroy();
     }
 
     @NonNull
@@ -73,7 +77,10 @@ public class ContactActivity extends MvpActivity<ContactView, ContactPresenter> 
     public ContactPresenter createPresenter() {
         return new ContactPresenter(
                 new TcpServiceManager(),
-                new TcpServiceConnectorFactory());
+                new TcpServiceConnectorFactory(),
+                OpenHelperManager.getHelper(this, DatabaseManager.class),
+                new ChatsManager(),
+                new MessageFactory(this));
     }
 
     @Override
@@ -97,10 +104,9 @@ public class ContactActivity extends MvpActivity<ContactView, ContactPresenter> 
         unbindService(serviceConnector);
     }
 
-    @OnClick(R.id.sendMessage)
+    @OnClick(R.id.startChat)
     public void startChat() {
-        // TODO: Implement
-        MaterialToast.makeText(this, "START_CHAT", Toast.LENGTH_LONG, MaterialToast.TYPE_INFO).show();
+        getPresenter().handleStartChat();
     }
 
     @OnClick(R.id.muteContact)

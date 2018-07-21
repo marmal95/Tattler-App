@@ -43,7 +43,7 @@
             android:background="@color/colorDivider"/>
 
         <TextView
-            android:id="@+id/sendMessage"
+            android:id="@+id/startChat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space16"

@@ -1,7 +1,12 @@
 package tattler.pro.tattler.contact;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.orhanobut.logger.Logger;
+import tattler.pro.tattler.common.ChatsManager;
+import tattler.pro.tattler.common.DatabaseManager;
+import tattler.pro.tattler.messages.CreateChatRequest;
+import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Contact;
 import tattler.pro.tattler.tcp.TcpServiceConnector;
 import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
@@ -10,15 +15,27 @@ import tattler.pro.tattler.tcp.TcpServiceManager;
 public class ContactPresenter extends MvpBasePresenter<ContactView> {
     private TcpServiceManager tcpServiceManager;
     private TcpServiceConnector tcpServiceConnector;
+    private ChatsManager chatsManager;
+    private MessageFactory messageFactory;
+
+    private Contact contact;
 
     ContactPresenter(TcpServiceManager tcpManager,
-                     TcpServiceConnectorFactory serviceConnectorFactory) {
+                     TcpServiceConnectorFactory serviceConnectorFactory,
+                     DatabaseManager databaseManager,
+                     ChatsManager chatsManager,
+                     MessageFactory messageFactory) {
         this.tcpServiceManager = tcpManager;
         this.tcpServiceConnector = serviceConnectorFactory.create(tcpServiceManager);
+        this.chatsManager = chatsManager;
+        this.chatsManager.setDatabaseManager(databaseManager);
+        this.messageFactory = messageFactory;
     }
 
     @SuppressWarnings("ConstantConditions")
     public void onCreate(Contact contact) {
+        this.contact = contact;
+
         if (isViewAttached()) {
             getView().loadContactData(contact);
         }
@@ -29,8 +46,20 @@ public class ContactPresenter extends MvpBasePresenter<ContactView> {
     }
 
     public void onDestroy() {
+        OpenHelperManager.releaseHelper();
         if (tcpServiceManager.isServiceBound()) {
             unbindTcpConnectionService();
+        }
+    }
+
+    public void handleStartChat() {
+        if (chatsManager.retrieveIndividualChat(contact).isPresent()) {
+            Logger.d("Retrieved existed individual chat for: " + contact.toString());
+            // TODO: Implement (open chat activity)
+        } else {
+            Logger.d("Individual chat does not exist for: " + contact.toString());
+            CreateChatRequest chatRequest = messageFactory.createCreateChatRequest(contact);
+            tcpServiceManager.getTcpService().sendMessage(chatRequest);
         }
     }
 

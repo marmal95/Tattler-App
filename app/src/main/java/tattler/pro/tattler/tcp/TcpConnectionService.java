@@ -10,8 +10,8 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.orhanobut.logger.Logger;
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
-import tattler.pro.tattler.messages.LoginRequestFactory;
 import tattler.pro.tattler.messages.Message;
+import tattler.pro.tattler.messages.MessageFactory;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 public class TcpConnectionService extends Service {
-    private static final String SERVER_IP = "192.168.43.70";
+    private static final String SERVER_IP = "10.2.14.101";
     private static final int SERVER_PORT = 50000;
     private static final int SLEEP_MS = 5000;
 
@@ -36,6 +36,7 @@ public class TcpConnectionService extends Service {
     private TcpServiceBinder tcpServiceBinder;
     private DatabaseManager databaseManager;
     private TcpMessageHandler tcpMessageHandler;
+    private MessageFactory messageFactory;
 
     public TcpConnectionService() {
         super();
@@ -56,6 +57,7 @@ public class TcpConnectionService extends Service {
         tcpServiceBinder = new TcpServiceBinder();
         databaseManager = OpenHelperManager.getHelper(this, DatabaseManager.class);
         tcpMessageHandler = new TcpMessageHandler(this, AppPreferences.getInstance(this), databaseManager);
+        messageFactory = new MessageFactory(this);
 
         new Thread(() -> {
             establishConnection();
@@ -121,7 +123,7 @@ public class TcpConnectionService extends Service {
         }
 
         logConnectionStatus();
-        sendMessage(new LoginRequestFactory().create(this));
+        sendMessage(messageFactory.createLoginRequest());
     }
 
     private void logConnectionStatus() {
@@ -169,6 +171,7 @@ public class TcpConnectionService extends Service {
 
         private void sendMessage(Message message) {
             try {
+                Logger.d("Sending message: " + message.toString());
                 outputStream.writeObject(message);
                 outputStream.flush();
             } catch (IOException | NullPointerException e) {
