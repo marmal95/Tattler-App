@@ -29,7 +29,7 @@ public class RegisterActivity extends MvpActivity<RegisterView, RegisterPresente
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_screen_slide);
+        setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
 
         PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
