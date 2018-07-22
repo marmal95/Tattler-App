@@ -13,12 +13,13 @@ import tattler.pro.tattler.models.Contact;
 import tattler.pro.tattler.models.ContactChat;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "tattler.db";
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 12;
 
     public DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -71,6 +72,19 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         Logger.d("Inserted " + chat.toString());
     }
 
+    public void insertChat(Chat chat, List<tattler.pro.tattler.messages.models.Contact> contacts) throws SQLException {
+        Dao<Chat, Integer> chats = getChatsDao();
+        chats.create(chat);
+        Logger.d("Inserted " + chat.toString());
+
+        List<Contact> contactsToAdd = new ArrayList<>(contacts.size());
+        contacts.forEach(contact -> contactsToAdd.add(new Contact(contact.contactName, contact.contactNumber)));
+
+        for (Contact contact : contactsToAdd) {
+            insertChatContact(chat, contact);
+        }
+    }
+
     public void insertChatContact(Chat chat, Contact contact) throws SQLException {
         Dao<ContactChat, Integer> contactChats = getContactChatsDao();
         ContactChat contactChat = new ContactChat(chat, contact);
@@ -80,7 +94,7 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
 
     public Optional<Chat> getIndividualChat(Contact contact) throws SQLException {
         QueryBuilder<ContactChat, Integer> contactChatQueryBuilder = getContactChatsDao().queryBuilder();
-        contactChatQueryBuilder.where().eq("contact_id", contact.contactId);
+        contactChatQueryBuilder.where().eq("contact_number", contact.contactNumber);
 
         QueryBuilder<Chat, Integer> chatQueryBuilder = getChatsDao().queryBuilder();
         chatQueryBuilder.where().eq("is_group", false);

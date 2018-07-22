@@ -12,7 +12,7 @@ public class ContactChat {
     @DatabaseField(foreign = true, columnName = "chat_id", uniqueCombo = true)
     public Chat chat;
 
-    @DatabaseField(foreign = true, columnName = "contact_id", uniqueCombo = true)
+    @DatabaseField(foreign = true, columnName = "contact_number", uniqueCombo = true)
     public Contact contact;
 
     public ContactChat() {
