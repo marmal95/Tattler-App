@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -18,11 +19,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.common.DatabaseManager;
-import tattler.pro.tattler.common.OnItemClickListener;
+import tattler.pro.tattler.common.OnItemViewClickListener;
+import tattler.pro.tattler.custom_ui.MaterialToast;
 import tattler.pro.tattler.main.MainActivity;
 
 public class InvitationsFragment extends MvpFragment<InvitationsView, InvitationsPresenter>
-        implements InvitationsView, OnItemClickListener {
+        implements InvitationsView, OnItemViewClickListener {
 
     @BindView(R.id.recyclerView)
     RecyclerView invitationsView;
@@ -66,7 +68,11 @@ public class InvitationsFragment extends MvpFragment<InvitationsView, Invitation
     }
 
     @Override
-    public void onItemClick(int position) {
-
+    public void onItemViewClick(int position, View view) {
+        if (view.getId() == R.id.acceptChat) {
+            MaterialToast.makeText(getContext(), "CLICK", Toast.LENGTH_LONG, MaterialToast.TYPE_SUCCESS).show();
+        } else {
+            MaterialToast.makeText(getContext(), "CLICK", Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show();
+        }
     }
 }

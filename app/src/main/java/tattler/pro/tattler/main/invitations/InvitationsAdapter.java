@@ -21,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import tattler.pro.tattler.R;
-import tattler.pro.tattler.common.OnItemClickListener;
+import tattler.pro.tattler.common.OnItemViewClickListener;
 import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Invitation;
@@ -29,11 +29,11 @@ import tattler.pro.tattler.models.Invitation;
 public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.ViewHolder> {
     private Context context;
     private List<Invitation> invitations;
-    private OnItemClickListener clickListener;
+    private OnItemViewClickListener clickListener;
 
     private int lastPosition;
 
-    InvitationsAdapter(Context context, List<Invitation> invitations, OnItemClickListener clickListener) {
+    InvitationsAdapter(Context context, List<Invitation> invitations, OnItemViewClickListener clickListener) {
         this.context = context;
         this.invitations = invitations;
         this.clickListener = clickListener;
@@ -139,6 +139,8 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            acceptChat.setOnClickListener(v -> clickListener.onItemViewClick(getAdapterPosition(), acceptChat));
+            rejectChat.setOnClickListener(v -> clickListener.onItemViewClick(getAdapterPosition(), rejectChat));
         }
     }
 }
