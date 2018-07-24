@@ -17,4 +17,10 @@ public class Util {
         }
         return String.valueOf(userName.toUpperCase().charAt(0));
     }
+
+    public static boolean isMessageSentByMe(Context context, int messageSenderUserNumber) {
+        AppPreferences appPreferences = AppPreferences.getInstance(context);
+        int myNumber = appPreferences.getInt(AppPreferences.Key.USER_NUMBER);
+        return myNumber == messageSenderUserNumber;
+    }
 }

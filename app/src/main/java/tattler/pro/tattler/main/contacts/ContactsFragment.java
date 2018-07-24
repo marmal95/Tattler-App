@@ -64,10 +64,10 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
         MainActivity activity = (MainActivity) getActivity();
         assert activity != null;
         return new ContactsPresenter(
-                new ContactsAdapter(getActivity(), new ArrayList<>(), this),
-                OpenHelperManager.getHelper(getActivity(), DatabaseManager.class),
+                new ContactsAdapter(activity, new ArrayList<>(), this),
+                OpenHelperManager.getHelper(activity, DatabaseManager.class),
                 activity.getPresenter(),
-                AppPreferences.getInstance(getActivity()));
+                AppPreferences.getInstance(activity));
     }
 
     @Override

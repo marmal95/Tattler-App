@@ -2,8 +2,10 @@ package tattler.pro.tattler.main;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.orhanobut.logger.Logger;
+
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.main.contacts.ContactsPresenter;
+import tattler.pro.tattler.main.invitations.InvitationsPresenter;
 import tattler.pro.tattler.messages.AddContactResponse;
 import tattler.pro.tattler.messages.LoginResponse;
 import tattler.pro.tattler.messages.Message;
@@ -21,6 +23,7 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
     private AppPreferences appPreferences;
 
     private ContactsPresenter contactsPresenter;
+    private InvitationsPresenter invitationsPresenter;
 
     MainPresenter(TcpServiceManager tcpManager,
                   TcpServiceConnectorFactory serviceConnectorFactory,
@@ -38,6 +41,10 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
 
     public void setContactsPresenter(ContactsPresenter contactsPresenter) {
         this.contactsPresenter = contactsPresenter;
+    }
+
+    public void setInvitationsPresenter(InvitationsPresenter invitationsPresenter) {
+        this.invitationsPresenter = invitationsPresenter;
     }
 
     public void onCreate() {

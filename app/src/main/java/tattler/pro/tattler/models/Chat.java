@@ -1,6 +1,8 @@
 package tattler.pro.tattler.models;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
@@ -12,8 +14,14 @@ public class Chat implements Serializable {
     @DatabaseField(columnName = "chat_id", unique = true, id = true)
     public int chatId;
 
+    @DatabaseField(columnName = "chat_name")
+    public String chatName;
+
     @DatabaseField(columnName = "is_group")
     public boolean isGroupChat;
+
+    @ForeignCollectionField
+    public ForeignCollection<Invitation> invitations;
 
     public Chat() {}
 
@@ -24,9 +32,9 @@ public class Chat implements Serializable {
 
     @Override
     public String toString() {
-        return "Chat{" +
-                "chatId=" + chatId +
+        return "Chat{" + "chatId=" + chatId +
+                ", chatName='" + chatName + '\'' +
                 ", isGroupChat=" + isGroupChat +
-                '}';
+                ", invitations=" + invitations + '}';
     }
 }

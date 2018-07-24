@@ -8,12 +8,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.hannesdorfmann.mosby.mvp.MvpFragment;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.common.DatabaseManager;
+import tattler.pro.tattler.common.OnItemClickListener;
+import tattler.pro.tattler.main.MainActivity;
 
-public class InvitationsFragment extends MvpFragment<InvitationsView, InvitationsPresenter> {
+public class InvitationsFragment extends MvpFragment<InvitationsView, InvitationsPresenter>
+        implements InvitationsView, OnItemClickListener {
 
     @BindView(R.id.recyclerView)
     RecyclerView invitationsView;
@@ -37,6 +46,27 @@ public class InvitationsFragment extends MvpFragment<InvitationsView, Invitation
     @NonNull
     @Override
     public InvitationsPresenter createPresenter() {
-        return new InvitationsPresenter();
+        MainActivity activity = (MainActivity) getActivity();
+        assert activity != null;
+        return new InvitationsPresenter(
+                new InvitationsAdapter(activity, new ArrayList<>(), this),
+                OpenHelperManager.getHelper(activity, DatabaseManager.class),
+                activity.getPresenter());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getPresenter().onDestroy();
+    }
+
+    @Override
+    public void setInvitationsAdapter(InvitationsAdapter adapter) {
+        invitationsView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+
     }
 }

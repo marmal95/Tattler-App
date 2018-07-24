@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/invitationsRecyclerItemSize"
+    android:background="?android:attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="@dimen/invitationsRecyclerItemAvatarSize"
+        android:layout_height="@dimen/invitationsRecyclerItemAvatarSize"
+        android:layout_marginEnd="@dimen/space16">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/chatAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/chatInitials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/chatAvatar"
+            android:layout_alignEnd="@+id/chatAvatar"
+            android:layout_alignStart="@+id/chatAvatar"
+            android:layout_alignTop="@+id/chatAvatar"
+            android:layout_margin="1dp"
+            android:gravity="center"
+            android:textColor="@color/colorPrimaryLightText" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/invitationGroupInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/iconsGroupLayout"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/chatName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space5"
+                android:textSize="@dimen/primaryRecyclerItemFontSize" />
+
+            <TextView
+                android:id="@+id/userNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/secondaryRecyclerItemFontSize" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/iconsGroupLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/acceptChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:padding="@dimen/space4"
+                android:src="@drawable/ic_check"
+                android:tint="@color/colorTextSuccess"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/rejectChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:padding="@dimen/space4"
+                android:src="@drawable/ic_close"
+                android:tint="@color/colorTextError"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/invitationDirectionIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/space4"
+                android:tint="@color/colorPrimary" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
