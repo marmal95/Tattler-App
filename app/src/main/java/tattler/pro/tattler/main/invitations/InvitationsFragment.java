@@ -70,9 +70,9 @@ public class InvitationsFragment extends MvpFragment<InvitationsView, Invitation
     @Override
     public void onItemViewClick(int position, View view) {
         if (view.getId() == R.id.acceptChat) {
-            MaterialToast.makeText(getContext(), "CLICK", Toast.LENGTH_LONG, MaterialToast.TYPE_SUCCESS).show();
+            MaterialToast.makeText(getContext(), "CLICK: " + position, Toast.LENGTH_LONG, MaterialToast.TYPE_SUCCESS).show();
         } else {
-            MaterialToast.makeText(getContext(), "CLICK", Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show();
+            MaterialToast.makeText(getContext(), "CLICK: " + position, Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show();
         }
     }
 }

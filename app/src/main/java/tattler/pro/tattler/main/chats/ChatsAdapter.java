@@ -1,4 +1,4 @@
-package tattler.pro.tattler.main.invitations;
+package tattler.pro.tattler.main.chats;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -19,21 +18,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import tattler.pro.tattler.R;
-import tattler.pro.tattler.common.OnItemViewClickListener;
+import tattler.pro.tattler.common.OnItemClickListener;
 import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.models.Chat;
-import tattler.pro.tattler.models.Invitation;
 
-public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.ViewHolder> {
+public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> {
     private Context context;
-    private List<Invitation> invitations;
-    private OnItemViewClickListener clickListener;
+    private List<Chat> chats;
+    private OnItemClickListener clickListener;
 
     private int lastPosition;
 
-    InvitationsAdapter(Context context, List<Invitation> invitations, OnItemViewClickListener clickListener) {
+    ChatsAdapter(Context context, List<Chat> chats, OnItemClickListener clickListener) {
         this.context = context;
-        this.invitations = invitations;
+        this.chats = chats;
         this.clickListener = clickListener;
         this.lastPosition = -1;
     }
@@ -41,36 +39,26 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.recycler_view_invitation_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.recycler_view_chat_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Invitation invitation = getInvitation(position);
-        Chat chat = invitation.chat;
+        Chat chat = getChat(position);
         ColorDrawable chatNameColorDrawable = new ColorDrawable(Color.parseColor(Util.pickHexColor(context, chat.chatName)));
 
         holder.chatAvatar.setImageDrawable(chatNameColorDrawable);
         holder.chatInitials.setText(Util.extractUserInitials(chat.chatName));
         holder.chatName.setText(chat.chatName);
-
-        if (Util.isMessageSentByMe(context, invitation.senderId)) {
-            holder.contactNumber.setText(String.valueOf(invitation.receiverId));
-            holder.invitationDirectionIcon.setBackgroundResource(R.drawable.ic_call_made);
-        } else {
-            holder.contactNumber.setText(String.valueOf(invitation.senderId));
-            holder.invitationDirectionIcon.setImageResource(R.drawable.ic_call_received);
-            holder.acceptChat.setVisibility(View.VISIBLE);
-            holder.rejectChat.setVisibility(View.VISIBLE);
-        }
+        holder.chatLastMessage.setText("TODO: Update last message"); // TODO
 
         setAnimation(holder.itemView, position);
     }
 
     @Override
     public int getItemCount() {
-        return invitations.size();
+        return chats.size();
     }
 
     @Override
@@ -79,28 +67,28 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
         holder.itemView.clearAnimation();
     }
 
-    public void addInvitation(Invitation invitation) {
-        invitations.add(invitation);
+    public void addChat(Chat chat) {
+        chats.add(chat);
         notifyDataSetChanged();
     }
 
-    public void addInvitations(List<Invitation> invitations) {
-        this.invitations.addAll(invitations);
+    public void addChats(List<Chat> chats) {
+        this.chats.addAll(chats);
         notifyDataSetChanged();
     }
 
-    public void clearInvitations() {
-        invitations.clear();
+    public void clearChats() {
+        chats.clear();
         notifyDataSetChanged();
     }
 
-    public void removeInvitation(int position) {
-        invitations.remove(position);
+    public void removeChat(int position) {
+        chats.remove(position);
         notifyItemRemoved(position);
     }
 
-    public Invitation getInvitation(int position) {
-        return invitations.get(position);
+    public Chat getChat(int position) {
+        return chats.get(position);
     }
 
     private void setAnimation(View viewToAnimate, int position) {
@@ -121,23 +109,13 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
         @BindView(R.id.chatName)
         TextView chatName;
 
-        @BindView(R.id.userNumber)
-        TextView contactNumber;
-
-        @BindView(R.id.acceptChat)
-        ImageView acceptChat;
-
-        @BindView(R.id.rejectChat)
-        ImageView rejectChat;
-
-        @BindView(R.id.invitationDirectionIcon)
-        ImageView invitationDirectionIcon;
+        @BindView(R.id.chatLastMessage)
+        TextView chatLastMessage;
 
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            acceptChat.setOnClickListener(v -> clickListener.onItemViewClick(getAdapterPosition(), acceptChat));
-            rejectChat.setOnClickListener(v -> clickListener.onItemViewClick(getAdapterPosition(), rejectChat));
+            itemView.setOnClickListener(v -> clickListener.onItemClick(getAdapterPosition()));
         }
     }
 }
