@@ -22,7 +22,7 @@ import tattler.pro.tattler.models.Invitation;
 
 public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "tattler.db";
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 19;
 
     public DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

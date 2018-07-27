@@ -6,12 +6,9 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.orhanobut.logger.Logger;
-import tattler.pro.tattler.common.AppPreferences;
-import tattler.pro.tattler.common.DatabaseManager;
-import tattler.pro.tattler.messages.Message;
-import tattler.pro.tattler.messages.MessageFactory;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,6 +16,11 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import tattler.pro.tattler.common.AppPreferences;
+import tattler.pro.tattler.common.DatabaseManager;
+import tattler.pro.tattler.messages.Message;
+import tattler.pro.tattler.messages.MessageFactory;
 
 
 public class TcpConnectionService extends Service {
@@ -35,8 +37,8 @@ public class TcpConnectionService extends Service {
 
     private TcpServiceBinder tcpServiceBinder;
     private DatabaseManager databaseManager;
-    private TcpMessageHandler tcpMessageHandler;
     private MessageFactory messageFactory;
+    private TcpMessageHandler tcpMessageHandler;
 
     public TcpConnectionService() {
         super();
@@ -56,8 +58,8 @@ public class TcpConnectionService extends Service {
 
         tcpServiceBinder = new TcpServiceBinder();
         databaseManager = OpenHelperManager.getHelper(this, DatabaseManager.class);
-        tcpMessageHandler = new TcpMessageHandler(this, AppPreferences.getInstance(this), databaseManager);
         messageFactory = new MessageFactory(this);
+        tcpMessageHandler = new TcpMessageHandler(this, AppPreferences.getInstance(this), databaseManager, messageFactory);
 
         new Thread(() -> {
             establishConnection();

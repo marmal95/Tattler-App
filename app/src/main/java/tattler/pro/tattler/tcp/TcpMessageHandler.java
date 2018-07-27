@@ -10,22 +10,29 @@ import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.IntentKey;
 import tattler.pro.tattler.common.ReceivedMessageCallback;
+import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.messages.AddContactResponse;
+import tattler.pro.tattler.messages.ChatInvitation;
 import tattler.pro.tattler.messages.CreateChatResponse;
 import tattler.pro.tattler.messages.LoginResponse;
 import tattler.pro.tattler.messages.Message;
+import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Contact;
+import tattler.pro.tattler.models.Invitation;
 
 public class TcpMessageHandler implements ReceivedMessageCallback {
     private TcpConnectionService tcpConnectionService;
     private AppPreferences appPreferences;
     private DatabaseManager databaseManager;
+    private MessageFactory messageFactory;
 
-    TcpMessageHandler(TcpConnectionService tcpConnectionService, AppPreferences appPreferences, DatabaseManager databaseManager) {
+    TcpMessageHandler(TcpConnectionService tcpConnectionService, AppPreferences appPreferences,
+            DatabaseManager databaseManager, MessageFactory messageFactory) {
         this.tcpConnectionService = tcpConnectionService;
         this.appPreferences = appPreferences;
         this.databaseManager = databaseManager;
+        this.messageFactory = messageFactory;
     }
 
     @Override
@@ -78,11 +85,22 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
                     message.status == CreateChatResponse.Status.CHAT_ALREADY_EXISTS) {
                 Chat chat = new Chat(message.chatId, message.isGroupChat, message.chatName);
                 databaseManager.insertChat(chat, message.contacts);
+
+                // TODO: Handle properly chat invitation when chat exist and is reinitialized
+                Invitation invitation = new Invitation(chat, Util.getMyUserNumber(tcpConnectionService));
+                databaseManager.insertInvitation(invitation);
+
+                sendChatInvitation(message);
             }
             broadcastMessage(message);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void sendChatInvitation(CreateChatResponse message) {
+        ChatInvitation chatInvitation = messageFactory.createChatInvitation(message);
+        tcpConnectionService.sendMessage(chatInvitation);
     }
 
     private void broadcastMessage(Message message) {

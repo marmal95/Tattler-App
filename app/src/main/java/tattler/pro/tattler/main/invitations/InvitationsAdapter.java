@@ -56,7 +56,6 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
         holder.chatName.setText(chat.chatName);
 
         if (Util.isMessageSentByMe(context, invitation.senderId)) {
-            holder.contactNumber.setText(String.valueOf(invitation.receiverId));
             holder.invitationDirectionIcon.setBackgroundResource(R.drawable.ic_call_made);
         } else {
             holder.contactNumber.setText(String.valueOf(invitation.senderId));

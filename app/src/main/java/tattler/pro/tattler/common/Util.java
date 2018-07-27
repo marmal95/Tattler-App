@@ -23,4 +23,9 @@ public class Util {
         int myNumber = appPreferences.getInt(AppPreferences.Key.USER_NUMBER);
         return myNumber == messageSenderUserNumber;
     }
+
+    public static int getMyUserNumber(Context context) {
+        AppPreferences appPreferences = AppPreferences.getInstance(context);
+        return appPreferences.getInt(AppPreferences.Key.USER_NUMBER);
+    }
 }

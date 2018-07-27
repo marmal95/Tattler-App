@@ -1,11 +1,12 @@
 package tattler.pro.tattler.messages;
 
 import android.content.Context;
-import tattler.pro.tattler.common.AppPreferences;
-import tattler.pro.tattler.models.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import tattler.pro.tattler.common.AppPreferences;
+import tattler.pro.tattler.models.Contact;
 
 public class MessageFactory {
     private Context context;
@@ -30,5 +31,23 @@ public class MessageFactory {
         chatContacts.add(contact.contactNumber);
 
         return new CreateChatRequest(userNumber, chatContacts, contact.contactName, false);
+    }
+
+    public ChatInvitation createChatInvitation(CreateChatResponse chatResponse) {
+        AppPreferences appPreferences = AppPreferences.getInstance(context);
+        int userNumber = appPreferences.getInt(AppPreferences.Key.USER_NUMBER);
+        String userName = appPreferences.getString(AppPreferences.Key.USER_NAME);
+
+        ChatInvitation chatInvitation = new ChatInvitation(
+                userNumber,
+                chatResponse.chatId,
+                chatResponse.chatId,
+                chatResponse.isGroupChat,
+                chatResponse.chatName);
+
+        chatInvitation.chatContacts.addAll(chatResponse.contacts);
+        chatInvitation.chatContacts.add(new tattler.pro.tattler.messages.models.Contact(userNumber, userName));
+
+        return chatInvitation;
     }
 }

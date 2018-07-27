@@ -18,11 +18,11 @@ public class Invitation implements Serializable {
     @DatabaseField(columnName = "sender_id")
     public int senderId;
 
-    @DatabaseField(columnName = "receiver_id")
-    public int receiverId;
+    public Invitation() {}
 
-    public Invitation() {
-
+    public Invitation(Chat chat, int senderId) {
+        this.chat = chat;
+        this.senderId = senderId;
     }
 
     @Override
@@ -31,7 +31,6 @@ public class Invitation implements Serializable {
                 "invitationId=" + invitationId +
                 ", chat=" + chat +
                 ", senderId=" + senderId +
-                ", receiverId=" + receiverId +
                 '}';
     }
 }
