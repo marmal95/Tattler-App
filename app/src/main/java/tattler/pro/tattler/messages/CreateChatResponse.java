@@ -1,13 +1,14 @@
 package tattler.pro.tattler.messages;
 
-import tattler.pro.tattler.messages.models.Contact;
-
 import java.util.List;
+
+import tattler.pro.tattler.messages.models.Contact;
 
 public class CreateChatResponse extends MessageResponse {
     private static final long serialVersionUID = 7689710211630600805L;
     public int chatId;
     public boolean isGroupChat;
+    public String chatName;
     public List<Contact> contacts;
 
     public CreateChatResponse(int status, long acknowledgedMessageId, int receiverId) {
@@ -20,6 +21,7 @@ public class CreateChatResponse extends MessageResponse {
         return "CreateChatResponse{" +
                 "chatId=" + chatId +
                 ", isGroupChat=" + isGroupChat +
+                ", chatName='" + chatName + '\'' +
                 ", contacts=" + contacts +
                 ", acknowledgedMessageId=" + acknowledgedMessageId +
                 ", status=" + status +

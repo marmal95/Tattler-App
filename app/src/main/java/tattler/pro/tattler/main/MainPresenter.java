@@ -8,6 +8,7 @@ import tattler.pro.tattler.main.chats.ChatsPresenter;
 import tattler.pro.tattler.main.contacts.ContactsPresenter;
 import tattler.pro.tattler.main.invitations.InvitationsPresenter;
 import tattler.pro.tattler.messages.AddContactResponse;
+import tattler.pro.tattler.messages.CreateChatResponse;
 import tattler.pro.tattler.messages.LoginResponse;
 import tattler.pro.tattler.messages.Message;
 import tattler.pro.tattler.tcp.MessageBroadcastReceiver;
@@ -96,11 +97,21 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
     }
 
     public void handleLoginResponse(LoginResponse loginResponse) {
-        contactsPresenter.handleLoginResponse(loginResponse);
+        if (contactsPresenter != null) {
+            contactsPresenter.handleLoginResponse(loginResponse);
+        }
     }
 
     public void handleAddContactResponse(AddContactResponse message) {
-        contactsPresenter.handleAddContactResponse(message);
+        if (contactsPresenter != null) {
+            contactsPresenter.handleAddContactResponse(message);
+        }
+    }
+
+    public void handleCreateChatResponse(CreateChatResponse message) {
+        if (chatsPresenter != null) {
+            chatsPresenter.handleCreateChatResponse(message);
+        }
     }
 
     @SuppressWarnings("ConstantConditions")

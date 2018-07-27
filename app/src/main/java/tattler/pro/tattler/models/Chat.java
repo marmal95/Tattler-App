@@ -25,9 +25,10 @@ public class Chat implements Serializable {
 
     public Chat() {}
 
-    public Chat(int chatId, boolean isGroupChat) {
+    public Chat(int chatId, boolean isGroupChat, String chatName) {
         this.chatId = chatId;
         this.isGroupChat = isGroupChat;
+        this.chatName = chatName;
     }
 
     @Override

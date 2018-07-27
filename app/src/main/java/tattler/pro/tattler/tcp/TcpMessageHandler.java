@@ -1,7 +1,11 @@
 package tattler.pro.tattler.tcp;
 
 import android.content.Intent;
+
 import com.orhanobut.logger.Logger;
+
+import java.sql.SQLException;
+
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.IntentKey;
@@ -12,8 +16,6 @@ import tattler.pro.tattler.messages.LoginResponse;
 import tattler.pro.tattler.messages.Message;
 import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Contact;
-
-import java.sql.SQLException;
 
 public class TcpMessageHandler implements ReceivedMessageCallback {
     private TcpConnectionService tcpConnectionService;
@@ -39,6 +41,8 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
             case Message.Type.CREATE_CHAT_RESPONSE:
                 handleReceivedCreateChatResponse((CreateChatResponse) message);
                 break;
+            default:
+                Logger.d("Message not handled: " + message.toString());
         }
     }
 
@@ -72,10 +76,10 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
         try {
             if (message.status == CreateChatResponse.Status.CHAT_CREATED ||
                     message.status == CreateChatResponse.Status.CHAT_ALREADY_EXISTS) {
-                Chat chat = new Chat(message.chatId, message.isGroupChat);
+                Chat chat = new Chat(message.chatId, message.isGroupChat, message.chatName);
                 databaseManager.insertChat(chat, message.contacts);
             }
-            broadcastMessage(message); // TODO: Handle in activity
+            broadcastMessage(message);
         } catch (SQLException e) {
             e.printStackTrace();
         }

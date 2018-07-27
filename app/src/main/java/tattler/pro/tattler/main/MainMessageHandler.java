@@ -1,7 +1,10 @@
 package tattler.pro.tattler.main;
 
+import com.orhanobut.logger.Logger;
+
 import tattler.pro.tattler.common.ReceivedMessageCallback;
 import tattler.pro.tattler.messages.AddContactResponse;
+import tattler.pro.tattler.messages.CreateChatResponse;
 import tattler.pro.tattler.messages.LoginResponse;
 import tattler.pro.tattler.messages.Message;
 
@@ -10,12 +13,16 @@ public class MainMessageHandler implements ReceivedMessageCallback {
 
     @Override
     public void onMessageReceived(Message message) {
+        Logger.d("Handling Message: " + message.toString());
         switch (message.messageType) {
             case Message.Type.LOGIN_RESPONSE:
                 handleLoginResponse((LoginResponse) message);
                 break;
             case Message.Type.ADD_CONTACT_RESPONSE:
                 handleAddContactResponse((AddContactResponse) message);
+                break;
+            case Message.Type.CREATE_CHAT_RESPONSE:
+                handleCreateChatResponse((CreateChatResponse) message);
                 break;
         }
     }
@@ -42,6 +49,15 @@ public class MainMessageHandler implements ReceivedMessageCallback {
                 break;
             case AddContactResponse.Status.CONTACT_NOT_EXIST:
                 // TODO: Notify user
+                break;
+        }
+    }
+
+    private void handleCreateChatResponse(CreateChatResponse message) {
+        switch (message.status) {
+            case CreateChatResponse.Status.CHAT_CREATED:
+            case CreateChatResponse.Status.CHAT_ALREADY_EXISTS:
+                presenter.handleCreateChatResponse(message);
                 break;
         }
     }
