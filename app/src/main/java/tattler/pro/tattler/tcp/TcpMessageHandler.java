@@ -83,6 +83,7 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
             if (message.status == CreateChatResponse.Status.CHAT_CREATED ||
                     message.status == CreateChatResponse.Status.CHAT_ALREADY_EXISTS) {
                 Chat chat = new Chat(message.chatId, message.isGroupChat, message.chatName);
+                chat.chatName = chat.chatName == null ? Util.generateChatName(message.contacts) : chat.chatName;
                 databaseManager.insertChat(chat, message.contacts);
 
                 // TODO: Handle properly chat invitation when chat exist and is reinitialized

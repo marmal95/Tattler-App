@@ -30,7 +30,7 @@ public class MessageFactory {
         List<Integer> chatContacts = new ArrayList<>();
         chatContacts.add(contact.contactNumber);
 
-        return new CreateChatRequest(userNumber, chatContacts, contact.contactName, false);
+        return new CreateChatRequest(userNumber, chatContacts, null, false);
     }
 
     public ChatInvitation createChatInvitation(CreateChatResponse chatResponse) {
