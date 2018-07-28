@@ -4,7 +4,6 @@ import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import tattler.pro.tattler.common.AppPreferences;
@@ -13,7 +12,6 @@ import tattler.pro.tattler.main.MainPresenter;
 import tattler.pro.tattler.messages.AddContactRequest;
 import tattler.pro.tattler.messages.AddContactResponse;
 import tattler.pro.tattler.messages.LoginResponse;
-import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Contact;
 
 public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
@@ -28,29 +26,6 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
         this.mainPresenter = mainPresenter;
         this.appPreferences = appPreferences;
         this.mainPresenter.setContactsPresenter(this);
-
-
-        try {
-            Contact contact1 = new Contact("Andrzej", 111);
-            Contact contact2 = new Contact("Stefan", 222);
-            databaseManager.insertContact(contact1);
-            databaseManager.insertContact(contact2);
-
-            Chat chat1 = new Chat(1, false, "U Andrzeja");
-            Chat chat2 = new Chat(2, true, "Grupowy Stefana");
-
-            List<tattler.pro.tattler.messages.models.Contact> contacts1 = new ArrayList<>();
-            contacts1.add(new tattler.pro.tattler.messages.models.Contact(contact1.contactNumber, contact1.contactName));
-            databaseManager.insertChat(chat1, contacts1);
-
-            List<tattler.pro.tattler.messages.models.Contact> contacts2 = new ArrayList<>();
-            contacts2.add(new tattler.pro.tattler.messages.models.Contact(contact1.contactNumber, contact1.contactName));
-            contacts2.add(new tattler.pro.tattler.messages.models.Contact(contact2.contactNumber, contact2.contactName));
-            databaseManager.insertChat(chat2, contacts2);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
