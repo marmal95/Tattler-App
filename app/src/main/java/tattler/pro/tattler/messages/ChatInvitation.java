@@ -12,14 +12,13 @@ public class ChatInvitation extends Message {
     public String chatName;
     public List<Contact> chatContacts;
 
-    public ChatInvitation(int senderId, int receiverId, int chatId, boolean isGroupChat, String chatName) {
+    public ChatInvitation(int senderId, int chatId, boolean isGroupChat, String chatName) {
         super(Type.CHAT_INVITATION);
         this.senderId = senderId;
         this.chatId = chatId;
         this.isGroupChat = isGroupChat;
         this.chatName = chatName;
         this.chatContacts = new ArrayList<>();
-        this.receiverId = receiverId;
     }
 
     @Override

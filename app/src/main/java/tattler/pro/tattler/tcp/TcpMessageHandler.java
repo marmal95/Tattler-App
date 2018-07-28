@@ -49,7 +49,7 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
                 handleReceivedCreateChatResponse((CreateChatResponse) message);
                 break;
             default:
-                Logger.d("Message not handled: " + message.toString());
+                Logger.e("Message not handled: " + message.toString());
         }
     }
 
@@ -62,7 +62,6 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
                 Logger.d("Received contacts from Server, size: " + message.contacts.size());
                 databaseManager.updateContacts(message.contacts);
             }
-
             broadcastMessage(message);
         }
     }

@@ -23,6 +23,9 @@ public class Chat implements Serializable {
     @ForeignCollectionField
     public ForeignCollection<Invitation> invitations;
 
+    @ForeignCollectionField
+    public ForeignCollection<Participant> participants;
+
     public Chat() {}
 
     public Chat(int chatId, boolean isGroupChat, String chatName) {
@@ -33,9 +36,12 @@ public class Chat implements Serializable {
 
     @Override
     public String toString() {
-        return "Chat{" + "chatId=" + chatId +
+        return "Chat{" +
+                "chatId=" + chatId +
                 ", chatName='" + chatName + '\'' +
                 ", isGroupChat=" + isGroupChat +
-                ", invitations=" + invitations + '}';
+                ", invitations=" + invitations +
+                ", participants=" + participants +
+                '}';
     }
 }

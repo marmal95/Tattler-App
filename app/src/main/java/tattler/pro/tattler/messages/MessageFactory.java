@@ -41,7 +41,6 @@ public class MessageFactory {
         ChatInvitation chatInvitation = new ChatInvitation(
                 userNumber,
                 chatResponse.chatId,
-                chatResponse.chatId,
                 chatResponse.isGroupChat,
                 chatResponse.chatName);
 
