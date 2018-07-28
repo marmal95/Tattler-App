@@ -35,7 +35,8 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
     }
 
     public void handleCreateChatResponse(CreateChatResponse message) {
-        Chat chat = new Chat(message.chatId, message.isGroupChat, message.chatName);
+        // TODO: Extract from DB ? (should be already inserted
+        Chat chat = new Chat(message.chatId, message.isGroupChat, message.chatName, false);
         chatsAdapter.addChat(chat);
     }
 

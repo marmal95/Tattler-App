@@ -34,6 +34,6 @@ public class Util {
     }
 
     public static String generateChatName(List<Contact> contacts) {
-        return contacts.stream().map(contact -> contact.contactName).collect(Collectors.joining());
+        return contacts.stream().map(contact -> contact.contactName).collect(Collectors.joining(" - "));
     }
 }

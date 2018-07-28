@@ -48,6 +48,9 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
             case Message.Type.CREATE_CHAT_RESPONSE:
                 handleReceivedCreateChatResponse((CreateChatResponse) message);
                 break;
+            case Message.Type.CHAT_INVITATION:
+                handleChatInvitation((ChatInvitation) message);
+                break;
             default:
                 Logger.e("Message not handled: " + message.toString());
         }
@@ -82,7 +85,7 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
         try {
             if (message.status == CreateChatResponse.Status.CHAT_CREATED ||
                     message.status == CreateChatResponse.Status.CHAT_ALREADY_EXISTS) {
-                Chat chat = new Chat(message.chatId, message.isGroupChat, message.chatName);
+                Chat chat = new Chat(message.chatId, message.isGroupChat, message.chatName, false);
                 chat.chatName = chat.chatName == null ? Util.generateChatName(message.contacts) : chat.chatName;
                 databaseManager.insertChat(chat, message.contacts);
 
@@ -97,6 +100,20 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
             e.printStackTrace();
         }
     }
+
+    private void handleChatInvitation(ChatInvitation message) {
+        try {
+            Chat chat = new Chat(message.chatId, message.isGroupChat, message.chatName, false);
+            chat.chatName = chat.chatName == null ? Util.generateChatName(message.chatContacts) : chat.chatName;
+            databaseManager.insertChat(chat, message.chatContacts);
+
+            Invitation invitation = new Invitation(chat, message.senderId);
+            databaseManager.insertInvitation(invitation);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void sendChatInvitation(CreateChatResponse message) {
         ChatInvitation chatInvitation = messageFactory.createChatInvitation(message);

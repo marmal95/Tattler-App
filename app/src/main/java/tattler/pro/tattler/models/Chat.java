@@ -20,6 +20,9 @@ public class Chat implements Serializable {
     @DatabaseField(columnName = "is_group")
     public boolean isGroupChat;
 
+    @DatabaseField(columnName = "is_initialized")
+    public boolean isInitialized;
+
     @ForeignCollectionField
     public ForeignCollection<Invitation> invitations;
 
@@ -28,10 +31,11 @@ public class Chat implements Serializable {
 
     public Chat() {}
 
-    public Chat(int chatId, boolean isGroupChat, String chatName) {
+    public Chat(int chatId, boolean isGroupChat, String chatName, boolean isInitialized) {
         this.chatId = chatId;
         this.isGroupChat = isGroupChat;
         this.chatName = chatName;
+        this.isInitialized = isInitialized;
     }
 
     @Override
@@ -40,8 +44,10 @@ public class Chat implements Serializable {
                 "chatId=" + chatId +
                 ", chatName='" + chatName + '\'' +
                 ", isGroupChat=" + isGroupChat +
+                ", isInitialized=" + isInitialized +
                 ", invitations=" + invitations +
                 ", participants=" + participants +
                 '}';
     }
+
 }
