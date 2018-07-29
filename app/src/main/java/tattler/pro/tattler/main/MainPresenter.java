@@ -97,6 +97,7 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
     }
 
     public void handleLoginResponse(LoginResponse loginResponse) {
+        displayUserData();
         if (contactsPresenter != null) {
             contactsPresenter.handleLoginResponse(loginResponse);
         }
