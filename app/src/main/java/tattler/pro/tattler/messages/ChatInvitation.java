@@ -10,7 +10,7 @@ public class ChatInvitation extends Message {
     public int chatId;
     public boolean isGroupChat;
     public String chatName;
-    public List<Contact> chatContacts;
+    public List<Contact> chatContacts; // TODO: Is it needed here? Server knows it
 
     public ChatInvitation(int senderId, int chatId, boolean isGroupChat, String chatName) {
         super(Type.CHAT_INVITATION);

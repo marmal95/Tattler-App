@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class Invitation implements Serializable {
     private static final long serialVersionUID = -8968639584253595654L;
 
-    @DatabaseField(id = true, columnName = "invitation_id", unique = true)
+    @DatabaseField(generatedId = true, columnName = "invitation_id", unique = true)
     public int invitationId;
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "chat")
