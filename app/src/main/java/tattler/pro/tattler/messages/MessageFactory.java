@@ -58,10 +58,17 @@ public class MessageFactory {
     }
 
     public ChatInvitationResponse createChatInvitationResponse(Invitation invitation, int status, byte[] publicKey) {
+        AppPreferences appPreferences = AppPreferences.getInstance(context);
+        int userPhoneId = appPreferences.getInt(AppPreferences.Key.USER_NUMBER);
+
         ChatInvitationResponse invitationResponse = new ChatInvitationResponse(
+                userPhoneId,
+                invitation.senderId,
                 invitation.invitationMessageId,
                 status);
+
         invitationResponse.publicKey = publicKey;
+        invitationResponse.chatId = invitation.chat.chatId;
         return invitationResponse;
     }
 }
