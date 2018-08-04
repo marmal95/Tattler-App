@@ -48,22 +48,8 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Invitation invitation = getInvitation(position);
-        Chat chat = invitation.chat;
-        ColorDrawable chatNameColorDrawable = new ColorDrawable(Color.parseColor(Util.pickHexColor(context, chat.chatName)));
-
-        holder.chatAvatar.setImageDrawable(chatNameColorDrawable);
-        holder.chatInitials.setText(Util.extractUserInitials(chat.chatName));
-        holder.chatName.setText(chat.chatName);
-
-        if (Util.isMessageSentByMe(context, invitation.senderId)) {
-            holder.invitationDirectionIcon.setBackgroundResource(R.drawable.ic_call_made);
-        } else {
-            holder.contactNumber.setText(String.valueOf(invitation.senderId));
-            holder.invitationDirectionIcon.setImageResource(R.drawable.ic_call_received);
-            holder.acceptChat.setVisibility(View.VISIBLE);
-            holder.rejectChat.setVisibility(View.VISIBLE);
-        }
-
+        displayInvitationData(holder, invitation);
+        displayInvitationBasedOnState(holder, invitation);
         setAnimation(holder.itemView, position);
     }
 
@@ -102,6 +88,39 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
         return invitations.get(position);
     }
 
+    private void displayInvitationData(@NonNull ViewHolder holder, Invitation invitation) {
+        Chat chat = invitation.chat;
+        ColorDrawable chatNameColorDrawable = new ColorDrawable(Color.parseColor(Util.pickHexColor(context, chat.chatName)));
+        holder.chatAvatar.setImageDrawable(chatNameColorDrawable);
+        holder.chatInitials.setText(Util.extractUserInitials(chat.chatName));
+        holder.chatName.setText(chat.chatName);
+    }
+
+    private void displayInvitationBasedOnState(@NonNull ViewHolder holder, Invitation invitation) {
+        displayInvitationDirection(holder, invitation);
+        displayIconsBasedOnInvitationState(holder, invitation);
+    }
+
+    private void displayInvitationDirection(@NonNull ViewHolder holder, Invitation invitation) {
+        if (Util.isMessageSentByMe(context, invitation.senderId)) {
+            holder.invitationDirectionIcon.setBackgroundResource(R.drawable.ic_call_made);
+        } else {
+            holder.contactNumber.setText(String.valueOf(invitation.senderId));
+            holder.invitationDirectionIcon.setImageResource(R.drawable.ic_call_received);
+        }
+    }
+
+    private void displayIconsBasedOnInvitationState(@NonNull ViewHolder holder, Invitation invitation) {
+        switch (invitation.state) {
+            case PENDING_FOR_REACTION:
+                holder.changeStateToPendingReaction();
+                break;
+            case PENDING_FOR_RESPONSE:
+                holder.changeStateToPendingResponse();
+                break;
+        }
+    }
+
     private void setAnimation(View viewToAnimate, int position) {
         if (position > lastPosition) {
             Animation animation = AnimationUtils.loadAnimation(context, R.anim.item_animation_from_right);
@@ -132,11 +151,26 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
         @BindView(R.id.invitationDirectionIcon)
         ImageView invitationDirectionIcon;
 
+        @BindView(R.id.invitationPendingIcon)
+        ImageView invitationPendingIcon;
+
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             acceptChat.setOnClickListener(v -> clickListener.onItemViewClick(getAdapterPosition(), acceptChat));
             rejectChat.setOnClickListener(v -> clickListener.onItemViewClick(getAdapterPosition(), rejectChat));
+        }
+
+        public void changeStateToPendingReaction() {
+            acceptChat.setVisibility(View.VISIBLE);
+            rejectChat.setVisibility(View.VISIBLE);
+            invitationPendingIcon.setVisibility(View.GONE);
+        }
+
+        public void changeStateToPendingResponse() {
+            acceptChat.setVisibility(View.GONE);
+            rejectChat.setVisibility(View.GONE);
+            invitationPendingIcon.setVisibility(View.VISIBLE);
         }
     }
 }

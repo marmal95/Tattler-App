@@ -22,7 +22,7 @@ public class SplashActivity extends MvpActivity<SplashView, SplashPresenter> imp
         // TODO: Only for tests
         AppPreferences appPreferences = AppPreferences.getInstance(this);
         appPreferences.put(AppPreferences.Key.USER_PHONE_NUMBER, "222");
-        appPreferences.put(AppPreferences.Key.USER_NAME, "EMU");
+        appPreferences.put(AppPreferences.Key.USER_NAME, "_EMU_");
     }
 
     @NonNull

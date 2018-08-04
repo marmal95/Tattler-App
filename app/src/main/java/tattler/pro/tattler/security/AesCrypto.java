@@ -18,7 +18,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class AesCrypto {
-    private static final int KEY_LENGTH = 256;
+    private static final int KEY_LENGTH = 128;
     private static final int IV_LENGTH = 16;
     private byte[] key;
 

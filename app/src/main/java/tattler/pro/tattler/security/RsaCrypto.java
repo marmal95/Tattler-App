@@ -23,11 +23,11 @@ public class RsaCrypto {
     private KeyPair keyPair;
     private Cipher cipher;
 
-    public RsaCrypto(KeyPair rsaKeyPair) throws GeneralSecurityException {
-        this(rsaKeyPair.getPublic().getEncoded(), rsaKeyPair.getPrivate().getEncoded());
+    public void init(KeyPair rsaKeyPair) throws GeneralSecurityException {
+        init(rsaKeyPair.getPublic().getEncoded(), rsaKeyPair.getPrivate().getEncoded());
     }
 
-    public RsaCrypto(byte[] publicKey, byte[] privateKey) throws GeneralSecurityException {
+    public void init(byte[] publicKey, byte[] privateKey) throws GeneralSecurityException {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 
         X509EncodedKeySpec encodedKeySpecPublic = new X509EncodedKeySpec(publicKey);
@@ -40,7 +40,7 @@ public class RsaCrypto {
         cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
     }
 
-    public static KeyPair generateRsaKeyPair() {
+    public KeyPair generateRsaKeyPair() {
         KeyPair keyPair = null;
         try {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");

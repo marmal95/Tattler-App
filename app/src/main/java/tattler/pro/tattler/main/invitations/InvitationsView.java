@@ -4,4 +4,5 @@ import com.hannesdorfmann.mosby.mvp.MvpView;
 
 interface InvitationsView extends MvpView {
     void setInvitationsAdapter(InvitationsAdapter adapter);
+    void changeInvitationToPending(int position);
 }

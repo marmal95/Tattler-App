@@ -42,7 +42,7 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
 
     private void initChats() {
         try {
-            List<Chat> chats = databaseManager.selectChats();
+            List<Chat> chats = databaseManager.selectInitializedChats();
             chatsAdapter.clearChats();
             chatsAdapter.addChats(chats);
         } catch (SQLException e) {

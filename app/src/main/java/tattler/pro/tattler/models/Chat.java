@@ -1,6 +1,7 @@
 package tattler.pro.tattler.models;
 
 import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -22,6 +23,12 @@ public class Chat implements Serializable {
 
     @DatabaseField(columnName = "is_initialized")
     public boolean isInitialized;
+
+    @DatabaseField(dataType = DataType.BYTE_ARRAY)
+    public byte[] publicKey;
+
+    @DatabaseField(dataType = DataType.BYTE_ARRAY)
+    public byte[] privateKey;
 
     @ForeignCollectionField
     public ForeignCollection<Invitation> invitations;

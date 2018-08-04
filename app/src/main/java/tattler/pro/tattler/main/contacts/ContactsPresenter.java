@@ -6,26 +6,30 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import java.sql.SQLException;
 import java.util.List;
 
-import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.main.MainPresenter;
 import tattler.pro.tattler.messages.AddContactRequest;
 import tattler.pro.tattler.messages.AddContactResponse;
 import tattler.pro.tattler.messages.LoginResponse;
+import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Contact;
 
 public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
     private ContactsAdapter contactsAdapter;
     private DatabaseManager databaseManager;
     private MainPresenter mainPresenter;
-    private AppPreferences appPreferences;
+    private MessageFactory messageFactory;
 
-    ContactsPresenter(ContactsAdapter contactsAdapter, DatabaseManager databaseManager, MainPresenter mainPresenter, AppPreferences appPreferences) {
+    ContactsPresenter(
+            ContactsAdapter contactsAdapter,
+            DatabaseManager databaseManager,
+            MainPresenter mainPresenter,
+            MessageFactory messageFactory) {
         this.contactsAdapter = contactsAdapter;
         this.databaseManager = databaseManager;
         this.mainPresenter = mainPresenter;
-        this.appPreferences = appPreferences;
         this.mainPresenter.setContactsPresenter(this);
+        this.messageFactory = messageFactory;
     }
 
     @Override
@@ -58,7 +62,7 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
     }
 
     public void handleAddContactResponse(AddContactResponse message) {
-        Contact contact = new Contact(message.userName, message.userNumber);
+        Contact contact = new Contact(message.userName, message.userNumber); // TODO: Get from DB?
         contactsAdapter.addContact(contact);
     }
 
@@ -81,8 +85,7 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
     }
 
     private void sendAddContactRequest(int contactPhoneId) {
-        int userPhoneId = appPreferences.getInt(AppPreferences.Key.USER_NUMBER);
-        AddContactRequest addContactRequest = new AddContactRequest(contactPhoneId, userPhoneId);
+        AddContactRequest addContactRequest = messageFactory.createAddContactRequest(contactPhoneId);
         mainPresenter.sendMessage(addContactRequest);
     }
 }

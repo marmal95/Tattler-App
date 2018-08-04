@@ -22,6 +22,8 @@ import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.OnItemViewClickListener;
 import tattler.pro.tattler.custom_ui.MaterialToast;
 import tattler.pro.tattler.main.MainActivity;
+import tattler.pro.tattler.messages.MessageFactory;
+import tattler.pro.tattler.security.RsaCrypto;
 
 public class InvitationsFragment extends MvpFragment<InvitationsView, InvitationsPresenter>
         implements InvitationsView, OnItemViewClickListener {
@@ -53,7 +55,9 @@ public class InvitationsFragment extends MvpFragment<InvitationsView, Invitation
         return new InvitationsPresenter(
                 new InvitationsAdapter(activity, new ArrayList<>(), this),
                 OpenHelperManager.getHelper(activity, DatabaseManager.class),
-                activity.getPresenter());
+                activity.getPresenter(),
+                new MessageFactory(activity),
+                new RsaCrypto());
     }
 
     @Override
@@ -68,10 +72,18 @@ public class InvitationsFragment extends MvpFragment<InvitationsView, Invitation
     }
 
     @Override
+    public void changeInvitationToPending(int position) {
+        InvitationsAdapter.ViewHolder viewHolder = (InvitationsAdapter.ViewHolder)
+                invitationsView.findViewHolderForAdapterPosition(position);
+        viewHolder.changeStateToPendingResponse();
+    }
+
+    @Override
     public void onItemViewClick(int position, View view) {
         if (view.getId() == R.id.acceptChat) {
-            MaterialToast.makeText(getContext(), "CLICK: " + position, Toast.LENGTH_LONG, MaterialToast.TYPE_SUCCESS).show();
+            getPresenter().handleAcceptInvitation(position);
         } else {
+            // TODO: Implement
             MaterialToast.makeText(getContext(), "CLICK: " + position, Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show();
         }
     }

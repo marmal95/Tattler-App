@@ -18,11 +18,19 @@ public class Invitation implements Serializable {
     @DatabaseField(columnName = "sender_id")
     public int senderId;
 
+    @DatabaseField(columnName = "invitation_message_id")
+    public long invitationMessageId;
+
+    @DatabaseField(columnName = "invitation_status")
+    public State state;
+
     public Invitation() {}
 
-    public Invitation(Chat chat, int senderId) {
+    public Invitation(Chat chat, int senderId, long invitationMessageId, State state) {
         this.chat = chat;
         this.senderId = senderId;
+        this.invitationMessageId = invitationMessageId;
+        this.state = state;
     }
 
     @Override
@@ -31,6 +39,12 @@ public class Invitation implements Serializable {
                 "invitationId=" + invitationId +
                 ", chat=" + chat +
                 ", senderId=" + senderId +
+                ", invitationMessageId=" + invitationMessageId +
                 '}';
+    }
+
+    public enum State {
+        PENDING_FOR_RESPONSE,
+        PENDING_FOR_REACTION
     }
 }

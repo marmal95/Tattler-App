@@ -87,6 +87,15 @@
                 android:visibility="gone" />
 
             <ImageView
+                android:id="@+id/invitationPendingIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/space4"
+                android:src="@drawable/ic_timelapse"
+                android:tint="@color/colorTextWarning"
+                android:visibility="gone" />
+
+            <ImageView
                 android:id="@+id/invitationDirectionIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

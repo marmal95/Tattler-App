@@ -27,5 +27,6 @@ public abstract class Message implements Serializable {
         public static final int CREATE_CHAT_REQUEST = 5;
         public static final int CREATE_CHAT_RESPONSE = 6;
         public static final int CHAT_INVITATION = 7;
+        public static final int CHAT_INVITATION_RESPONSE = 8;
     }
 }

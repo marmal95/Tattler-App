@@ -1,6 +1,7 @@
 package tattler.pro.tattler;
 
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.security.GeneralSecurityException;
@@ -15,19 +16,24 @@ import static org.junit.Assert.fail;
 
 public class RsaCryptoTest {
     private final byte[] INVALID_KEY = "invalid_key".getBytes();
-    private final KeyPair randomKeyPair = RsaCrypto.generateRsaKeyPair();
     private RsaCrypto rsaCrypto;
+    private KeyPair keyPair;
+
+    @Before
+    public void setUp() {
+        rsaCrypto = new RsaCrypto();
+        keyPair = rsaCrypto.generateRsaKeyPair();
+    }
 
     @Test(expected = GeneralSecurityException.class)
-    public void shallRsaCryptoConstructorThrowExceptionWhenKeysInvalid() throws Exception {
-        new RsaCrypto(INVALID_KEY, INVALID_KEY);
+    public void shallRsaCryptoInitThrowExceptionWhenKeysInvalid() throws Exception {
+        new RsaCrypto().init(INVALID_KEY, INVALID_KEY);
     }
 
     @Test
-    public void shallRsaCryptoConstructorNotThrowExceptionWhenKeysValid() {
+    public void shallRsaCryptoInitNotThrowExceptionWhenKeysValid() {
         try {
-            KeyPair keyPair = RsaCrypto.generateRsaKeyPair();
-            new RsaCrypto(keyPair.getPublic().getEncoded(), keyPair.getPrivate().getEncoded());
+            rsaCrypto.init(keyPair.getPublic().getEncoded(), keyPair.getPrivate().getEncoded());
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
             fail();
@@ -35,10 +41,9 @@ public class RsaCryptoTest {
     }
 
     @Test
-    public void shallRsaCryptoConstructorNotThrowExceptionWhenKeyPairValid() {
+    public void shallRsaCryptoInitNotThrowExceptionWhenKeyPairValid() {
         try {
-            KeyPair keyPair = RsaCrypto.generateRsaKeyPair();
-            new RsaCrypto(keyPair);
+            rsaCrypto.init(keyPair);
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
             fail();
@@ -47,43 +52,43 @@ public class RsaCryptoTest {
 
     @Test
     public void shouldNotGenerateNullKeyPair() {
-        KeyPair keyPair = RsaCrypto.generateRsaKeyPair();
+        KeyPair keyPair = rsaCrypto.generateRsaKeyPair();
         assertNotNull(keyPair);
     }
 
     @Test
     public void shouldEncryptAndDecryptWithPassedKeys() throws Exception {
-        rsaCrypto = new RsaCrypto(randomKeyPair.getPublic().getEncoded(), randomKeyPair.getPrivate().getEncoded());
+        rsaCrypto.init(keyPair.getPublic().getEncoded(), keyPair.getPrivate().getEncoded());
         expectEncryptAndDecryptMessages();
     }
 
     @Test
     public void shouldEncryptAndDecryptWithPassedKeyPair() throws Exception {
-        rsaCrypto = new RsaCrypto(randomKeyPair);
+        rsaCrypto.init(keyPair);
         expectEncryptAndDecryptMessages();
     }
 
     @Test
     public void shallEncryptAndDecryptDividedIntoBlocksWhenMessageIsBigWithPassedKeys() throws GeneralSecurityException {
-        rsaCrypto = new RsaCrypto(randomKeyPair.getPublic().getEncoded(), randomKeyPair.getPrivate().getEncoded());
+        rsaCrypto.init(keyPair.getPublic().getEncoded(), keyPair.getPrivate().getEncoded());
         expectEncryptAndDecryptBigMessage();
     }
 
     @Test
     public void shallEncryptAndDecryptDividedIntoBlocksWhenMessageIsBigWithPassedKeyPair() throws GeneralSecurityException {
-        rsaCrypto = new RsaCrypto(randomKeyPair);
+        rsaCrypto.init(keyPair);
         expectEncryptAndDecryptBigMessage();
     }
 
     @Test
     public void shallEncryptAndDecryptByteArrayWithPassedKeys() throws GeneralSecurityException {
-        rsaCrypto = new RsaCrypto(randomKeyPair.getPublic().getEncoded(), randomKeyPair.getPrivate().getEncoded());
+        rsaCrypto.init(keyPair.getPublic().getEncoded(), keyPair.getPrivate().getEncoded());
         expectEncryptAndDecryptRandomBytes();
     }
 
     @Test
     public void shallEncryptAndDecryptByteArrayWithPassedKeyPair() throws GeneralSecurityException {
-        rsaCrypto = new RsaCrypto(randomKeyPair);
+        rsaCrypto.init(keyPair);
         expectEncryptAndDecryptRandomBytes();
     }
 

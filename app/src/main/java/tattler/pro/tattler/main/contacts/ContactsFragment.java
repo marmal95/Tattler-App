@@ -27,12 +27,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import tattler.pro.tattler.R;
-import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.IntentKey;
 import tattler.pro.tattler.common.OnItemClickListener;
 import tattler.pro.tattler.contact.ContactActivity;
 import tattler.pro.tattler.main.MainActivity;
+import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Contact;
 
 public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresenter>
@@ -67,7 +67,7 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
                 new ContactsAdapter(activity, new ArrayList<>(), this),
                 OpenHelperManager.getHelper(activity, DatabaseManager.class),
                 activity.getPresenter(),
-                AppPreferences.getInstance(activity));
+                new MessageFactory(activity));
     }
 
     @Override
@@ -103,7 +103,11 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
 
         Intent intent = new Intent(activity, ContactActivity.class);
         intent.putExtra(IntentKey.CONTACT.name(), contact);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, Pair.create(clickedView.findViewById(R.id.userAvatar), getString(R.string.contactAvatar)), Pair.create(clickedView.findViewById(R.id.userName), getString(R.string.contactName)), Pair.create(clickedView.findViewById(R.id.userNumber), getString(R.string.contactNumber)));
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                activity,
+                Pair.create(clickedView.findViewById(R.id.userAvatar), getString(R.string.contactAvatar)),
+                Pair.create(clickedView.findViewById(R.id.userName), getString(R.string.contactName)),
+                Pair.create(clickedView.findViewById(R.id.userNumber), getString(R.string.contactNumber)));
 
         startActivity(intent, options.toBundle());
     }

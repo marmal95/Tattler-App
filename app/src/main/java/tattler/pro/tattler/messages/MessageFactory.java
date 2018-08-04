@@ -7,6 +7,7 @@ import java.util.List;
 
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.models.Contact;
+import tattler.pro.tattler.models.Invitation;
 
 public class MessageFactory {
     private Context context;
@@ -48,5 +49,19 @@ public class MessageFactory {
         chatInvitation.chatContacts.add(new tattler.pro.tattler.messages.models.Contact(userNumber, userName));
 
         return chatInvitation;
+    }
+
+    public AddContactRequest createAddContactRequest(int contactPhoneId) {
+        AppPreferences appPreferences = AppPreferences.getInstance(context);
+        int userPhoneId = appPreferences.getInt(AppPreferences.Key.USER_NUMBER);
+        return new AddContactRequest(contactPhoneId, userPhoneId);
+    }
+
+    public ChatInvitationResponse createChatInvitationResponse(Invitation invitation, int status, byte[] publicKey) {
+        ChatInvitationResponse invitationResponse = new ChatInvitationResponse(
+                invitation.invitationMessageId,
+                status);
+        invitationResponse.publicKey = publicKey;
+        return invitationResponse;
     }
 }

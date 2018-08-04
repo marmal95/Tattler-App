@@ -90,10 +90,12 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
                 databaseManager.insertChat(chat, message.contacts);
 
                 // TODO: Handle properly chat invitation when chat exist and is reinitialized
-                Invitation invitation = new Invitation(chat, Util.getMyUserNumber(tcpConnectionService));
-                databaseManager.insertInvitation(invitation);
+                ChatInvitation chatInvitation = messageFactory.createChatInvitation(message);
+                Invitation invitation = new Invitation(chat, Util.getMyUserNumber(tcpConnectionService),
+                        chatInvitation.messageId, Invitation.State.PENDING_FOR_RESPONSE);
 
-                sendChatInvitation(message);
+                databaseManager.insertInvitation(invitation);
+                tcpConnectionService.sendMessage(chatInvitation);
             }
             broadcastMessage(message);
         } catch (SQLException e) {
@@ -107,17 +109,12 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
             chat.chatName = chat.chatName == null ? Util.generateChatName(message.chatContacts) : chat.chatName;
             databaseManager.insertChat(chat, message.chatContacts);
 
-            Invitation invitation = new Invitation(chat, message.senderId);
+            Invitation invitation = new Invitation(
+                    chat, message.senderId, message.messageId, Invitation.State.PENDING_FOR_REACTION);
             databaseManager.insertInvitation(invitation);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-
-    private void sendChatInvitation(CreateChatResponse message) {
-        ChatInvitation chatInvitation = messageFactory.createChatInvitation(message);
-        tcpConnectionService.sendMessage(chatInvitation);
     }
 
     private void broadcastMessage(Message message) {
