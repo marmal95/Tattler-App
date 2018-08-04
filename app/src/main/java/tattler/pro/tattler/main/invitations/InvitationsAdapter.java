@@ -103,7 +103,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
 
     private void displayInvitationDirection(@NonNull ViewHolder holder, Invitation invitation) {
         if (Util.isMessageSentByMe(context, invitation.senderId)) {
-            holder.invitationDirectionIcon.setBackgroundResource(R.drawable.ic_call_made);
+            holder.invitationDirectionIcon.setImageResource(R.drawable.ic_call_made);
         } else {
             holder.contactNumber.setText(String.valueOf(invitation.senderId));
             holder.invitationDirectionIcon.setImageResource(R.drawable.ic_call_received);
