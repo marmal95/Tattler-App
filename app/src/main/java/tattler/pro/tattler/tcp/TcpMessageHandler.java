@@ -112,6 +112,7 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
             Invitation invitation = new Invitation(
                     chat, message.senderId, message.messageId, Invitation.State.PENDING_FOR_REACTION);
             databaseManager.insertInvitation(invitation);
+            broadcastMessage(message);
         } catch (SQLException e) {
             e.printStackTrace();
         }

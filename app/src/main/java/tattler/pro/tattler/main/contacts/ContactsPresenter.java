@@ -62,8 +62,12 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
     }
 
     public void handleAddContactResponse(AddContactResponse message) {
-        Contact contact = new Contact(message.userName, message.userNumber); // TODO: Get from DB?
-        contactsAdapter.addContact(contact);
+        try {
+            Contact contact = databaseManager.selectContactByPhoneId(message.userNumber);
+            contactsAdapter.addContact(contact);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressWarnings("ConstantConditions")

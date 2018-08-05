@@ -4,6 +4,7 @@ import com.orhanobut.logger.Logger;
 
 import tattler.pro.tattler.common.ReceivedMessageCallback;
 import tattler.pro.tattler.messages.AddContactResponse;
+import tattler.pro.tattler.messages.ChatInvitation;
 import tattler.pro.tattler.messages.CreateChatResponse;
 import tattler.pro.tattler.messages.LoginResponse;
 import tattler.pro.tattler.messages.Message;
@@ -13,6 +14,7 @@ public class MainMessageHandler implements ReceivedMessageCallback {
 
     @Override
     public void onMessageReceived(Message message) {
+        // TODO: Maybe introduce internal messages send from TcpConnectionService?
         Logger.d("Handling Message: " + message.toString());
         switch (message.messageType) {
             case Message.Type.LOGIN_RESPONSE:
@@ -23,6 +25,9 @@ public class MainMessageHandler implements ReceivedMessageCallback {
                 break;
             case Message.Type.CREATE_CHAT_RESPONSE:
                 handleCreateChatResponse((CreateChatResponse) message);
+                break;
+            case Message.Type.CHAT_INVITATION:
+                handleChatInvitation((ChatInvitation) message);
                 break;
         }
     }
@@ -60,5 +65,10 @@ public class MainMessageHandler implements ReceivedMessageCallback {
                 presenter.handleCreateChatResponse(message);
                 break;
         }
+    }
+
+
+    private void handleChatInvitation(ChatInvitation message) {
+        presenter.handleChatInvitation(message);
     }
 }

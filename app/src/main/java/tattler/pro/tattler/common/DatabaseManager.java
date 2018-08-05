@@ -22,7 +22,7 @@ import tattler.pro.tattler.models.Participant;
 
 public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "tattler.db";
-    private static final int DATABASE_VERSION = 42;
+    private static final int DATABASE_VERSION = 45;
 
     public DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -59,6 +59,10 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         return contacts;
     }
 
+    public Contact selectContactByPhoneId(int phoneId) throws SQLException {
+        return getContactsDao().queryForId(phoneId);
+    }
+
     public List<Chat> selectInitializedChats() throws SQLException {
         List<Chat> chats = getChatsDao().queryBuilder().where().eq("is_initialized", true).query();
         Logger.d("Selected " + chats.size() + " chats.");
@@ -69,6 +73,11 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         List<Invitation> invitations = getInvitationsDao().queryForAll();
         Logger.d("Selected " + invitations.size() + " invitations.");
         return invitations;
+    }
+
+    public Invitation selectInvitationForChatInvitation(long chatInvitationId) throws SQLException {
+        return getInvitationsDao().queryBuilder()
+                .where().eq("invitation_message_id", chatInvitationId).queryForFirst();
     }
 
     public void insertContact(Contact contact) throws SQLException {

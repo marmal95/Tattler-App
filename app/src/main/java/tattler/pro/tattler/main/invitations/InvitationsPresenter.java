@@ -9,6 +9,7 @@ import java.util.List;
 
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.main.MainPresenter;
+import tattler.pro.tattler.messages.ChatInvitation;
 import tattler.pro.tattler.messages.ChatInvitationResponse;
 import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Chat;
@@ -61,6 +62,16 @@ public class InvitationsPresenter extends MvpBasePresenter<InvitationsView> {
 
         sendChatInvitationResponse(invitation, publicKey);
         changeInvitationStateToPendingReactionResponse(position);
+    }
+
+    public void handleChatInvitation(ChatInvitation chatInvitation) {
+        try {
+            Invitation invitation = databaseManager.selectInvitationForChatInvitation(chatInvitation.messageId);
+            invitationsAdapter.addInvitation(invitation);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void updateChatKeys(Chat chat, byte[] publicKey, byte[] privateKey) {

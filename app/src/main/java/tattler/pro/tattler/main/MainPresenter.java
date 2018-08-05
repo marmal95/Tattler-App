@@ -30,10 +30,10 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
     private InvitationsPresenter invitationsPresenter;
 
     MainPresenter(TcpServiceManager tcpManager,
-                  TcpServiceConnectorFactory serviceConnectorFactory,
-                  MainMessageHandler messageHandler,
-                  MessageBroadcastReceiver broadcastReceiver,
-                  AppPreferences appPreferences) {
+            TcpServiceConnectorFactory serviceConnectorFactory,
+            MainMessageHandler messageHandler,
+            MessageBroadcastReceiver broadcastReceiver,
+            AppPreferences appPreferences) {
         this.tcpServiceManager = tcpManager;
         this.tcpServiceConnector = serviceConnectorFactory.create(tcpServiceManager);
         this.appPreferences = appPreferences;
@@ -117,8 +117,9 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
     }
 
     public void handleChatInvitation(ChatInvitation message) {
-        // TODO: Get from DB?
-
+        if (invitationsPresenter != null) {
+            invitationsPresenter.handleChatInvitation(message);
+        }
     }
 
     @SuppressWarnings("ConstantConditions")
