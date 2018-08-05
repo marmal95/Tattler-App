@@ -8,36 +8,27 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
 
 
 public class RsaCrypto {
     private static final int KEY_SIZE = 1024;
     private static final int BLOCK_SIZE = 32;
-
-    private KeyPair keyPair;
     private Cipher cipher;
 
-    public void init(KeyPair rsaKeyPair) throws GeneralSecurityException {
-        init(rsaKeyPair.getPublic().getEncoded(), rsaKeyPair.getPrivate().getEncoded());
-    }
-
-    public void init(byte[] publicKey, byte[] privateKey) throws GeneralSecurityException {
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-
-        X509EncodedKeySpec encodedKeySpecPublic = new X509EncodedKeySpec(publicKey);
-        PKCS8EncodedKeySpec encodedKeySpecPrivate = new PKCS8EncodedKeySpec(privateKey);
-
-        PublicKey genPublicKey = keyFactory.generatePublic(encodedKeySpecPublic);
-        PrivateKey genPrivateKey = keyFactory.generatePrivate(encodedKeySpecPrivate);
-
-        keyPair = new KeyPair(genPublicKey, genPrivateKey);
-        cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
+    public RsaCrypto() {
+        try {
+            cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+            e.printStackTrace();
+        }
     }
 
     public KeyPair generateRsaKeyPair() {
@@ -54,13 +45,13 @@ public class RsaCrypto {
         return keyPair;
     }
 
-    public byte[] encrypt(byte[] message) throws GeneralSecurityException {
-        cipher.init(Cipher.ENCRYPT_MODE, keyPair.getPublic());
+    public byte[] encrypt(byte[] message, byte[] encryptKey) throws GeneralSecurityException {
+        cipher.init(Cipher.ENCRYPT_MODE, createPublicKey(encryptKey));
         return encryptMessageDividedIntoBlocks(message);
     }
 
-    public byte[] decrypt(byte[] encryptedMessage) throws GeneralSecurityException {
-        cipher.init(Cipher.DECRYPT_MODE, keyPair.getPrivate());
+    public byte[] decrypt(byte[] encryptedMessage, byte[] decryptKey) throws GeneralSecurityException {
+        cipher.init(Cipher.DECRYPT_MODE, createPrivateKey(decryptKey));
         return trimByteArray(decryptMessageDividedIntoBlocks(encryptedMessage));
     }
 
@@ -127,5 +118,17 @@ public class RsaCrypto {
 
     private byte[] decryptBlock(byte[] block) throws GeneralSecurityException {
         return cipher.doFinal(block);
+    }
+
+    private PublicKey createPublicKey(byte[] publicKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        X509EncodedKeySpec encodedKeySpecPublic = new X509EncodedKeySpec(publicKey);
+        return keyFactory.generatePublic(encodedKeySpecPublic);
+    }
+
+    private PrivateKey createPrivateKey(byte[] privateKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        PKCS8EncodedKeySpec encodedKeySpecPrivate = new PKCS8EncodedKeySpec(privateKey);
+        return keyFactory.generatePrivate(encodedKeySpecPrivate);
     }
 }

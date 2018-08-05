@@ -3,7 +3,6 @@ package tattler.pro.tattler.main.invitations;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
-import java.security.KeyPair;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -50,17 +49,8 @@ public class InvitationsPresenter extends MvpBasePresenter<InvitationsView> {
     }
 
     public void handleAcceptInvitation(int position) {
-        KeyPair keyPair = rsaCrypto.generateRsaKeyPair();
-        byte[] publicKey = keyPair.getPublic().getEncoded();
-        byte[] privateKey = keyPair.getPublic().getEncoded();
-
         Invitation invitation = invitationsAdapter.getInvitation(position);
-        Chat chat = invitation.chat;
-
-        updateChatKeys(chat, publicKey, privateKey);
-        databaseManager.updateChat(chat);
-
-        sendChatInvitationResponse(invitation, publicKey);
+        sendChatInvitationResponse(invitation, invitation.chat.publicKey);
         changeInvitationStateToPendingReactionResponse(position);
     }
 

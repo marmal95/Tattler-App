@@ -22,11 +22,11 @@ public class AesCrypto {
     private static final int IV_LENGTH = 16;
     private byte[] key;
 
-    public AesCrypto(byte[] key) {
+    public void init(byte[] key) {
         this.key = key;
     }
 
-    public static byte[] generateAesKey() {
+    public byte[] generateAesKey() {
         byte[] key = null;
         try {
             Security.setProperty("crypto.policy", "unlimited");

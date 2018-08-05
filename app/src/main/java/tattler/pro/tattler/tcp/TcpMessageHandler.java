@@ -4,6 +4,8 @@ import android.content.Intent;
 
 import com.orhanobut.logger.Logger;
 
+import java.security.GeneralSecurityException;
+import java.security.KeyPair;
 import java.sql.SQLException;
 
 import tattler.pro.tattler.common.AppPreferences;
@@ -13,13 +15,17 @@ import tattler.pro.tattler.common.ReceivedMessageCallback;
 import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.messages.AddContactResponse;
 import tattler.pro.tattler.messages.ChatInvitation;
+import tattler.pro.tattler.messages.ChatInvitationResponse;
 import tattler.pro.tattler.messages.CreateChatResponse;
+import tattler.pro.tattler.messages.InitializeChatIndication;
 import tattler.pro.tattler.messages.LoginResponse;
 import tattler.pro.tattler.messages.Message;
 import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Contact;
 import tattler.pro.tattler.models.Invitation;
+import tattler.pro.tattler.security.AesCrypto;
+import tattler.pro.tattler.security.RsaCrypto;
 
 public class TcpMessageHandler implements ReceivedMessageCallback {
     private TcpConnectionService tcpConnectionService;
@@ -50,6 +56,12 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
                 break;
             case Message.Type.CHAT_INVITATION:
                 handleChatInvitation((ChatInvitation) message);
+                break;
+            case Message.Type.CHAT_INVITATION_RESPONSE:
+                handleChatInvitationResponse((ChatInvitationResponse) message);
+                break;
+            case Message.Type.INITIALIZE_CHAT_INDICATION:
+                handleInitializeChatIndication((InitializeChatIndication) message);
                 break;
             default:
                 Logger.e("Message not handled: " + message.toString());
@@ -87,6 +99,8 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
                     message.status == CreateChatResponse.Status.CHAT_ALREADY_EXISTS) {
                 Chat chat = new Chat(message.chatId, message.isGroupChat, message.chatName, false);
                 chat.chatName = chat.chatName == null ? Util.generateChatName(message.contacts) : chat.chatName;
+                chat.chatKey = new AesCrypto().generateAesKey();
+                chat.isInitialized = true;
                 databaseManager.insertChat(chat, message.contacts);
 
                 // TODO: Handle properly chat invitation when chat exist and is reinitialized
@@ -105,8 +119,12 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
 
     private void handleChatInvitation(ChatInvitation message) {
         try {
+            KeyPair rsaKeyPair = new RsaCrypto().generateRsaKeyPair();
+
             Chat chat = new Chat(message.chatId, message.isGroupChat, message.chatName, false);
             chat.chatName = chat.chatName == null ? Util.generateChatName(message.chatContacts) : chat.chatName;
+            chat.publicKey = rsaKeyPair.getPublic().getEncoded();
+            chat.privateKey = rsaKeyPair.getPrivate().getEncoded();
             databaseManager.insertChat(chat, message.chatContacts);
 
             Invitation invitation = new Invitation(
@@ -117,6 +135,37 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
             e.printStackTrace();
         }
     }
+
+    private void handleChatInvitationResponse(ChatInvitationResponse message) {
+        try {
+            Chat chat = databaseManager.selectChatById(message.chatId);
+            InitializeChatIndication initChatInd = messageFactory.createInitializeChatIndication(
+                    message, chat, new RsaCrypto());
+            tcpConnectionService.sendMessage(initChatInd);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleInitializeChatIndication(InitializeChatIndication message) {
+        try {
+            Chat chat = databaseManager.selectChatById(message.chatId);
+
+            RsaCrypto rsaCrypto = new RsaCrypto();
+            byte[] chatKey = rsaCrypto.decrypt(message.chatEncryptedKey, chat.privateKey);
+
+            AesCrypto aesCrypto = new AesCrypto();
+            aesCrypto.init(chatKey);
+
+            chat.chatKey = chatKey;
+            chat.isInitialized = true;
+
+            databaseManager.updateChat(chat);
+        } catch (SQLException | GeneralSecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void broadcastMessage(Message message) {
         Intent intent = new Intent(IntentKey.BROADCAST_MESSAGE.name());

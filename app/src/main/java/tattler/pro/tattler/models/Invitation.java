@@ -40,6 +40,7 @@ public class Invitation implements Serializable {
                 ", chat=" + chat +
                 ", senderId=" + senderId +
                 ", invitationMessageId=" + invitationMessageId +
+                ", state=" + state +
                 '}';
     }
 

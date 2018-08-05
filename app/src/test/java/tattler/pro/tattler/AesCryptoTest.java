@@ -1,5 +1,6 @@
 package tattler.pro.tattler;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Random;
@@ -13,9 +14,14 @@ import static org.junit.Assert.assertNotNull;
 public class AesCryptoTest {
     private AesCrypto aesCrypto;
 
+    @Before
+    public void setUp() {
+        aesCrypto = new AesCrypto();
+    }
+
     @Test
     public void shouldNotGenerateNullKey() {
-        byte[] key = AesCrypto.generateAesKey();
+        byte[] key = aesCrypto.generateAesKey();
         assertNotNull(key);
     }
 
@@ -68,6 +74,7 @@ public class AesCryptoTest {
     }
 
     private void initAesCryptoWithRandomKey() {
-        aesCrypto = new AesCrypto(AesCrypto.generateAesKey());
+        byte[] key = aesCrypto.generateAesKey();
+        aesCrypto.init(key);
     }
 }

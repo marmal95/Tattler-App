@@ -15,37 +15,23 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 public class RsaCryptoTest {
-    private final byte[] INVALID_KEY = "invalid_key".getBytes();
     private RsaCrypto rsaCrypto;
-    private KeyPair keyPair;
+    private byte[] publicKey;
+    private byte[] privateKey;
 
     @Before
     public void setUp() {
         rsaCrypto = new RsaCrypto();
-        keyPair = rsaCrypto.generateRsaKeyPair();
-    }
-
-    @Test(expected = GeneralSecurityException.class)
-    public void shallRsaCryptoInitThrowExceptionWhenKeysInvalid() throws Exception {
-        new RsaCrypto().init(INVALID_KEY, INVALID_KEY);
+        KeyPair keyPair = rsaCrypto.generateRsaKeyPair();
+        publicKey = keyPair.getPublic().getEncoded();
+        privateKey = keyPair.getPrivate().getEncoded();
     }
 
     @Test
-    public void shallRsaCryptoInitNotThrowExceptionWhenKeysValid() {
+    public void shouldConstructorNotThrowException() {
         try {
-            rsaCrypto.init(keyPair.getPublic().getEncoded(), keyPair.getPrivate().getEncoded());
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-            fail();
-        }
-    }
-
-    @Test
-    public void shallRsaCryptoInitNotThrowExceptionWhenKeyPairValid() {
-        try {
-            rsaCrypto.init(keyPair);
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
+            new RsaCrypto();
+        } catch (Exception e) {
             fail();
         }
     }
@@ -58,57 +44,36 @@ public class RsaCryptoTest {
 
     @Test
     public void shouldEncryptAndDecryptWithPassedKeys() throws Exception {
-        rsaCrypto.init(keyPair.getPublic().getEncoded(), keyPair.getPrivate().getEncoded());
-        expectEncryptAndDecryptMessages();
-    }
-
-    @Test
-    public void shouldEncryptAndDecryptWithPassedKeyPair() throws Exception {
-        rsaCrypto.init(keyPair);
         expectEncryptAndDecryptMessages();
     }
 
     @Test
     public void shallEncryptAndDecryptDividedIntoBlocksWhenMessageIsBigWithPassedKeys() throws GeneralSecurityException {
-        rsaCrypto.init(keyPair.getPublic().getEncoded(), keyPair.getPrivate().getEncoded());
-        expectEncryptAndDecryptBigMessage();
-    }
-
-    @Test
-    public void shallEncryptAndDecryptDividedIntoBlocksWhenMessageIsBigWithPassedKeyPair() throws GeneralSecurityException {
-        rsaCrypto.init(keyPair);
         expectEncryptAndDecryptBigMessage();
     }
 
     @Test
     public void shallEncryptAndDecryptByteArrayWithPassedKeys() throws GeneralSecurityException {
-        rsaCrypto.init(keyPair.getPublic().getEncoded(), keyPair.getPrivate().getEncoded());
-        expectEncryptAndDecryptRandomBytes();
-    }
-
-    @Test
-    public void shallEncryptAndDecryptByteArrayWithPassedKeyPair() throws GeneralSecurityException {
-        rsaCrypto.init(keyPair);
         expectEncryptAndDecryptRandomBytes();
     }
 
     private void expectEncryptAndDecryptMessages() throws GeneralSecurityException {
-        byte[] encryptedMessage_1 = rsaCrypto.encrypt(TestMessages.message_1.getBytes());
-        byte[] decryptedMessage_1 = rsaCrypto.decrypt(encryptedMessage_1);
+        byte[] encryptedMessage_1 = rsaCrypto.encrypt(TestMessages.message_1.getBytes(), publicKey);
+        byte[] decryptedMessage_1 = rsaCrypto.decrypt(encryptedMessage_1, privateKey);
         assertArrayEquals(TestMessages.message_1.getBytes(), decryptedMessage_1);
 
-        byte[] encryptedMessage_2 = rsaCrypto.encrypt(TestMessages.message_2.getBytes());
-        byte[] decryptedMessage_2 = rsaCrypto.decrypt(encryptedMessage_2);
+        byte[] encryptedMessage_2 = rsaCrypto.encrypt(TestMessages.message_2.getBytes(), publicKey);
+        byte[] decryptedMessage_2 = rsaCrypto.decrypt(encryptedMessage_2, privateKey);
         assertArrayEquals(TestMessages.message_2.getBytes(), decryptedMessage_2);
 
-        byte[] encryptedMessage_3 = rsaCrypto.encrypt(TestMessages.message_3.getBytes());
-        byte[] decryptedMessage_3 = rsaCrypto.decrypt(encryptedMessage_3);
+        byte[] encryptedMessage_3 = rsaCrypto.encrypt(TestMessages.message_3.getBytes(), publicKey);
+        byte[] decryptedMessage_3 = rsaCrypto.decrypt(encryptedMessage_3, privateKey);
         assertArrayEquals(TestMessages.message_3.getBytes(), decryptedMessage_3);
     }
 
     private void expectEncryptAndDecryptBigMessage() throws GeneralSecurityException {
-        byte[] encryptedMessage_4 = rsaCrypto.encrypt(TestMessages.message_4.getBytes());
-        byte[] decryptedMessage_4 = rsaCrypto.decrypt(encryptedMessage_4);
+        byte[] encryptedMessage_4 = rsaCrypto.encrypt(TestMessages.message_4.getBytes(), publicKey);
+        byte[] decryptedMessage_4 = rsaCrypto.decrypt(encryptedMessage_4, privateKey);
         assertArrayEquals(TestMessages.message_4.getBytes(), decryptedMessage_4);
     }
 
@@ -117,8 +82,8 @@ public class RsaCryptoTest {
         byte[] randomBytes = new byte[test_array_size];
         new Random().nextBytes(randomBytes);
 
-        byte[] encryptedBytes = rsaCrypto.encrypt(randomBytes);
-        byte[] decryptedBytes = rsaCrypto.decrypt(encryptedBytes);
+        byte[] encryptedBytes = rsaCrypto.encrypt(randomBytes, publicKey);
+        byte[] decryptedBytes = rsaCrypto.decrypt(encryptedBytes, privateKey);
         assertArrayEquals(randomBytes, decryptedBytes);
     }
 }

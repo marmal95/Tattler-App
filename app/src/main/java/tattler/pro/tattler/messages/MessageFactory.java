@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tattler.pro.tattler.common.AppPreferences;
+import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Contact;
 import tattler.pro.tattler.models.Invitation;
+import tattler.pro.tattler.security.RsaCrypto;
 
 public class MessageFactory {
     private Context context;
@@ -25,44 +27,37 @@ public class MessageFactory {
     }
 
     public CreateChatRequest createCreateChatRequest(Contact contact) {
-        AppPreferences appPreferences = AppPreferences.getInstance(context);
-        int userNumber = appPreferences.getInt(AppPreferences.Key.USER_NUMBER);
-
         List<Integer> chatContacts = new ArrayList<>();
         chatContacts.add(contact.contactNumber);
 
-        return new CreateChatRequest(userNumber, chatContacts, null, false);
+        return new CreateChatRequest(getMyUserNumber(), chatContacts, null, false);
     }
 
     public ChatInvitation createChatInvitation(CreateChatResponse chatResponse) {
         AppPreferences appPreferences = AppPreferences.getInstance(context);
-        int userNumber = appPreferences.getInt(AppPreferences.Key.USER_NUMBER);
         String userName = appPreferences.getString(AppPreferences.Key.USER_NAME);
 
         ChatInvitation chatInvitation = new ChatInvitation(
-                userNumber,
+                getMyUserNumber(),
                 chatResponse.chatId,
                 chatResponse.isGroupChat,
                 chatResponse.chatName);
 
         chatInvitation.chatContacts.addAll(chatResponse.contacts);
-        chatInvitation.chatContacts.add(new tattler.pro.tattler.messages.models.Contact(userNumber, userName));
+        // TODO: Send only my user number (without name) -> take it from server
+        chatInvitation.chatContacts.add(new tattler.pro.tattler.messages.models.Contact(getMyUserNumber(), userName));
 
         return chatInvitation;
     }
 
     public AddContactRequest createAddContactRequest(int contactPhoneId) {
-        AppPreferences appPreferences = AppPreferences.getInstance(context);
-        int userPhoneId = appPreferences.getInt(AppPreferences.Key.USER_NUMBER);
+        int userPhoneId = getMyUserNumber();
         return new AddContactRequest(contactPhoneId, userPhoneId);
     }
 
     public ChatInvitationResponse createChatInvitationResponse(Invitation invitation, int status, byte[] publicKey) {
-        AppPreferences appPreferences = AppPreferences.getInstance(context);
-        int userPhoneId = appPreferences.getInt(AppPreferences.Key.USER_NUMBER);
-
         ChatInvitationResponse invitationResponse = new ChatInvitationResponse(
-                userPhoneId,
+                getMyUserNumber(),
                 invitation.senderId,
                 invitation.invitationMessageId,
                 status);
@@ -70,5 +65,20 @@ public class MessageFactory {
         invitationResponse.publicKey = publicKey;
         invitationResponse.chatId = invitation.chat.chatId;
         return invitationResponse;
+    }
+
+    public InitializeChatIndication createInitializeChatIndication(
+            ChatInvitationResponse chatInvitationResponse, Chat chat, RsaCrypto rsaCrypto) throws Exception {
+        InitializeChatIndication initChatInd = new InitializeChatIndication(
+                getMyUserNumber(),
+                chatInvitationResponse.senderId);
+        initChatInd.chatId = chatInvitationResponse.chatId;
+        initChatInd.chatEncryptedKey = rsaCrypto.encrypt(chat.chatKey, chatInvitationResponse.publicKey);
+        return initChatInd;
+    }
+
+    private int getMyUserNumber() {
+        AppPreferences appPreferences = AppPreferences.getInstance(context);
+        return appPreferences.getInt(AppPreferences.Key.USER_NUMBER);
     }
 }
