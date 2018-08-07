@@ -33,19 +33,13 @@ public class MessageFactory {
     }
 
     public ChatInvitation createChatInvitation(CreateChatResponse chatResponse) {
-        AppPreferences appPreferences = AppPreferences.getInstance(context);
-        String userName = appPreferences.getString(AppPreferences.Key.USER_NAME);
-
         ChatInvitation chatInvitation = new ChatInvitation(
                 getMyUserNumber(),
                 chatResponse.chatId,
                 chatResponse.isGroupChat,
                 chatResponse.chatName);
-
         chatInvitation.chatContacts.addAll(chatResponse.contacts);
-        // TODO: Send only my user number (without name) -> take it from server
-        chatInvitation.chatContacts.add(new tattler.pro.tattler.messages.models.Contact(getMyUserNumber(), userName));
-
+        chatInvitation.chatContacts.add(new tattler.pro.tattler.messages.models.Contact(getMyUserNumber(), getMyUserName()));
         return chatInvitation;
     }
 
@@ -79,5 +73,10 @@ public class MessageFactory {
     private int getMyUserNumber() {
         AppPreferences appPreferences = AppPreferences.getInstance(context);
         return appPreferences.getInt(AppPreferences.Key.USER_NUMBER);
+    }
+
+    private String getMyUserName() {
+        AppPreferences appPreferences = AppPreferences.getInstance(context);
+        return appPreferences.getString(AppPreferences.Key.USER_NAME);
     }
 }
