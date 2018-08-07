@@ -54,7 +54,7 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
 
     public List<Contact> selectContacts() throws SQLException {
         List<Contact> contacts = getContactsDao().queryForAll();
-        Logger.d("Selected " + contacts.size() + " contactsDao.");
+        Logger.d("Selected " + contacts.size() + " contacts.");
         return contacts;
     }
 
@@ -64,7 +64,7 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
 
     public List<Chat> selectInitializedChats() throws SQLException {
         List<Chat> chats = getChatsDao().queryBuilder().where().eq("is_initialized", true).query();
-        Logger.d("Selected " + chats.size() + " chatsDao.");
+        Logger.d("Selected " + chats.size() + " chats.");
         return chats;
     }
 
@@ -74,7 +74,7 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
 
     public List<Invitation> selectInvitations() throws SQLException {
         List<Invitation> invitations = getInvitationsDao().queryForAll();
-        Logger.d("Selected " + invitations.size() + " invitationsDao.");
+        Logger.d("Selected " + invitations.size() + " invitations.");
         return invitations;
     }
 
