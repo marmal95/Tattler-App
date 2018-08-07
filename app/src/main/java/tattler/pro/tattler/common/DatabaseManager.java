@@ -22,7 +22,7 @@ import tattler.pro.tattler.models.Participant;
 
 public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "tattler.db";
-    private static final int DATABASE_VERSION = 62;
+    private static final int DATABASE_VERSION = 64;
 
     private Dao<Chat, Integer> chatsDao;
     private Dao<Contact, Integer> contactsDao;

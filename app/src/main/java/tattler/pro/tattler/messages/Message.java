@@ -12,7 +12,7 @@ public abstract class Message implements Serializable {
 
     public Message(int messageType) {
         this.messageType = messageType;
-        this.messageTime = System.currentTimeMillis() / 1000L;
+        this.messageTime = System.currentTimeMillis();
         this.messageId = this.messageTime; // MessageId is UNIX time value
         this.senderId = 0;
         this.receiverId = 0;
