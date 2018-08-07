@@ -12,10 +12,10 @@ public class Invitation implements Serializable {
     @DatabaseField(generatedId = true, columnName = "invitation_id", unique = true)
     public int invitationId;
 
-    @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "chat")
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "chat", uniqueCombo = true)
     public Chat chat;
 
-    @DatabaseField(columnName = "sender_id")
+    @DatabaseField(columnName = "sender_id", uniqueCombo = true)
     public int senderId;
 
     @DatabaseField(columnName = "invitation_message_id")

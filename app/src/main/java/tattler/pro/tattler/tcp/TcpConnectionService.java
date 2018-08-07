@@ -100,7 +100,7 @@ public class TcpConnectionService extends Service {
         Logger.d("Closing connection with server.");
         try {
             tcpReceiver.interrupt();
-            tcpReceiver.interrupt();
+            tcpSender.interrupt();
             socket.close();
             inputStream.close();
             outputStream.close();
@@ -114,18 +114,22 @@ public class TcpConnectionService extends Service {
     }
 
     private synchronized void establishConnection() {
-        Logger.d("Trying to establish connection with server.");
-        try {
-            socket = new Socket(SERVER_IP, SERVER_PORT);
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
-            outputStream.flush();
-            inputStream = new ObjectInputStream(socket.getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        if (!isConnected()) {
+            Logger.d("Trying to establish connection with server.");
+            try {
+                socket = new Socket(SERVER_IP, SERVER_PORT);
+                outputStream = new ObjectOutputStream(socket.getOutputStream());
+                outputStream.flush();
+                inputStream = new ObjectInputStream(socket.getInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        logConnectionStatus();
-        sendMessage(messageFactory.createLoginRequest());
+            logConnectionStatus();
+            sendMessage(messageFactory.createLoginRequest());
+        } else {
+            Logger.w("Connection has been already established.");
+        }
     }
 
     private void logConnectionStatus() {
@@ -152,23 +156,14 @@ public class TcpConnectionService extends Service {
         @Override
         public void run() {
             while (!Thread.currentThread().isInterrupted()) {
-                sendMessages();
-            }
-        }
-
-        private void queueMessage(Message message) {
-            messages.add(message);
-        }
-
-        private void sendMessages() {
-            Message message = messages.poll();
-            if (message != null) {
-                if (!isConnected()) {
-                    establishConnection();
+                Message message = messages.poll();
+                if (message != null) {
+                    if (!isConnected()) {
+                        establishConnection();
+                    }
+                    sendMessage(message);
                 }
-                sendMessage(message);
             }
-
         }
 
         private void sendMessage(Message message) {
@@ -180,36 +175,44 @@ public class TcpConnectionService extends Service {
                 e.printStackTrace();
             }
         }
+
+        private void queueMessage(Message message) {
+            messages.add(message);
+        }
     }
 
     private class ServerReader extends Thread {
-        @Override
-        public void run() {
+        private void readAndHandleMessage() {
             Message message;
-            while (!Thread.currentThread().isInterrupted()) {
-                if (isConnected()) {
-                    try {
-                        message = (Message) inputStream.readObject();
-                        tcpMessageHandler.onMessageReceived(message);
-                    } catch (SocketException e) {
-                        trySleep();
-                        establishConnection();
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    trySleep();
-                    establishConnection();
-                }
+            try {
+                message = (Message) inputStream.readObject();
+                tcpMessageHandler.onMessageReceived(message);
+            } catch (SocketException e) {
+                sleep(SLEEP_MS);
+                establishConnection();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
         }
 
-        private void trySleep() {
+        @Override
+        public void run() {
+            while (!Thread.currentThread().isInterrupted()) {
+                if (!isConnected()) {
+                    establishConnection();
+                }
+                readAndHandleMessage();
+            }
+        }
+
+        private void sleep(int timeToSleep) {
             try {
-                Thread.sleep(SLEEP_MS);
+                Thread.sleep(timeToSleep);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+
+
     }
 }

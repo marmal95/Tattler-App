@@ -1,6 +1,7 @@
 package tattler.pro.tattler.splash;
 
 import android.content.Context;
+
 import tattler.pro.tattler.common.AppPreferences;
 
 public class UserLoginStatusChecker {
@@ -12,6 +13,12 @@ public class UserLoginStatusChecker {
 
     boolean isUserLoggedIn() {
         String phoneNumber = appPreferences.getString(AppPreferences.Key.USER_PHONE_NUMBER);
-        return phoneNumber != null && !phoneNumber.isEmpty();
+        String userName = appPreferences.getString(AppPreferences.Key.USER_NAME);
+        return isUserDataSufficient(phoneNumber, userName);
+    }
+
+    private boolean isUserDataSufficient(String phoneNumber, String userName) {
+        return phoneNumber != null && !phoneNumber.isEmpty() &&
+                userName != null && !userName.isEmpty();
     }
 }

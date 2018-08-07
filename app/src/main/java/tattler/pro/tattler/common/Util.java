@@ -28,11 +28,6 @@ public class Util {
         return myNumber == messageSenderUserNumber;
     }
 
-    public static int getMyUserNumber(Context context) {
-        AppPreferences appPreferences = AppPreferences.getInstance(context);
-        return appPreferences.getInt(AppPreferences.Key.USER_NUMBER);
-    }
-
     public static String generateChatName(List<Contact> contacts) {
         return contacts.stream().map(contact -> contact.contactName).collect(Collectors.joining(" - "));
     }

@@ -24,6 +24,11 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "tattler.db";
     private static final int DATABASE_VERSION = 49;
 
+    private Dao<Chat, Integer> chatsDao;
+    private Dao<Contact, Integer> contactsDao;
+    private Dao<Invitation, Integer> invitationsDao;
+    private Dao<Participant, Integer> participantsDao;
+
     public DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -31,10 +36,7 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
-            TableUtils.createTable(connectionSource, Contact.class);
-            TableUtils.createTable(connectionSource, Chat.class);
-            TableUtils.createTable(connectionSource, Participant.class);
-            TableUtils.createTable(connectionSource, Invitation.class);
+            createTables(connectionSource);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -43,10 +45,7 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
-            TableUtils.dropTable(connectionSource, Contact.class, true);
-            TableUtils.dropTable(connectionSource, Chat.class, true);
-            TableUtils.dropTable(connectionSource, Participant.class, true);
-            TableUtils.dropTable(connectionSource, Invitation.class, true);
+            dropTables(connectionSource);
             onCreate(database, connectionSource);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -55,7 +54,7 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
 
     public List<Contact> selectContacts() throws SQLException {
         List<Contact> contacts = getContactsDao().queryForAll();
-        Logger.d("Selected " + contacts.size() + " contacts.");
+        Logger.d("Selected " + contacts.size() + " contactsDao.");
         return contacts;
     }
 
@@ -65,7 +64,7 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
 
     public List<Chat> selectInitializedChats() throws SQLException {
         List<Chat> chats = getChatsDao().queryBuilder().where().eq("is_initialized", true).query();
-        Logger.d("Selected " + chats.size() + " chats.");
+        Logger.d("Selected " + chats.size() + " chatsDao.");
         return chats;
     }
 
@@ -75,7 +74,7 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
 
     public List<Invitation> selectInvitations() throws SQLException {
         List<Invitation> invitations = getInvitationsDao().queryForAll();
-        Logger.d("Selected " + invitations.size() + " invitations.");
+        Logger.d("Selected " + invitations.size() + " invitationsDao.");
         return invitations;
     }
 
@@ -85,14 +84,12 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     }
 
     public void insertContact(Contact contact) throws SQLException {
-        Dao<Contact, Integer> contacts = getContactsDao();
-        contacts.create(contact);
+        getContactsDao().createOrUpdate(contact);
         Logger.d("Inserted " + contact.toString());
     }
 
     public void insertChat(Chat chat, List<tattler.pro.tattler.messages.models.Contact> contacts) throws SQLException {
-        Dao<Chat, Integer> chats = getChatsDao();
-        chats.create(chat);
+        getChatsDao().createOrUpdate(chat); // TODO: Check if this removes participantsDao, invitationsDao etc... on update
         Logger.d("Inserted " + chat.toString());
 
         List<Contact> contactsToAdd = new ArrayList<>(contacts.size());
@@ -104,15 +101,13 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     }
 
     public void insertChatParticipant(Chat chat, Contact contact) throws SQLException {
-        Dao<Participant, Integer> chatParticipants = getParticipantsDao();
         Participant participant = new Participant(contact.contactNumber, contact.contactName, chat);
-        chatParticipants.create(participant);
+        getParticipantsDao().create(participant);
         Logger.d("Inserted " + participant.toString());
     }
 
     public void insertInvitation(Invitation invitation) throws SQLException {
-        Dao<Invitation, Integer> invitations = getInvitationsDao();
-        invitations.create(invitation);
+        getInvitationsDao().createOrUpdate(invitation);
         Logger.d("Inserted " + invitation.toString());
     }
 
@@ -131,21 +126,16 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         return selectedChats.isEmpty() ? Optional.empty() : Optional.of(selectedChats.get(0));
     }
 
-    public void updateContacts(List<tattler.pro.tattler.messages.models.Contact> contacts) {
-        try {
-            TableUtils.clearTable(connectionSource, Contact.class);
-            for (tattler.pro.tattler.messages.models.Contact contact : contacts) {
-                insertContact(new Contact(contact.contactName, contact.contactNumber));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void updateContacts(List<tattler.pro.tattler.messages.models.Contact> contacts) throws SQLException {
+        TableUtils.clearTable(connectionSource, Contact.class);
+        for (tattler.pro.tattler.messages.models.Contact contact : contacts) {
+            insertContact(new Contact(contact.contactName, contact.contactNumber));
         }
     }
 
     public void updateChat(Chat chat) {
         try {
-            Dao<Chat, Integer> chatsDao = getChatsDao();
-            chatsDao.update(chat);
+            getChatsDao().update(chat);
             Logger.d("Updated: " + chat.toString());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -153,19 +143,23 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     }
 
     private Dao<Contact, Integer> getContactsDao() throws SQLException {
-        return getDao(Contact.class);
+        if (contactsDao == null) { contactsDao = getDao(Contact.class);}
+        return contactsDao;
     }
 
     private Dao<Chat, Integer> getChatsDao() throws SQLException {
-        return getDao(Chat.class);
+        if (chatsDao == null) { chatsDao = getDao(Chat.class);}
+        return chatsDao;
     }
 
     private Dao<Invitation, Integer> getInvitationsDao() throws SQLException {
-        return getDao(Invitation.class);
+        if (invitationsDao == null) { invitationsDao = getDao(Invitation.class);}
+        return invitationsDao;
     }
 
     private Dao<Participant, Integer> getParticipantsDao() throws SQLException {
-        return getDao(Participant.class);
+        if (participantsDao == null) { participantsDao = getDao(Participant.class);}
+        return participantsDao;
     }
 
     private void logSelectedIndividualChat(List<Chat> chats, Contact contact) {
@@ -174,5 +168,19 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         } else {
             Logger.i("Individual chat not found for contact: " + contact.toString());
         }
+    }
+
+    private void createTables(ConnectionSource connectionSource) throws SQLException {
+        TableUtils.createTable(connectionSource, Contact.class);
+        TableUtils.createTable(connectionSource, Chat.class);
+        TableUtils.createTable(connectionSource, Participant.class);
+        TableUtils.createTable(connectionSource, Invitation.class);
+    }
+
+    private void dropTables(ConnectionSource connectionSource) throws SQLException {
+        TableUtils.dropTable(connectionSource, Contact.class, true);
+        TableUtils.dropTable(connectionSource, Chat.class, true);
+        TableUtils.dropTable(connectionSource, Participant.class, true);
+        TableUtils.dropTable(connectionSource, Invitation.class, true);
     }
 }

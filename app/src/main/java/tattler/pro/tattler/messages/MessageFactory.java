@@ -20,8 +20,8 @@ public class MessageFactory {
 
     public LoginRequest createLoginRequest() {
         AppPreferences appPreferences = AppPreferences.getInstance(context);
-        String phoneNumber = appPreferences.getString(AppPreferences.Key.USER_PHONE_NUMBER, "");
-        String userName = appPreferences.getString(AppPreferences.Key.USER_NAME, "");
+        String phoneNumber = appPreferences.getString(AppPreferences.Key.USER_PHONE_NUMBER);
+        String userName = appPreferences.getString(AppPreferences.Key.USER_NAME);
         boolean areContactsRequested = appPreferences.getBoolean(AppPreferences.Key.IS_FIRST_LAUNCH, true);
         return new LoginRequest(phoneNumber, userName, areContactsRequested);
     }
@@ -29,7 +29,6 @@ public class MessageFactory {
     public CreateChatRequest createCreateChatRequest(Contact contact) {
         List<Integer> chatContacts = new ArrayList<>();
         chatContacts.add(contact.contactNumber);
-
         return new CreateChatRequest(getMyUserNumber(), chatContacts, null, false);
     }
 

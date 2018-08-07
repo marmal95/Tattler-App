@@ -1,6 +1,7 @@
 package tattler.pro.tattler.tcp;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 
 import com.orhanobut.logger.Logger;
 
@@ -46,13 +47,13 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
         Logger.d("Received Message: " + message.toString());
         switch (message.messageType) {
             case Message.Type.LOGIN_RESPONSE:
-                handleReceivedLoginResponse((LoginResponse) message);
+                handleLoginResponse((LoginResponse) message);
                 break;
             case Message.Type.ADD_CONTACT_RESPONSE:
-                handleReceivedAddContactResponse((AddContactResponse) message);
+                handleAddContactResponse((AddContactResponse) message);
                 break;
             case Message.Type.CREATE_CHAT_RESPONSE:
-                handleReceivedCreateChatResponse((CreateChatResponse) message);
+                handleCreateChatResponse((CreateChatResponse) message);
                 break;
             case Message.Type.CHAT_INVITATION:
                 handleChatInvitation((ChatInvitation) message);
@@ -68,22 +69,27 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
         }
     }
 
-    private void handleReceivedLoginResponse(LoginResponse message) {
-        if (message.status == LoginResponse.Status.LOGIN_SUCCESSFUL) {
-            appPreferences.put(AppPreferences.Key.USER_NUMBER, message.phoneId);
-            appPreferences.put(AppPreferences.Key.IS_FIRST_LAUNCH, false);
+    private void handleLoginResponse(LoginResponse message) {
+        try {
+            if (message.status == LoginResponse.Status.LOGIN_SUCCESSFUL) {
+                appPreferences.put(AppPreferences.Key.USER_NUMBER, message.phoneId);
+                appPreferences.put(AppPreferences.Key.IS_FIRST_LAUNCH, false);
 
-            if (!message.contacts.isEmpty()) {
-                Logger.d("Received contacts from Server, size: " + message.contacts.size());
-                databaseManager.updateContacts(message.contacts);
+                if (!message.contacts.isEmpty()) {
+                    Logger.d("Received contacts from Server, size: " + message.contacts.size());
+                    databaseManager.updateContacts(message.contacts);
+                }
+                broadcastMessage(message);
             }
-            broadcastMessage(message);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
-    private void handleReceivedAddContactResponse(AddContactResponse message) {
+    private void handleAddContactResponse(AddContactResponse message) {
         try {
-            if (message.status == AddContactResponse.Status.CONTACT_ADDED) {
+            if (message.status == AddContactResponse.Status.CONTACT_ADDED ||
+                    message.status == AddContactResponse.Status.CONTACT_ALREADY_ADDED) {
                 Contact contact = new Contact(message.userName, message.userNumber);
                 databaseManager.insertContact(contact);
             }
@@ -93,20 +99,15 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
         }
     }
 
-    private void handleReceivedCreateChatResponse(CreateChatResponse message) {
+    private void handleCreateChatResponse(CreateChatResponse message) {
         try {
             if (message.status == CreateChatResponse.Status.CHAT_CREATED ||
                     message.status == CreateChatResponse.Status.CHAT_ALREADY_EXISTS) {
-                Chat chat = new Chat(message.chatId, message.isGroupChat, message.chatName, false);
-                chat.chatName = chat.chatName == null ? Util.generateChatName(message.contacts) : chat.chatName;
-                chat.chatKey = new AesCrypto().generateAesKey();
-                chat.isInitialized = true;
+                Chat chat = prepareChat(message);
                 databaseManager.insertChat(chat, message.contacts);
 
-                // TODO: Handle properly chat invitation when chat exist and is reinitialized
                 ChatInvitation chatInvitation = messageFactory.createChatInvitation(message);
-                Invitation invitation = new Invitation(chat, Util.getMyUserNumber(tcpConnectionService),
-                        chatInvitation.messageId, Invitation.State.PENDING_FOR_RESPONSE);
+                Invitation invitation = prepareInvitation(message, chat, chatInvitation);
 
                 databaseManager.insertInvitation(invitation);
                 tcpConnectionService.sendMessage(chatInvitation);
@@ -120,15 +121,10 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
     private void handleChatInvitation(ChatInvitation message) {
         try {
             KeyPair rsaKeyPair = new RsaCrypto().generateRsaKeyPair();
-
-            Chat chat = new Chat(message.chatId, message.isGroupChat, message.chatName, false);
-            chat.chatName = chat.chatName == null ? Util.generateChatName(message.chatContacts) : chat.chatName;
-            chat.publicKey = rsaKeyPair.getPublic().getEncoded();
-            chat.privateKey = rsaKeyPair.getPrivate().getEncoded();
+            Chat chat = prepareChat(message, rsaKeyPair);
             databaseManager.insertChat(chat, message.chatContacts);
 
-            Invitation invitation = new Invitation(
-                    chat, message.senderId, message.messageId, Invitation.State.PENDING_FOR_REACTION);
+            Invitation invitation = prepareInvitation(message, chat);
             databaseManager.insertInvitation(invitation);
             broadcastMessage(message);
         } catch (SQLException e) {
@@ -150,14 +146,9 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
     private void handleInitializeChatIndication(InitializeChatIndication message) {
         try {
             Chat chat = databaseManager.selectChatById(message.chatId);
-
             RsaCrypto rsaCrypto = new RsaCrypto();
-            byte[] chatKey = rsaCrypto.decrypt(message.chatEncryptedKey, chat.privateKey);
 
-            AesCrypto aesCrypto = new AesCrypto();
-            aesCrypto.init(chatKey);
-
-            chat.chatKey = chatKey;
+            chat.chatKey = rsaCrypto.decrypt(message.chatEncryptedKey, chat.privateKey);
             chat.isInitialized = true;
 
             databaseManager.updateChat(chat);
@@ -166,6 +157,35 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
         }
     }
 
+    @NonNull
+    private Chat prepareChat(CreateChatResponse message) {
+        Chat chat = new Chat(message.chatId, message.isGroupChat, message.chatName, false);
+        chat.chatName = chat.chatName == null ? Util.generateChatName(message.contacts) : chat.chatName;
+        chat.chatKey = new AesCrypto().generateAesKey();
+        chat.isInitialized = true;
+        return chat;
+    }
+
+    @NonNull
+    private Chat prepareChat(ChatInvitation message, KeyPair rsaKeyPair) {
+        Chat chat = new Chat(message.chatId, message.isGroupChat, message.chatName, false);
+        chat.chatName = chat.chatName == null ? Util.generateChatName(message.chatContacts) : chat.chatName;
+        chat.publicKey = rsaKeyPair.getPublic().getEncoded();
+        chat.privateKey = rsaKeyPair.getPrivate().getEncoded();
+        return chat;
+    }
+
+    @NonNull
+    private Invitation prepareInvitation(ChatInvitation message, Chat chat) {
+        return new Invitation(
+                chat, message.senderId, message.messageId, Invitation.State.PENDING_FOR_REACTION);
+    }
+
+    @NonNull
+    private Invitation prepareInvitation(CreateChatResponse message, Chat chat, ChatInvitation chatInvitation) {
+        return new Invitation(chat, message.receiverId,
+                chatInvitation.messageId, Invitation.State.PENDING_FOR_RESPONSE);
+    }
 
     private void broadcastMessage(Message message) {
         Intent intent = new Intent(IntentKey.BROADCAST_MESSAGE.name());
