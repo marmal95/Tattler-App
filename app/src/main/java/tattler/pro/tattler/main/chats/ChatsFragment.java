@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -19,6 +20,7 @@ import butterknife.ButterKnife;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.OnItemClickListener;
+import tattler.pro.tattler.custom_ui.MaterialToast;
 import tattler.pro.tattler.main.MainActivity;
 
 public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
@@ -64,6 +66,12 @@ public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
     @Override
     public void setChatsAdapter(ChatsAdapter adapter) {
         chatsView.setAdapter(adapter);
+    }
+
+    @Override
+    public void showChatAddingError() {
+        MaterialToast.makeText(getActivity(), getString(R.string.chatCreatingError),
+                Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show();
     }
 
     @Override

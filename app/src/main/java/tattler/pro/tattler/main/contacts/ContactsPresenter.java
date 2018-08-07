@@ -67,6 +67,7 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
             contactsAdapter.addContact(contact);
         } catch (SQLException e) {
             e.printStackTrace();
+            showContactAddingError();
         }
     }
 
@@ -77,6 +78,20 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
+    public void showContactAlreadyAddedInfo() {
+        if (isViewAttached()) {
+            getView().showContactAlreadyAddedInfo();
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public void showContactNotExistInfo() {
+        if (isViewAttached()) {
+            getView().showContactNotExistInfo();
+        }
+    }
+
     private void initUserContacts() {
         try {
             List<Contact> contacts = databaseManager.selectContacts();
@@ -84,7 +99,14 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
             contactsAdapter.addContacts(contacts);
         } catch (SQLException e) {
             e.printStackTrace();
-            // TODO: Inform user about fail
+            showContactAddingError();
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void showContactAddingError() {
+        if (isViewAttached()) {
+            getView().showContactAddingError();
         }
     }
 

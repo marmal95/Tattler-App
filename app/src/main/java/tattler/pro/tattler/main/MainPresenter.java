@@ -122,6 +122,18 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
         }
     }
 
+    public void showContactAlreadyAddedInfo() {
+        if (contactsPresenter != null) {
+            contactsPresenter.showContactAlreadyAddedInfo();
+        }
+    }
+
+    public void showContactNotExistInfo() {
+        if (contactsPresenter != null) {
+            contactsPresenter.showContactNotExistInfo();
+        }
+    }
+
     @SuppressWarnings("ConstantConditions")
     private void bindTcpConnectionService() {
         if (isViewAttached()) {

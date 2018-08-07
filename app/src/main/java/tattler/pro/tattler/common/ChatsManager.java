@@ -1,10 +1,10 @@
 package tattler.pro.tattler.common;
 
-import tattler.pro.tattler.models.Chat;
-import tattler.pro.tattler.models.Contact;
-
 import java.sql.SQLException;
 import java.util.Optional;
+
+import tattler.pro.tattler.models.Chat;
+import tattler.pro.tattler.models.Contact;
 
 public class ChatsManager {
     private DatabaseManager databaseManager;
@@ -19,7 +19,6 @@ public class ChatsManager {
         } catch (SQLException e) {
             e.printStackTrace();
             return Optional.empty();
-            // TODO: Handle error -> Inform user
         }
     }
 }

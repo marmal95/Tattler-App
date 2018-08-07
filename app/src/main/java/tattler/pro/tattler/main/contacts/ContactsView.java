@@ -8,4 +8,7 @@ interface ContactsView extends MvpView {
     void setContactsAdapter(ContactsAdapter adapter);
     void startAddContactDialog();
     void startContactActivity(Contact contact, int position);
+    void showContactAddingError();
+    void showContactAlreadyAddedInfo();
+    void showContactNotExistInfo();
 }

@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -31,6 +32,7 @@ import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.IntentKey;
 import tattler.pro.tattler.common.OnItemClickListener;
 import tattler.pro.tattler.contact.ContactActivity;
+import tattler.pro.tattler.custom_ui.MaterialToast;
 import tattler.pro.tattler.main.MainActivity;
 import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Contact;
@@ -110,6 +112,24 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
                 Pair.create(clickedView.findViewById(R.id.userNumber), getString(R.string.contactNumber)));
 
         startActivity(intent, options.toBundle());
+    }
+
+    @Override
+    public void showContactAddingError() {
+        MaterialToast.makeText(getActivity(), getString(R.string.contactCreatingError),
+                Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show();
+    }
+
+    @Override
+    public void showContactAlreadyAddedInfo() {
+        MaterialToast.makeText(getActivity(), getString(R.string.contactAlreadyAddedInfo),
+                Toast.LENGTH_LONG, MaterialToast.TYPE_WARNING).show();
+    }
+
+    @Override
+    public void showContactNotExistInfo() {
+        MaterialToast.makeText(getActivity(), getString(R.string.contactNotExist),
+                Toast.LENGTH_LONG, MaterialToast.TYPE_WARNING).show();
     }
 
     @Override

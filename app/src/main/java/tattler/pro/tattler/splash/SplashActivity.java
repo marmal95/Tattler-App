@@ -19,7 +19,7 @@ public class SplashActivity extends MvpActivity<SplashView, SplashPresenter> imp
         super.onCreate(savedInstanceState);
         Logger.addLogAdapter(new AndroidLogAdapter());
 
-        // TODO: Only for tests
+        // FIXME: Only for tests
         AppPreferences appPreferences = AppPreferences.getInstance(this);
         appPreferences.put(AppPreferences.Key.USER_PHONE_NUMBER, "111");
         appPreferences.put(AppPreferences.Key.USER_NAME, "$ONY");
@@ -33,14 +33,14 @@ public class SplashActivity extends MvpActivity<SplashView, SplashPresenter> imp
 
     @Override
     public void startRegisterActivity() {
-        // TODO: Change to RegisterActivity after tests
+        // FIXME: Change to RegisterActivity after tests
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void startFingerAuthActivity() {
-        // TODO: Change to FingerAuthActivity after tests
+        // FIXME: Change to FingerAuthActivity after tests
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

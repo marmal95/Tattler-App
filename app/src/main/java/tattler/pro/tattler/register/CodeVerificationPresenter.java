@@ -10,7 +10,17 @@ public class CodeVerificationPresenter extends MvpBasePresenter<CodeVerification
     }
 
     public void checkVerificationCode(String code) {
-        // TODO: Check code
-        registerPresenter.verifyAuthCode(code);
+        if (code == null || code.isEmpty()) {
+            showCodeInvalidOrEmptyError();
+        } else {
+            registerPresenter.verifyAuthCode(code);
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void showCodeInvalidOrEmptyError() {
+        if (isViewAttached()) {
+            getView().showCodeInvalidOrEmptyError();
+        }
     }
 }

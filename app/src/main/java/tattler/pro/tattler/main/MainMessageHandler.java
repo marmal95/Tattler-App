@@ -50,10 +50,10 @@ public class MainMessageHandler implements ReceivedMessageCallback {
                 presenter.handleAddContactResponse(message);
                 break;
             case AddContactResponse.Status.CONTACT_ALREADY_ADDED:
-                // TODO: Notify user
+                showContactAlreadyAddedInfo();
                 break;
             case AddContactResponse.Status.CONTACT_NOT_EXIST:
-                // TODO: Notify user
+                showContactNotExistInfo();
                 break;
         }
     }
@@ -67,8 +67,15 @@ public class MainMessageHandler implements ReceivedMessageCallback {
         }
     }
 
-
     private void handleChatInvitation(ChatInvitation message) {
         presenter.handleChatInvitation(message);
+    }
+
+    private void showContactAlreadyAddedInfo() {
+        presenter.showContactAlreadyAddedInfo();
+    }
+
+    private void showContactNotExistInfo() {
+        presenter.showContactNotExistInfo();
     }
 }

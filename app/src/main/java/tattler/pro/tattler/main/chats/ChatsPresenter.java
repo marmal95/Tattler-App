@@ -46,6 +46,14 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
             chatsAdapter.addChats(chats);
         } catch (SQLException e) {
             e.printStackTrace();
+            showChatAddingError();
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void showChatAddingError() {
+        if (isViewAttached()) {
+            getView().showChatAddingError();
         }
     }
 }

@@ -8,7 +8,7 @@ import tattler.pro.tattler.messages.models.Contact;
 public class ChatInvitation extends Message {
     private static final long serialVersionUID = -5646373887571573954L;
     public int chatId;
-    public boolean isGroupChat; // TODO: Is it needed here?
+    public boolean isGroupChat;
     public String chatName;
     public List<Contact> chatContacts; // TODO: Is it needed here? Server knows it
 
