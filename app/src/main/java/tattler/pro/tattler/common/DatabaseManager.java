@@ -22,7 +22,7 @@ import tattler.pro.tattler.models.Participant;
 
 public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "tattler.db";
-    private static final int DATABASE_VERSION = 49;
+    private static final int DATABASE_VERSION = 62;
 
     private Dao<Chat, Integer> chatsDao;
     private Dao<Contact, Integer> contactsDao;
@@ -68,8 +68,9 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         return chats;
     }
 
-    public Chat selectChatById(int chatId) throws SQLException {
-        return getChatsDao().queryForId(chatId);
+    public Optional<Chat> selectChatById(int chatId) throws SQLException {
+        Chat chat = getChatsDao().queryForId(chatId);
+        return chat != null ? Optional.of(chat) : Optional.empty();
     }
 
     public List<Invitation> selectInvitations() throws SQLException {
@@ -89,7 +90,12 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     }
 
     public void insertChat(Chat chat, List<tattler.pro.tattler.messages.models.Contact> contacts) throws SQLException {
-        getChatsDao().createOrUpdate(chat); // TODO: Check if this removes participantsDao, invitationsDao etc... on update
+        Optional<Chat> existingChat = selectChatById(chat.chatId);
+        if (existingChat.isPresent()) {
+            deleteChat(existingChat.get());
+        }
+
+        getChatsDao().create(chat);
         Logger.d("Inserted " + chat.toString());
 
         List<Contact> contactsToAdd = new ArrayList<>(contacts.size());
@@ -121,9 +127,10 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         chatQueryBuilder.join(participantQueryBuilder);
         Logger.i(chatQueryBuilder.prepareStatementString());
 
-        List<Chat> selectedChats = getChatsDao().query(chatQueryBuilder.prepare());
-        logSelectedIndividualChat(selectedChats, contact);
-        return selectedChats.isEmpty() ? Optional.empty() : Optional.of(selectedChats.get(0));
+        Chat selectedChat = getChatsDao().queryForFirst(chatQueryBuilder.prepare());
+        Optional<Chat> optionalChat = selectedChat != null ? Optional.of(selectedChat) : Optional.empty();
+        logSelectedIndividualChat(optionalChat, contact);
+        return optionalChat;
     }
 
     public void updateContacts(List<tattler.pro.tattler.messages.models.Contact> contacts) throws SQLException {
@@ -140,6 +147,14 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void deleteChat(Chat chat) throws SQLException {
+        if (chat.invitations != null)
+            chat.invitations.clear();
+        if (chat.participants != null)
+            chat.participants.clear();
+        getChatsDao().delete(chat);
     }
 
     private Dao<Contact, Integer> getContactsDao() throws SQLException {
@@ -162,9 +177,10 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         return participantsDao;
     }
 
-    private void logSelectedIndividualChat(List<Chat> chats, Contact contact) {
-        if (!chats.isEmpty()) {
-            Logger.i("Selected individual chat: " + chats.get(0).toString());
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private void logSelectedIndividualChat(Optional<Chat> optionalChat, Contact contact) {
+        if (optionalChat.isPresent()) {
+            Logger.i("Selected individual chat: " + optionalChat.get().toString());
         } else {
             Logger.i("Individual chat not found for contact: " + contact.toString());
         }

@@ -8,6 +8,7 @@ import com.orhanobut.logger.Logger;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
@@ -134,10 +135,12 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
 
     private void handleChatInvitationResponse(ChatInvitationResponse message) {
         try {
-            Chat chat = databaseManager.selectChatById(message.chatId);
-            InitializeChatIndication initChatInd = messageFactory.createInitializeChatIndication(
-                    message, chat, new RsaCrypto());
-            tcpConnectionService.sendMessage(initChatInd);
+            Optional<Chat> optionalChat = databaseManager.selectChatById(message.chatId);
+            if (optionalChat.isPresent()) {
+                InitializeChatIndication initChatInd = messageFactory.createInitializeChatIndication(
+                        message, optionalChat.get(), new RsaCrypto());
+                tcpConnectionService.sendMessage(initChatInd);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -145,13 +148,16 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
 
     private void handleInitializeChatIndication(InitializeChatIndication message) {
         try {
-            Chat chat = databaseManager.selectChatById(message.chatId);
-            RsaCrypto rsaCrypto = new RsaCrypto();
+            Optional<Chat> optionalChat = databaseManager.selectChatById(message.chatId);
+            if (optionalChat.isPresent()) {
+                Chat chat = optionalChat.get();
+                RsaCrypto rsaCrypto = new RsaCrypto();
 
-            chat.chatKey = rsaCrypto.decrypt(message.chatEncryptedKey, chat.privateKey);
-            chat.isInitialized = true;
+                chat.chatKey = rsaCrypto.decrypt(message.chatEncryptedKey, chat.privateKey);
+                chat.isInitialized = true;
 
-            databaseManager.updateChat(chat);
+                databaseManager.updateChat(chat);
+            }
         } catch (SQLException | GeneralSecurityException e) {
             e.printStackTrace();
         }

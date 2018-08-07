@@ -62,6 +62,9 @@ public class Chat implements Serializable {
 
     @Override
     public String toString() {
+        int invitationsSize = invitations == null ? 0 : invitations.size();
+        int participantsSize = participants == null ? 0 : participants.size();
+
         return "Chat{" +
                 "chatId=" + chatId +
                 ", chatName='" + chatName + '\'' +
@@ -70,8 +73,8 @@ public class Chat implements Serializable {
                 ", publicKey=" + Arrays.toString(publicKey) +
                 ", privateKey=" + Arrays.toString(privateKey) +
                 ", chatKey=" + Arrays.toString(chatKey) +
-                ", invitations=" + "[...]" +
-                ", participants=" + "[...]" +
+                ", invitations=" + "[" + invitationsSize + "]" +
+                ", participants=" + "[" + participantsSize + "]" +
                 '}';
     }
 }
