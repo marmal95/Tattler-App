@@ -7,8 +7,6 @@
         <item name="android:windowEnterTransition">@android:transition/fade</item>
         <item name="android:windowExitTransition">@android:transition/fade</item>
 
-        <item name="android:windowTranslucentStatus">true</item>
-
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -18,6 +16,10 @@
         <item name="android:textColorPrimary">@color/colorPrimaryText</item>
         <item name="android:textColorSecondary">@color/colorSecondaryText</item>
         <item name="android:windowBackground">@color/colorBackground</item>
+    </style>
+
+    <style name="AppThemeGrayBackground" parent="AppTheme">
+        <item name="android:windowBackground">@color/colorBackgroundGray</item>
     </style>
 
     <style name="AppTheme.FullScreen" parent="AppTheme">

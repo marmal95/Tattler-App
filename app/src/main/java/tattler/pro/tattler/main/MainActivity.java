@@ -19,9 +19,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import com.hannesdorfmann.mosby.mvp.MvpActivity;
+
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.common.AppPreferences;
@@ -29,9 +33,11 @@ import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.main.chats.ChatsFragment;
 import tattler.pro.tattler.main.contacts.ContactsFragment;
 import tattler.pro.tattler.main.invitations.InvitationsFragment;
-import tattler.pro.tattler.tcp.*;
-
-import java.util.Objects;
+import tattler.pro.tattler.tcp.MessageBroadcastReceiver;
+import tattler.pro.tattler.tcp.TcpConnectionService;
+import tattler.pro.tattler.tcp.TcpServiceConnector;
+import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
+import tattler.pro.tattler.tcp.TcpServiceManager;
 
 public class MainActivity extends MvpActivity<MainView, MainPresenter> implements MainView, NavigationView.OnNavigationItemSelectedListener {
     @BindView(R.id.toolbar)
@@ -53,6 +59,7 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
         ButterKnife.bind(this);
 
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
         setUpToolbar();
         startContactsFragment();
     }

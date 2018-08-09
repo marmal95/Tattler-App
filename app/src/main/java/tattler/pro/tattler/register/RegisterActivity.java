@@ -9,9 +9,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.widget.Toast;
+
+import com.hannesdorfmann.mosby.mvp.MvpActivity;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.authentication.PhoneAuthenticator;
 import tattler.pro.tattler.common.AppPreferences;
@@ -24,7 +26,7 @@ public class RegisterActivity extends MvpActivity<RegisterView, RegisterPresente
     private static final int CODE_VERIFY_FRAGMENT_IDX = 1;
 
     @BindView(R.id.pager)
-    ViewPager mPager;
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +34,8 @@ public class RegisterActivity extends MvpActivity<RegisterView, RegisterPresente
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
 
-        PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
+        PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(pagerAdapter);
     }
 
     @NonNull
@@ -46,12 +48,12 @@ public class RegisterActivity extends MvpActivity<RegisterView, RegisterPresente
 
     @Override
     public void startPhoneAuthenticationFragment() {
-        runOnUiThread(() -> mPager.setCurrentItem(PHONE_AUTH_FRAGMENT_IDX));
+        runOnUiThread(() -> viewPager.setCurrentItem(PHONE_AUTH_FRAGMENT_IDX));
     }
 
     @Override
     public void startCodeVerificationFragment() {
-        runOnUiThread(() -> mPager.setCurrentItem(CODE_VERIFY_FRAGMENT_IDX));
+        runOnUiThread(() -> viewPager.setCurrentItem(CODE_VERIFY_FRAGMENT_IDX));
     }
 
     @Override

@@ -26,6 +26,10 @@
         <activity android:name=".main.MainActivity"/>
         <activity android:name=".contact.ContactActivity"
                   android:parentActivityName=".main.MainActivity"/>
+        <activity
+            android:name=".chat.ChatActivity"
+            android:parentActivityName=".main.MainActivity"
+            android:theme="@style/AppThemeGrayBackground" />
 
         <service
             android:name=".tcp.TcpConnectionService"
