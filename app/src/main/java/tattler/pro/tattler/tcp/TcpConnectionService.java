@@ -114,7 +114,7 @@ public class TcpConnectionService extends Service {
     }
 
     private synchronized void establishConnection() {
-        if (!isConnected()) {
+        while (!isConnected()) {
             Logger.d("Trying to establish connection with server.");
             try {
                 socket = new Socket(SERVER_IP, SERVER_PORT);
@@ -122,22 +122,16 @@ public class TcpConnectionService extends Service {
                 outputStream.flush();
                 inputStream = new ObjectInputStream(socket.getInputStream());
             } catch (IOException e) {
-                e.printStackTrace();
+                Logger.d("Could not establish connection... Next try in " + SLEEP_MS / 1000 + " seconds.");
             }
 
-            logConnectionStatus();
-            sendMessage(messageFactory.createLoginRequest());
-        } else {
-            Logger.w("Connection has been already established.");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ignored) {}
         }
-    }
 
-    private void logConnectionStatus() {
-        if (!isConnected()) {
-            Logger.w("Could not connect to the server.");
-        } else {
-            Logger.d("Connection to the server has been established.");
-        }
+        Logger.d("Connection has been already established.");
+        sendMessage(messageFactory.createLoginRequest());
     }
 
     public class TcpServiceBinder extends Binder {
@@ -156,11 +150,13 @@ public class TcpConnectionService extends Service {
         @Override
         public void run() {
             while (!Thread.currentThread().isInterrupted()) {
+                if (!isConnected()) {
+                    establishConnection();
+                    continue;
+                }
+
                 Message message = messages.poll();
                 if (message != null) {
-                    if (!isConnected()) {
-                        establishConnection();
-                    }
                     sendMessage(message);
                 }
             }
@@ -187,8 +183,8 @@ public class TcpConnectionService extends Service {
             try {
                 message = (Message) inputStream.readObject();
                 tcpMessageHandler.onMessageReceived(message);
-            } catch (SocketException e) {
-                sleep(SLEEP_MS);
+            } catch (SocketException | NullPointerException e) {
+                Logger.w("Exception while receiving message: " + e.getMessage());
                 establishConnection();
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -200,16 +196,9 @@ public class TcpConnectionService extends Service {
             while (!Thread.currentThread().isInterrupted()) {
                 if (!isConnected()) {
                     establishConnection();
+                    continue;
                 }
                 readAndHandleMessage();
-            }
-        }
-
-        private void sleep(int timeToSleep) {
-            try {
-                Thread.sleep(timeToSleep);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
 
