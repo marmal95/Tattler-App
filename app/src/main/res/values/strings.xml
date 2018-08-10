@@ -12,7 +12,7 @@
     <!--Labels-->
     <string name="touchFingerSensorToAppLogin">Touch the sensor with your finger to login to Tattler application
     </string>
-
+    <string name="enterMessage">Enter message…</string>
     <string name="polishLanguageCountyCode">(+48) Poland</string>
     <string name="phoneNumber">Phone number</string>
     <string name="userName">User name</string>

@@ -40,9 +40,6 @@
     <style name="PrimaryEditText">
         <item name="android:textColor">@color/colorPrimaryText</item>
         <item name="android:textColorHint">@color/colorHintText</item>
-        <item name="android:background">@drawable/rounded_edit_text_primary</item>
-        <item name="android:padding">@dimen/space16</item>
-        <item name="android:elevation">@dimen/space4</item>
     </style>
 
     <style name="PrimaryTextViewLabel">
