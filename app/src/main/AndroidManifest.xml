@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="tattler.pro.tattler">
+    package="tattler.pro.tattler">
 
-    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
         android:allowBackup="true"
@@ -16,24 +16,24 @@
             android:name=".splash.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".register.RegisterActivity"/>
-        <activity android:name=".login.FingerprintLoginActivity"/>
-        <activity android:name=".main.MainActivity"/>
-        <activity android:name=".contact.ContactActivity"
-                  android:parentActivityName=".main.MainActivity"/>
+        <activity android:name=".register.RegisterActivity" />
+        <activity android:name=".login.FingerprintLoginActivity" />
+        <activity android:name=".main.MainActivity" />
+        <activity
+            android:name=".contact.ContactActivity"
+            android:parentActivityName=".main.MainActivity" />
         <activity
             android:name=".chat.ChatActivity"
-            android:parentActivityName=".main.MainActivity"
-            android:theme="@style/AppThemeGrayBackground" />
+            android:parentActivityName=".main.MainActivity" />
 
         <service
             android:name=".tcp.TcpConnectionService"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -6,7 +6,13 @@
     android:fitsSystemWindows="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <include layout="@layout/toolbar" />
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/toolbar" />
+
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messagesView"
@@ -17,45 +23,50 @@
         android:layout_alignParentTop="true"
         android:overScrollMode="never" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/messageControlsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="bottom"
-        android:padding="@dimen/space10">
+        android:orientation="horizontal"
+        android:padding="@dimen/space8">
 
         <ImageButton
             android:id="@+id/addAttachmentButton"
             style="@style/PrimaryButtonStyle"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="@dimen/space10"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="@dimen/space8"
             android:padding="@dimen/space16"
             android:src="@drawable/ic_add"
             android:tint="@android:color/white" />
 
-        <EditText
-            android:id="@+id/messageInputArea"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/addAttachmentButton"
-            android:background="@drawable/rounded_background"
-            android:hint="@string/enterMessage"
-            android:inputType="textCapSentences"
-            android:padding="@dimen/space16"
-            android:paddingEnd="48dp" />
+            android:gravity="bottom">
 
-        <ImageButton
-            android:id="@+id/sendMessageButton"
-            android:layout_width="@dimen/space32"
-            android:layout_height="@dimen/space32"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/ic_send"
-            android:backgroundTint="@color/colorPrimary" />
+            <EditText
+                android:id="@+id/messageInputArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_background"
+                android:hint="@string/enterMessage"
+                android:inputType="textCapSentences"
+                android:paddingEnd="48dp" />
 
-    </RelativeLayout>
+            <ImageButton
+                android:id="@+id/sendMessageButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:background="@drawable/ic_send"
+                android:backgroundTint="@color/colorPrimary" />
+
+        </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

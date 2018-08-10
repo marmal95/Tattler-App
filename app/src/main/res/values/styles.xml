@@ -18,10 +18,6 @@
         <item name="android:windowBackground">@color/colorBackground</item>
     </style>
 
-    <style name="AppThemeGrayBackground" parent="AppTheme">
-        <item name="android:windowBackground">@color/colorBackgroundGray</item>
-    </style>
-
     <style name="AppTheme.FullScreen" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -56,7 +52,7 @@
         <item name="android:background">@drawable/rounded_button_primary</item>
         <item name="android:backgroundTint">@color/colorPrimary</item>
         <item name="android:padding">@dimen/space16</item>
-        <item name="android:elevation">@dimen/space4</item>
+        <item name="android:elevation">@dimen/elevation_radius</item>
     </style>
 
     <style name="PrimaryToolbarStyle" parent="ThemeOverlay.AppCompat.ActionBar">

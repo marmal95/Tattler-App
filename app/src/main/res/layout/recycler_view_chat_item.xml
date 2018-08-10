@@ -41,7 +41,7 @@
             android:id="@+id/chatName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space5"
+            android:layout_marginBottom="@dimen/space4"
             android:textSize="@dimen/primaryRecyclerItemFontSize" />
 
         <TextView
