@@ -3,32 +3,32 @@ package tattler.pro.tattler.main;
 import com.orhanobut.logger.Logger;
 
 import tattler.pro.tattler.common.ReceivedMessageCallback;
-import tattler.pro.tattler.messages.AddContactResponse;
-import tattler.pro.tattler.messages.ChatInvitation;
-import tattler.pro.tattler.messages.CreateChatResponse;
-import tattler.pro.tattler.messages.LoginResponse;
-import tattler.pro.tattler.messages.Message;
+import tattler.pro.tattler.internal_messages.ChatsUpdate;
+import tattler.pro.tattler.internal_messages.ContactsUpdate;
+import tattler.pro.tattler.internal_messages.InternalMessage;
+import tattler.pro.tattler.internal_messages.InvitationsUpdate;
+import tattler.pro.tattler.internal_messages.UserInfoUpdate;
 
 public class MainMessageHandler implements ReceivedMessageCallback {
     private MainPresenter presenter;
 
     @Override
-    public void onMessageReceived(Message message) {
-        // TODO: Maybe introduce internal messages send from TcpConnectionService?
+    public void onMessageReceived(InternalMessage message) {
         Logger.d("Handling Message: " + message.toString());
-        switch (message.messageType) {
-            case Message.Type.LOGIN_RESPONSE:
-                handleLoginResponse((LoginResponse) message);
+        switch (message.type) {
+            case USER_INFO_UPDATE:
+                handleUserInfoUpdate((UserInfoUpdate) message);
                 break;
-            case Message.Type.ADD_CONTACT_RESPONSE:
-                handleAddContactResponse((AddContactResponse) message);
+            case CONTACTS_UPDATE:
+                handleContactsUpdate((ContactsUpdate) message);
                 break;
-            case Message.Type.CREATE_CHAT_RESPONSE:
-                handleCreateChatResponse((CreateChatResponse) message);
+            case CHATS_UPDATE:
+                handleChatsUpdate((ChatsUpdate) message);
                 break;
-            case Message.Type.CHAT_INVITATION:
-                handleChatInvitation((ChatInvitation) message);
+            case INVITATIONS_UPDATE:
+                handleInvitationsUpdate((InvitationsUpdate) message);
                 break;
+
         }
     }
 
@@ -36,46 +36,44 @@ public class MainMessageHandler implements ReceivedMessageCallback {
         this.presenter = presenter;
     }
 
-    private void handleLoginResponse(LoginResponse message) {
-        switch (message.status) {
-            case LoginResponse.Status.LOGIN_SUCCESSFUL:
-                presenter.handleLoginResponse(message);
+    private void handleUserInfoUpdate(UserInfoUpdate message) {
+        switch (message.reason) {
+            case LOGIN_SUCCESSFUL:
+                presenter.updateUserInfo(message);
                 break;
         }
     }
 
-    private void handleAddContactResponse(AddContactResponse message) {
-        switch (message.status) {
-            case AddContactResponse.Status.CONTACT_ADDED:
-                presenter.handleAddContactResponse(message);
+    private void handleContactsUpdate(ContactsUpdate message) {
+        switch (message.reason) {
+            case ALL_CONTACTS_UPDATE:
+                presenter.handleContactsUpdate(message.contacts);
                 break;
-            case AddContactResponse.Status.CONTACT_ALREADY_ADDED:
-                showContactAlreadyAddedInfo();
+            case NEW_CONTACT_ADDED:
+                presenter.handleContactAdded(message.contacts.iterator().next());
                 break;
-            case AddContactResponse.Status.CONTACT_NOT_EXIST:
-                showContactNotExistInfo();
+            case CONTACT_ALREADY_ADDED:
+                presenter.showContactAlreadyAddedInfo();
                 break;
-        }
-    }
-
-    private void handleCreateChatResponse(CreateChatResponse message) {
-        switch (message.status) {
-            case CreateChatResponse.Status.CHAT_CREATED:
-            case CreateChatResponse.Status.CHAT_ALREADY_EXISTS:
-                presenter.handleCreateChatResponse(message);
+            case CONTACT_NOT_EXIST:
+                presenter.showContactNotExistInfo();
                 break;
         }
     }
 
-    private void handleChatInvitation(ChatInvitation message) {
-        presenter.handleChatInvitation(message);
+    private void handleChatsUpdate(ChatsUpdate message) {
+        switch (message.reason) {
+            case NEW_CHAT_CREATED:
+                presenter.handleChatCreated(message.chats.iterator().next());
+                break;
+        }
     }
 
-    private void showContactAlreadyAddedInfo() {
-        presenter.showContactAlreadyAddedInfo();
-    }
-
-    private void showContactNotExistInfo() {
-        presenter.showContactNotExistInfo();
+    private void handleInvitationsUpdate(InvitationsUpdate message) {
+        switch (message.reason) {
+            case NEW_INVITATION:
+                presenter.handleInvitationReceived(message.invitations.iterator().next());
+                break;
+        }
     }
 }

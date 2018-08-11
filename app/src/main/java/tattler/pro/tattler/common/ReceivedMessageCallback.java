@@ -1,7 +1,7 @@
 package tattler.pro.tattler.common;
 
-import tattler.pro.tattler.messages.Message;
+import tattler.pro.tattler.internal_messages.InternalMessage;
 
 public interface ReceivedMessageCallback {
-    void onMessageReceived(Message message);
+    void onMessageReceived(InternalMessage message);
 }

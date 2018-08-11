@@ -13,6 +13,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,9 +84,13 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    public void removeContact(int position) {
-        contacts.remove(position);
-        notifyItemRemoved(position);
+    public void removeContact(Contact contact) {
+        OptionalInt contactPosition = IntStream.range(0, contacts.size()).filter(
+                index -> contact.contactNumber == getContact(index).contactNumber).findFirst();
+        if (contactPosition.isPresent()) {
+            contacts.remove(contactPosition.getAsInt());
+            notifyItemRemoved(contactPosition.getAsInt());
+        }
     }
 
     public Contact getContact(int position) {

@@ -182,7 +182,7 @@ public class TcpConnectionService extends Service {
             Message message;
             try {
                 message = (Message) inputStream.readObject();
-                tcpMessageHandler.onMessageReceived(message);
+                tcpMessageHandler.handle(message);
             } catch (SocketException | NullPointerException e) {
                 Logger.w("Exception while receiving message: " + e.getMessage());
                 establishConnection();

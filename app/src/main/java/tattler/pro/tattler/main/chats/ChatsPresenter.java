@@ -8,7 +8,6 @@ import java.util.List;
 
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.main.MainPresenter;
-import tattler.pro.tattler.messages.CreateChatResponse;
 import tattler.pro.tattler.models.Chat;
 
 public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
@@ -34,9 +33,8 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
         OpenHelperManager.releaseHelper();
     }
 
-    public void handleCreateChatResponse(CreateChatResponse message) {
-        // TODO: Do not add chat here - it's not initialized yet.
-        // TODO: Eventually inform user about fail
+    public void handleChatCreated(Chat chat) {
+        chatsAdapter.addChat(chat);
     }
 
     private void initChats() {

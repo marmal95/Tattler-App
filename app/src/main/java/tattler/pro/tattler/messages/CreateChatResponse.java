@@ -36,6 +36,6 @@ public class CreateChatResponse extends MessageResponse {
     public class Status {
         public static final int CHAT_CREATED = 0;
         public static final int CHAT_ALREADY_EXISTS = 1;
-        public static final int CONTACT_NOT_FOUND = 2;
+        public static final int CHAT_NO_CONTACTS_ENOUGH = 2;
     }
 }

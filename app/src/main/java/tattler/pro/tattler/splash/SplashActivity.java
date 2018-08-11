@@ -9,7 +9,7 @@ import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
 import tattler.pro.tattler.common.AppPreferences;
-import tattler.pro.tattler.register.RegisterActivity;
+import tattler.pro.tattler.main.MainActivity;
 
 
 public class SplashActivity extends MvpActivity<SplashView, SplashPresenter> implements SplashView {
@@ -34,14 +34,14 @@ public class SplashActivity extends MvpActivity<SplashView, SplashPresenter> imp
     @Override
     public void startRegisterActivity() {
         // FIXME: Change to RegisterActivity after tests
-        Intent intent = new Intent(this, RegisterActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void startFingerAuthActivity() {
         // FIXME: Change to FingerAuthActivity after tests
-        Intent intent = new Intent(this, RegisterActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 }

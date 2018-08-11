@@ -9,8 +9,6 @@ import java.util.List;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.main.MainPresenter;
 import tattler.pro.tattler.messages.AddContactRequest;
-import tattler.pro.tattler.messages.AddContactResponse;
-import tattler.pro.tattler.messages.LoginResponse;
 import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Contact;
 
@@ -55,20 +53,13 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
         sendAddContactRequest(contactPhoneId);
     }
 
-    public void handleLoginResponse(LoginResponse message) {
-        if (!message.contacts.isEmpty()) {
-            initUserContacts();
-        }
+    public void handleContactsUpdate(List<Contact> contacts) {
+        contactsAdapter.clearContacts();
+        contactsAdapter.addContacts(contacts);
     }
 
-    public void handleAddContactResponse(AddContactResponse message) {
-        try {
-            Contact contact = databaseManager.selectContactByPhoneId(message.userNumber);
-            contactsAdapter.addContact(contact);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showContactAddingError();
-        }
+    public void handleContactAdded(Contact contact) {
+        contactsAdapter.addContact(contact);
     }
 
     @SuppressWarnings("ConstantConditions")

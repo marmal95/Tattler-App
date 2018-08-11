@@ -35,6 +35,7 @@ public class MessageFactory {
     public ChatInvitation createChatInvitation(CreateChatResponse chatResponse) {
         ChatInvitation chatInvitation = new ChatInvitation(
                 getMyUserNumber(),
+                0,
                 chatResponse.chatId,
                 chatResponse.isGroupChat,
                 chatResponse.chatName);

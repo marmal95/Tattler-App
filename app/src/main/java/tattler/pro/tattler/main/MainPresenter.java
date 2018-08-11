@@ -3,15 +3,17 @@ package tattler.pro.tattler.main;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.orhanobut.logger.Logger;
 
+import java.util.List;
+
 import tattler.pro.tattler.common.AppPreferences;
+import tattler.pro.tattler.internal_messages.UserInfoUpdate;
 import tattler.pro.tattler.main.chats.ChatsPresenter;
 import tattler.pro.tattler.main.contacts.ContactsPresenter;
 import tattler.pro.tattler.main.invitations.InvitationsPresenter;
-import tattler.pro.tattler.messages.AddContactResponse;
-import tattler.pro.tattler.messages.ChatInvitation;
-import tattler.pro.tattler.messages.CreateChatResponse;
-import tattler.pro.tattler.messages.LoginResponse;
 import tattler.pro.tattler.messages.Message;
+import tattler.pro.tattler.models.Chat;
+import tattler.pro.tattler.models.Contact;
+import tattler.pro.tattler.models.Invitation;
 import tattler.pro.tattler.tcp.MessageBroadcastReceiver;
 import tattler.pro.tattler.tcp.TcpServiceConnector;
 import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
@@ -56,11 +58,10 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
     }
 
     public void onCreate() {
+        displayUserInfo();
         if (!tcpServiceManager.isServiceBound()) {
             bindTcpConnectionService();
         }
-
-        displayUserData();
         registerReceiver();
     }
 
@@ -97,28 +98,31 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
         tcpServiceManager.getTcpService().sendMessage(message);
     }
 
-    public void handleLoginResponse(LoginResponse loginResponse) {
-        displayUserData();
+    public void updateUserInfo(UserInfoUpdate userInfo) {
+        displayUserInfo(userInfo.userName, String.valueOf(userInfo.userPhoneId));
+    }
+
+    public void handleContactsUpdate(List<Contact> contacts) {
         if (contactsPresenter != null) {
-            contactsPresenter.handleLoginResponse(loginResponse);
+            contactsPresenter.handleContactsUpdate(contacts);
         }
     }
 
-    public void handleAddContactResponse(AddContactResponse message) {
+    public void handleContactAdded(Contact contact) {
         if (contactsPresenter != null) {
-            contactsPresenter.handleAddContactResponse(message);
+            contactsPresenter.handleContactAdded(contact);
         }
     }
 
-    public void handleCreateChatResponse(CreateChatResponse message) {
+    public void handleChatCreated(Chat chat) {
         if (chatsPresenter != null) {
-            chatsPresenter.handleCreateChatResponse(message);
+            chatsPresenter.handleChatCreated(chat);
         }
     }
 
-    public void handleChatInvitation(ChatInvitation message) {
+    public void handleInvitationReceived(Invitation invitation) {
         if (invitationsPresenter != null) {
-            invitationsPresenter.handleChatInvitation(message);
+            invitationsPresenter.handleInvitationReceived(invitation);
         }
     }
 
@@ -151,15 +155,6 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void displayUserData() {
-        String userName = appPreferences.getString(AppPreferences.Key.USER_NAME);
-        String userNumber = String.valueOf(appPreferences.getInt(AppPreferences.Key.USER_NUMBER));
-        if (isViewAttached()) {
-            getView().displayUserData(userName, userNumber);
-        }
-    }
-
-    @SuppressWarnings("ConstantConditions")
     private void registerReceiver() {
         if (isViewAttached()) {
             Logger.d("Registering BroadcastReceiver.");
@@ -172,6 +167,19 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
         if (isViewAttached()) {
             Logger.d("Unregistering BroadcastReceiver.");
             getView().unregisterReceiver(broadcastReceiver);
+        }
+    }
+
+    private void displayUserInfo() {
+        String userName = appPreferences.getString(AppPreferences.Key.USER_NAME);
+        String userNumber = String.valueOf(appPreferences.getInt(AppPreferences.Key.USER_NUMBER));
+        displayUserInfo(userName, userNumber);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void displayUserInfo(String userName, String userNumber) {
+        if (isViewAttached()) {
+            getView().displayUserData(userName, userNumber);
         }
     }
 }

@@ -133,11 +133,17 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         return optionalChat;
     }
 
-    public void updateContacts(List<tattler.pro.tattler.messages.models.Contact> contacts) throws SQLException {
+    public List<Contact> updateContacts(List<tattler.pro.tattler.messages.models.Contact> contacts) throws SQLException {
         TableUtils.clearTable(connectionSource, Contact.class);
+        List<Contact> newContacts = new ArrayList<>();
+
         for (tattler.pro.tattler.messages.models.Contact contact : contacts) {
-            insertContact(new Contact(contact.contactName, contact.contactNumber));
+            Contact newContact = new Contact(contact.contactName, contact.contactNumber);
+            insertContact(newContact);
+            newContacts.add(newContact);
         }
+
+        return newContacts;
     }
 
     public void updateChat(Chat chat) {

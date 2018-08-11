@@ -13,8 +13,12 @@ import java.util.Optional;
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.IntentKey;
-import tattler.pro.tattler.common.ReceivedMessageCallback;
 import tattler.pro.tattler.common.Util;
+import tattler.pro.tattler.internal_messages.ChatsUpdate;
+import tattler.pro.tattler.internal_messages.ContactsUpdate;
+import tattler.pro.tattler.internal_messages.InternalMessage;
+import tattler.pro.tattler.internal_messages.InvitationsUpdate;
+import tattler.pro.tattler.internal_messages.UserInfoUpdate;
 import tattler.pro.tattler.messages.AddContactResponse;
 import tattler.pro.tattler.messages.ChatInvitation;
 import tattler.pro.tattler.messages.ChatInvitationResponse;
@@ -29,7 +33,7 @@ import tattler.pro.tattler.models.Invitation;
 import tattler.pro.tattler.security.AesCrypto;
 import tattler.pro.tattler.security.RsaCrypto;
 
-public class TcpMessageHandler implements ReceivedMessageCallback {
+public class TcpMessageHandler {
     private TcpConnectionService tcpConnectionService;
     private AppPreferences appPreferences;
     private DatabaseManager databaseManager;
@@ -43,8 +47,7 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
         this.messageFactory = messageFactory;
     }
 
-    @Override
-    public void onMessageReceived(Message message) {
+    public void handle(Message message) {
         Logger.d("Received Message: " + message.toString());
         switch (message.messageType) {
             case Message.Type.LOGIN_RESPONSE:
@@ -76,11 +79,21 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
                 appPreferences.put(AppPreferences.Key.USER_NUMBER, message.phoneId);
                 appPreferences.put(AppPreferences.Key.IS_FIRST_LAUNCH, false);
 
+                UserInfoUpdate userInfoUpdate = new UserInfoUpdate();
+                userInfoUpdate.userName = appPreferences.getString(AppPreferences.Key.USER_NAME);
+                userInfoUpdate.userPhoneId = message.phoneId;
+                userInfoUpdate.reason = UserInfoUpdate.Reason.LOGIN_SUCCESSFUL;
+                broadcastMessage(userInfoUpdate);
+
                 if (!message.contacts.isEmpty()) {
                     Logger.d("Received contacts from Server, size: " + message.contacts.size());
-                    databaseManager.updateContacts(message.contacts);
+
+                    ContactsUpdate contactsUpdate = new ContactsUpdate();
+                    contactsUpdate.contacts = databaseManager.updateContacts(message.contacts);
+                    contactsUpdate.reason = ContactsUpdate.Reason.ALL_CONTACTS_UPDATE;
+
+                    broadcastMessage(contactsUpdate);
                 }
-                broadcastMessage(message);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -89,12 +102,23 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
 
     private void handleAddContactResponse(AddContactResponse message) {
         try {
-            if (message.status == AddContactResponse.Status.CONTACT_ADDED ||
-                    message.status == AddContactResponse.Status.CONTACT_ALREADY_ADDED) {
+            ContactsUpdate contactsUpdate = new ContactsUpdate();
+
+            if (message.status == AddContactResponse.Status.CONTACT_ADDED) {
                 Contact contact = new Contact(message.userName, message.userNumber);
                 databaseManager.insertContact(contact);
+                contactsUpdate.reason = ContactsUpdate.Reason.NEW_CONTACT_ADDED;
+                contactsUpdate.contacts.add(contact);
+            } else if (message.status == AddContactResponse.Status.CONTACT_ALREADY_ADDED) {
+                Contact contact = new Contact(message.userName, message.userNumber);
+                databaseManager.insertContact(contact);
+                contactsUpdate.reason = ContactsUpdate.Reason.CONTACT_ALREADY_ADDED;
+                contactsUpdate.contacts.add(contact);
+            } else if (message.status == AddContactResponse.Status.CONTACT_NOT_EXIST) {
+                contactsUpdate.reason = ContactsUpdate.Reason.CONTACT_NOT_EXIST;
             }
-            broadcastMessage(message);
+
+            broadcastMessage(contactsUpdate);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -102,8 +126,7 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
 
     private void handleCreateChatResponse(CreateChatResponse message) {
         try {
-            if (message.status == CreateChatResponse.Status.CHAT_CREATED ||
-                    message.status == CreateChatResponse.Status.CHAT_ALREADY_EXISTS) {
+            if (message.status == CreateChatResponse.Status.CHAT_CREATED) {
                 Chat chat = prepareChat(message);
                 databaseManager.insertChat(chat, message.contacts);
 
@@ -112,8 +135,12 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
 
                 databaseManager.insertInvitation(invitation);
                 tcpConnectionService.sendMessage(chatInvitation);
+
+                ChatsUpdate chatsUpdate = new ChatsUpdate();
+                chatsUpdate.reason = ChatsUpdate.Reason.NEW_CHAT_CREATED;
+                chatsUpdate.chats.add(chat);
+                broadcastMessage(chatsUpdate);
             }
-            broadcastMessage(message);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -127,7 +154,11 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
 
             Invitation invitation = prepareInvitation(message, chat);
             databaseManager.insertInvitation(invitation);
-            broadcastMessage(message);
+
+            InvitationsUpdate invitationsUpdate = new InvitationsUpdate();
+            invitationsUpdate.invitations.add(invitation);
+            invitationsUpdate.reason = InvitationsUpdate.Reason.NEW_INVITATION;
+            broadcastMessage(invitationsUpdate);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -193,7 +224,7 @@ public class TcpMessageHandler implements ReceivedMessageCallback {
                 chatInvitation.messageId, Invitation.State.PENDING_FOR_RESPONSE);
     }
 
-    private void broadcastMessage(Message message) {
+    private void broadcastMessage(InternalMessage message) {
         Intent intent = new Intent(IntentKey.BROADCAST_MESSAGE.name());
         intent.putExtra(IntentKey.MESSAGE.name(), message);
         tcpConnectionService.sendBroadcast(intent);

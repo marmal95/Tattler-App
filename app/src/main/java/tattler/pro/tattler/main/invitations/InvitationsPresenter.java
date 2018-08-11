@@ -8,10 +8,8 @@ import java.util.List;
 
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.main.MainPresenter;
-import tattler.pro.tattler.messages.ChatInvitation;
 import tattler.pro.tattler.messages.ChatInvitationResponse;
 import tattler.pro.tattler.messages.MessageFactory;
-import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Invitation;
 import tattler.pro.tattler.security.RsaCrypto;
 
@@ -54,19 +52,8 @@ public class InvitationsPresenter extends MvpBasePresenter<InvitationsView> {
         changeInvitationStateToPendingReactionResponse(position);
     }
 
-    public void handleChatInvitation(ChatInvitation chatInvitation) {
-        try {
-            Invitation invitation = databaseManager.selectInvitationForChatInvitation(chatInvitation.messageId);
-            invitationsAdapter.addInvitation(invitation);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void updateChatKeys(Chat chat, byte[] publicKey, byte[] privateKey) {
-        chat.publicKey = publicKey;
-        chat.privateKey = privateKey;
+    public void handleInvitationReceived(Invitation invitation) {
+        invitationsAdapter.addInvitation(invitation);
     }
 
     private void sendChatInvitationResponse(Invitation invitation, byte[] publicKey) {
