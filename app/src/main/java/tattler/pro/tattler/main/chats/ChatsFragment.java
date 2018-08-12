@@ -1,5 +1,6 @@
 package tattler.pro.tattler.main.chats;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,10 +19,13 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.chat.ChatActivity;
 import tattler.pro.tattler.common.DatabaseManager;
+import tattler.pro.tattler.common.IntentKey;
 import tattler.pro.tattler.common.OnItemClickListener;
 import tattler.pro.tattler.custom_ui.MaterialToast;
 import tattler.pro.tattler.main.MainActivity;
+import tattler.pro.tattler.models.Chat;
 
 public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
         implements ChatsView, OnItemClickListener {
@@ -75,7 +79,14 @@ public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
     }
 
     @Override
-    public void onItemClick(int position) {
+    public void startChat(Chat chat) {
+        Intent intent = new Intent(getActivity(), ChatActivity.class);
+        intent.putExtra(IntentKey.CHAT.name(), chat);
+        startActivity(intent);
+    }
 
+    @Override
+    public void onItemClick(int position) {
+        getPresenter().handleChatClicked(position);
     }
 }

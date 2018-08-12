@@ -18,16 +18,18 @@ import java.util.Optional;
 import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Contact;
 import tattler.pro.tattler.models.Invitation;
+import tattler.pro.tattler.models.Message;
 import tattler.pro.tattler.models.Participant;
 
 public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "tattler.db";
-    private static final int DATABASE_VERSION = 64;
+    private static final int DATABASE_VERSION = 68;
 
     private Dao<Chat, Integer> chatsDao;
     private Dao<Contact, Integer> contactsDao;
     private Dao<Invitation, Integer> invitationsDao;
     private Dao<Participant, Integer> participantsDao;
+    private Dao<Message, Integer> messagesDao;
 
     public DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -117,6 +119,11 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         Logger.d("Inserted " + invitation.toString());
     }
 
+    public void insertMessage(Message message) throws SQLException {
+        getMessagesDao().create(message);
+        Logger.d("Inserted: " + message.toString());
+    }
+
     public Optional<Chat> getIndividualChat(Contact contact) throws SQLException {
         QueryBuilder<Participant, Integer> participantQueryBuilder = getParticipantsDao().queryBuilder();
         participantQueryBuilder.where().eq("contact_number", contact.contactNumber);
@@ -183,6 +190,11 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         return participantsDao;
     }
 
+    private Dao<Message, Integer> getMessagesDao() throws SQLException {
+        if (messagesDao == null) { messagesDao = getDao(Message.class);}
+        return messagesDao;
+    }
+
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private void logSelectedIndividualChat(Optional<Chat> optionalChat, Contact contact) {
         if (optionalChat.isPresent()) {
@@ -197,6 +209,7 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         TableUtils.createTable(connectionSource, Chat.class);
         TableUtils.createTable(connectionSource, Participant.class);
         TableUtils.createTable(connectionSource, Invitation.class);
+        TableUtils.createTable(connectionSource, Message.class);
     }
 
     private void dropTables(ConnectionSource connectionSource) throws SQLException {
@@ -204,5 +217,6 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         TableUtils.dropTable(connectionSource, Chat.class, true);
         TableUtils.dropTable(connectionSource, Participant.class, true);
         TableUtils.dropTable(connectionSource, Invitation.class, true);
+        TableUtils.dropTable(connectionSource, Message.class, true);
     }
 }

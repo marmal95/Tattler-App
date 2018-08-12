@@ -8,7 +8,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tattler.pro.tattler.R;
-import tattler.pro.tattler.models.ChatMessage;
+import tattler.pro.tattler.models.Message;
 
 public class MessageToMeViewHolder extends RecyclerView.ViewHolder implements MessageViewHolder {
     @BindView(R.id.messageTime)
@@ -23,7 +23,7 @@ public class MessageToMeViewHolder extends RecyclerView.ViewHolder implements Me
     }
 
     @Override
-    public void setViewData(ChatMessage message) {
+    public void setViewData(Message message) {
         messageTime.setText(message.getStringTime());
         switch (message.contentType) {
             case TEXT:

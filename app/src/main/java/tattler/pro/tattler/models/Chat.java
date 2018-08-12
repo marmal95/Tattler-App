@@ -40,6 +40,9 @@ public class Chat implements Serializable {
     @ForeignCollectionField
     public ForeignCollection<Participant> participants;
 
+    @ForeignCollectionField
+    public ForeignCollection<Message> messages;
+
     public Chat() {
         this.chatId = 0;
         this.isGroupChat = false;
@@ -64,6 +67,7 @@ public class Chat implements Serializable {
     public String toString() {
         int invitationsSize = invitations == null ? 0 : invitations.size();
         int participantsSize = participants == null ? 0 : participants.size();
+        int messagesSize = messages == null ? 0 : messages.size();
 
         return "Chat{" +
                 "chatId=" + chatId +
@@ -75,6 +79,7 @@ public class Chat implements Serializable {
                 ", chatKey=" + Arrays.toString(chatKey) +
                 ", invitations=" + "[" + invitationsSize + "]" +
                 ", participants=" + "[" + participantsSize + "]" +
+                ", messages=" + "[" + messagesSize + "]" +
                 '}';
     }
 }

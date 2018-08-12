@@ -2,29 +2,116 @@ package tattler.pro.tattler.chat;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.orhanobut.logger.Logger;
+
+import java.util.List;
 
 import tattler.pro.tattler.common.DatabaseManager;
+import tattler.pro.tattler.messages.ChatMessage;
 import tattler.pro.tattler.messages.MessageFactory;
+import tattler.pro.tattler.models.Chat;
+import tattler.pro.tattler.models.Message;
+import tattler.pro.tattler.tcp.MessageBroadcastReceiver;
+import tattler.pro.tattler.tcp.TcpServiceConnector;
+import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
+import tattler.pro.tattler.tcp.TcpServiceManager;
 
 public class ChatPresenter extends MvpBasePresenter<ChatView> {
-    private MessagesAdapter messagesAdapter;
-    private DatabaseManager databaseManager;
-    private MessageFactory messageFactory;
+    private TcpServiceManager tcpServiceManager;
+    private TcpServiceConnector tcpServiceConnector;
 
-    ChatPresenter(MessagesAdapter messagesAdapter, DatabaseManager databaseManager, MessageFactory messageFactory) {
+    private ChatMessageHandler messageHandler;
+    private MessageBroadcastReceiver broadcastReceiver;
+
+    private Chat chat;
+    private MessagesAdapter messagesAdapter;
+    private MessageFactory messageFactory;
+    private DatabaseManager databaseManager;
+
+    ChatPresenter(
+            TcpServiceManager tcpManager,
+            TcpServiceConnectorFactory serviceConnectorFactory,
+            ChatMessageHandler messageHandler,
+            MessageBroadcastReceiver broadcastReceiver,
+            MessagesAdapter messagesAdapter,
+            MessageFactory messageFactory,
+            Chat chat,
+            DatabaseManager databaseManager) {
+        this.tcpServiceManager = tcpManager;
+        this.tcpServiceConnector = serviceConnectorFactory.create(tcpServiceManager);
+        this.messageHandler = messageHandler;
+        this.broadcastReceiver = broadcastReceiver;
         this.messagesAdapter = messagesAdapter;
-        this.databaseManager = databaseManager;
         this.messageFactory = messageFactory;
+        this.chat = chat;
+        this.databaseManager = databaseManager;
+
+        this.messageHandler.setPresenter(this);
+        this.broadcastReceiver.setReceivedMessageCallback(messageHandler);
     }
 
     @SuppressWarnings("ConstantConditions")
     public void onCreate() {
         if (isViewAttached()) {
             getView().setMessagesAdapter(messagesAdapter);
+            getView().setTitle(chat.chatName);
         }
+
+        if (!tcpServiceManager.isServiceBound()) {
+            bindTcpConnectionService();
+        }
+        registerReceiver();
     }
 
     void onDestroy() {
         OpenHelperManager.releaseHelper();
+        if (tcpServiceManager.isServiceBound()) {
+            unbindTcpConnectionService();
+        }
+        unregisterReceiver();
+    }
+
+    public void handleMessagesReceived(List<Message> messages) {
+        messagesAdapter.addMessages(messages);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void bindTcpConnectionService() {
+        if (isViewAttached()) {
+            Logger.d("Binding TcpConnectionService.");
+            getView().bindTcpConnectionService(tcpServiceConnector);
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void unbindTcpConnectionService() {
+        if (isViewAttached()) {
+            Logger.d("Unbinding TcpConnectionService.");
+            getView().unbindTcpConnectionService(tcpServiceConnector);
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void registerReceiver() {
+        if (isViewAttached()) {
+            Logger.d("Registering BroadcastReceiver.");
+            getView().registerReceiver(broadcastReceiver);
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void unregisterReceiver() {
+        if (isViewAttached()) {
+            Logger.d("Unregistering BroadcastReceiver.");
+            getView().unregisterReceiver(broadcastReceiver);
+        }
+    }
+
+    public void handleSendMessage(String messageText) {
+        ChatMessage chatMessage = messageFactory.createChatMessage(chat, messageText.getBytes());
+        tcpServiceManager.getTcpService().sendMessage(chatMessage);
+
+        Message dbMessage = new Message(chatMessage, chat);
+        messagesAdapter.addMessage(dbMessage);
     }
 }

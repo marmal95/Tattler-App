@@ -14,6 +14,7 @@ public abstract class InternalMessage implements Serializable {
         USER_INFO_UPDATE,
         CONTACTS_UPDATE,
         CHATS_UPDATE,
-        INVITATIONS_UPDATE
+        INVITATIONS_UPDATE,
+        MESSAGES_UPDATE
     }
 }

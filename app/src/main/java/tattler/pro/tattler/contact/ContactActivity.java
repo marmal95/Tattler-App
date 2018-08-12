@@ -9,26 +9,30 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.hannesdorfmann.mosby.mvp.MvpActivity;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.hannesdorfmann.mosby.mvp.MvpActivity;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.chat.ChatActivity;
 import tattler.pro.tattler.common.ChatsManager;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.IntentKey;
 import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.custom_ui.MaterialToast;
 import tattler.pro.tattler.messages.MessageFactory;
+import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Contact;
 import tattler.pro.tattler.tcp.TcpConnectionService;
 import tattler.pro.tattler.tcp.TcpServiceConnector;
 import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
 import tattler.pro.tattler.tcp.TcpServiceManager;
-
-import java.util.Objects;
 
 public class ContactActivity extends MvpActivity<ContactView, ContactPresenter> implements ContactView {
     @BindView(R.id.toolbar)
@@ -84,15 +88,6 @@ public class ContactActivity extends MvpActivity<ContactView, ContactPresenter> 
     }
 
     @Override
-    public void loadContactData(Contact contact) {
-        ColorDrawable userNameColorDrawable = new ColorDrawable(Color.parseColor(Util.pickHexColor(this, contact.contactName)));
-        userAvatar.setImageDrawable(userNameColorDrawable);
-        userInitials.setText(Util.extractUserInitials(contact.contactName));
-        userName.setText(contact.contactName);
-        userNumber.setText(String.valueOf(contact.contactNumber));
-    }
-
-    @Override
     public void bindTcpConnectionService(TcpServiceConnector serviceConnector) {
         Intent intent = new Intent(this, TcpConnectionService.class);
         startService(intent);
@@ -102,6 +97,22 @@ public class ContactActivity extends MvpActivity<ContactView, ContactPresenter> 
     @Override
     public void unbindTcpConnectionService(TcpServiceConnector serviceConnector) {
         unbindService(serviceConnector);
+    }
+
+    @Override
+    public void loadContactData(Contact contact) {
+        ColorDrawable userNameColorDrawable = new ColorDrawable(Color.parseColor(Util.pickHexColor(this, contact.contactName)));
+        userAvatar.setImageDrawable(userNameColorDrawable);
+        userInitials.setText(Util.extractUserInitials(contact.contactName));
+        userName.setText(contact.contactName);
+        userNumber.setText(String.valueOf(contact.contactNumber));
+    }
+
+    @Override
+    public void startChatActivity(Chat chat) {
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra(IntentKey.CHAT.name(), chat);
+        startActivity(intent);
     }
 
     @OnClick(R.id.startChat)
@@ -126,5 +137,4 @@ public class ContactActivity extends MvpActivity<ContactView, ContactPresenter> 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
     }
-
 }

@@ -3,10 +3,14 @@ package tattler.pro.tattler.contact;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.orhanobut.logger.Logger;
+
+import java.util.Optional;
+
 import tattler.pro.tattler.common.ChatsManager;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.messages.CreateChatRequest;
 import tattler.pro.tattler.messages.MessageFactory;
+import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Contact;
 import tattler.pro.tattler.tcp.TcpServiceConnector;
 import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
@@ -53,9 +57,10 @@ public class ContactPresenter extends MvpBasePresenter<ContactView> {
     }
 
     public void handleStartChat() {
-        if (chatsManager.retrieveIndividualChat(contact).isPresent()) {
+        Optional<Chat> optionalChat = chatsManager.retrieveIndividualChat(contact);
+        if (optionalChat.isPresent()) {
             Logger.d("Retrieved existed individual chat for: " + contact.toString());
-            // TODO: Implement (open chat activity)
+            startChat(optionalChat.get());
         } else {
             Logger.d("Individual chat does not exist for: " + contact.toString());
             CreateChatRequest chatRequest = messageFactory.createCreateChatRequest(contact);
@@ -76,6 +81,13 @@ public class ContactPresenter extends MvpBasePresenter<ContactView> {
         if (isViewAttached()) {
             Logger.d("Unbinding TcpConnectionService.");
             getView().unbindTcpConnectionService(tcpServiceConnector);
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void startChat(Chat chat) {
+        if (isViewAttached()) {
+            getView().startChatActivity(chat);
         }
     }
 }

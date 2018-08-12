@@ -14,14 +14,14 @@ import tattler.pro.tattler.chat.view_holders.MessageByMeViewHolder;
 import tattler.pro.tattler.chat.view_holders.MessageToMeViewHolder;
 import tattler.pro.tattler.chat.view_holders.MessageViewHolder;
 import tattler.pro.tattler.common.Util;
-import tattler.pro.tattler.models.ChatMessage;
+import tattler.pro.tattler.models.Message;
 
 
 public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
-    private List<ChatMessage> messages;
+    private List<Message> messages;
 
-    MessagesAdapter(Context context, List<ChatMessage> messages) {
+    MessagesAdapter(Context context, List<Message> messages) {
         this.context = context;
         this.messages = messages;
     }
@@ -54,7 +54,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        ChatMessage message = messages.get(position);
+        Message message = messages.get(position);
         if (message == null) {
             return ChatViewType.NONE;
         }
@@ -70,12 +70,17 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return messages.size();
     }
 
-    public ChatMessage getMessage(int position) {
+    public Message getMessage(int position) {
         return messages.get(position);
     }
 
-    public void addMessage(ChatMessage message) {
+    public void addMessage(Message message) {
         messages.add(message);
+        notifyDataSetChanged();
+    }
+
+    public void addMessages(List<Message> messages) {
+        this.messages.addAll(messages);
         notifyDataSetChanged();
     }
 

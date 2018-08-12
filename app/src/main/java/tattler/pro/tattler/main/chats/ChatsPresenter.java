@@ -37,6 +37,13 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
         chatsAdapter.addChat(chat);
     }
 
+    @SuppressWarnings("ConstantConditions")
+    public void handleChatClicked(int position) {
+        if (isViewAttached()) {
+            getView().startChat(chatsAdapter.getChat(position));
+        }
+    }
+
     private void initChats() {
         try {
             List<Chat> chats = databaseManager.selectInitializedChats();

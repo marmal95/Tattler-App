@@ -28,7 +28,6 @@ public class MainMessageHandler implements ReceivedMessageCallback {
             case INVITATIONS_UPDATE:
                 handleInvitationsUpdate((InvitationsUpdate) message);
                 break;
-
         }
     }
 

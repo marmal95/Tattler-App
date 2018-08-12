@@ -71,6 +71,10 @@ public class MessageFactory {
         return initChatInd;
     }
 
+    public ChatMessage createChatMessage(Chat chat, byte[] content) {
+        return new ChatMessage(getMyUserNumber(), chat.chatId, content);
+    }
+
     private int getMyUserNumber() {
         AppPreferences appPreferences = AppPreferences.getInstance(context);
         return appPreferences.getInt(AppPreferences.Key.USER_NUMBER);

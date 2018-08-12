@@ -18,10 +18,12 @@ import tattler.pro.tattler.internal_messages.ChatsUpdate;
 import tattler.pro.tattler.internal_messages.ContactsUpdate;
 import tattler.pro.tattler.internal_messages.InternalMessage;
 import tattler.pro.tattler.internal_messages.InvitationsUpdate;
+import tattler.pro.tattler.internal_messages.MessagesUpdate;
 import tattler.pro.tattler.internal_messages.UserInfoUpdate;
 import tattler.pro.tattler.messages.AddContactResponse;
 import tattler.pro.tattler.messages.ChatInvitation;
 import tattler.pro.tattler.messages.ChatInvitationResponse;
+import tattler.pro.tattler.messages.ChatMessage;
 import tattler.pro.tattler.messages.CreateChatResponse;
 import tattler.pro.tattler.messages.InitializeChatIndication;
 import tattler.pro.tattler.messages.LoginResponse;
@@ -67,6 +69,9 @@ public class TcpMessageHandler {
                 break;
             case Message.Type.INITIALIZE_CHAT_INDICATION:
                 handleInitializeChatIndication((InitializeChatIndication) message);
+                break;
+            case Message.Type.CHAT_MESSAGE:
+                handleChatMessage((ChatMessage) message);
                 break;
             default:
                 Logger.e("Message not handled: " + message.toString());
@@ -190,6 +195,24 @@ public class TcpMessageHandler {
                 databaseManager.updateChat(chat);
             }
         } catch (SQLException | GeneralSecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleChatMessage(ChatMessage message) {
+        try {
+            Optional<Chat> optionalChat = databaseManager.selectChatById(message.chatId);
+            if (optionalChat.isPresent()) {
+                tattler.pro.tattler.models.Message dbMessage =
+                        new tattler.pro.tattler.models.Message(message, optionalChat.get());
+                databaseManager.insertMessage(dbMessage);
+
+                MessagesUpdate messagesUpdate = new MessagesUpdate();
+                messagesUpdate.reason = MessagesUpdate.Reason.NEW_MESSAGE_RECEIVED;
+                messagesUpdate.messages.add(dbMessage);
+                broadcastMessage(messagesUpdate);
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
