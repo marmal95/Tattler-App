@@ -21,6 +21,7 @@ import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.messages.Message;
 import tattler.pro.tattler.messages.MessageFactory;
+import tattler.pro.tattler.security.MessageCrypto;
 
 
 public class TcpConnectionService extends Service {
@@ -39,6 +40,7 @@ public class TcpConnectionService extends Service {
     private DatabaseManager databaseManager;
     private MessageFactory messageFactory;
     private TcpMessageHandler tcpMessageHandler;
+    private MessageCrypto messageCrypto;
 
     public TcpConnectionService() {
         super();
@@ -60,6 +62,7 @@ public class TcpConnectionService extends Service {
         databaseManager = OpenHelperManager.getHelper(this, DatabaseManager.class);
         messageFactory = new MessageFactory(this);
         tcpMessageHandler = new TcpMessageHandler(this, AppPreferences.getInstance(this), databaseManager, messageFactory);
+        messageCrypto = new MessageCrypto(databaseManager);
 
         new Thread(() -> {
             establishConnection();
@@ -165,9 +168,10 @@ public class TcpConnectionService extends Service {
         private void sendMessage(Message message) {
             try {
                 Logger.d("Sending message: " + message.toString());
+                message = messageCrypto.encryptMessage(message);
                 outputStream.writeObject(message);
                 outputStream.flush();
-            } catch (IOException | NullPointerException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -182,11 +186,14 @@ public class TcpConnectionService extends Service {
             Message message;
             try {
                 message = (Message) inputStream.readObject();
+                Logger.d("Received message: " + message.toString());
+
+                message = messageCrypto.decryptMessage(message);
                 tcpMessageHandler.handle(message);
             } catch (SocketException | NullPointerException e) {
                 Logger.w("Exception while receiving message: " + e.getMessage());
                 establishConnection();
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

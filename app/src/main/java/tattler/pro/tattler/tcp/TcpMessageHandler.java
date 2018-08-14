@@ -203,8 +203,10 @@ public class TcpMessageHandler {
         try {
             Optional<Chat> optionalChat = databaseManager.selectChatById(message.chatId);
             if (optionalChat.isPresent()) {
+                Chat chat = optionalChat.get();
                 tattler.pro.tattler.models.Message dbMessage =
-                        new tattler.pro.tattler.models.Message(message, optionalChat.get());
+                        new tattler.pro.tattler.models.Message(message, chat);
+
                 databaseManager.insertMessage(dbMessage);
 
                 MessagesUpdate messagesUpdate = new MessagesUpdate();
@@ -212,7 +214,7 @@ public class TcpMessageHandler {
                 messagesUpdate.messages.add(dbMessage);
                 broadcastMessage(messagesUpdate);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
