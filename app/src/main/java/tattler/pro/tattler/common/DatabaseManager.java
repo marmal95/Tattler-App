@@ -81,11 +81,6 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         return invitations;
     }
 
-    public Invitation selectInvitationForChatInvitation(long chatInvitationId) throws SQLException {
-        return getInvitationsDao().queryBuilder()
-                .where().eq("invitation_message_id", chatInvitationId).queryForFirst();
-    }
-
     public void insertContact(Contact contact) throws SQLException {
         getContactsDao().createOrUpdate(contact);
         Logger.d("Inserted " + contact.toString());
@@ -153,13 +148,9 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         return newContacts;
     }
 
-    public void updateChat(Chat chat) {
-        try {
-            getChatsDao().update(chat);
-            Logger.d("Updated: " + chat.toString());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void updateChat(Chat chat) throws SQLException {
+        getChatsDao().update(chat);
+        Logger.d("Updated: " + chat.toString());
     }
 
     public void deleteChat(Chat chat) throws SQLException {

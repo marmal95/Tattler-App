@@ -11,28 +11,24 @@ import tattler.pro.tattler.main.MainPresenter;
 import tattler.pro.tattler.messages.ChatInvitationResponse;
 import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Invitation;
-import tattler.pro.tattler.security.RsaCrypto;
 
 public class InvitationsPresenter extends MvpBasePresenter<InvitationsView> {
     private InvitationsAdapter invitationsAdapter;
     private DatabaseManager databaseManager;
     private MainPresenter mainPresenter;
     private MessageFactory messageFactory;
-    private RsaCrypto rsaCrypto;
 
     InvitationsPresenter(
             InvitationsAdapter
                     invitationsAdapter,
             DatabaseManager databaseManager,
             MainPresenter mainPresenter,
-            MessageFactory messageFactory,
-            RsaCrypto rsaCrypto) {
+            MessageFactory messageFactory) {
         this.invitationsAdapter = invitationsAdapter;
         this.databaseManager = databaseManager;
         this.mainPresenter = mainPresenter;
         this.mainPresenter.setInvitationsPresenter(this);
         this.messageFactory = messageFactory;
-        this.rsaCrypto = rsaCrypto;
     }
 
     @Override
@@ -49,7 +45,8 @@ public class InvitationsPresenter extends MvpBasePresenter<InvitationsView> {
     public void handleAcceptInvitation(int position) {
         Invitation invitation = invitationsAdapter.getInvitation(position);
         sendChatInvitationResponse(invitation, invitation.chat.publicKey);
-        changeInvitationStateToPendingReactionResponse(position);
+        updateInvitationStateToPendingResponse(invitation);
+        changeInvitationStateToPendingResponse(position);
     }
 
     public void handleInvitationReceived(Invitation invitation) {
@@ -64,8 +61,17 @@ public class InvitationsPresenter extends MvpBasePresenter<InvitationsView> {
         mainPresenter.sendMessage(invitationResponse);
     }
 
+    private void updateInvitationStateToPendingResponse(Invitation invitation) {
+        try {
+            invitation.state = Invitation.State.PENDING_FOR_RESPONSE;
+            databaseManager.insertInvitation(invitation);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     @SuppressWarnings("ConstantConditions")
-    private void changeInvitationStateToPendingReactionResponse(int position) {
+    private void changeInvitationStateToPendingResponse(int position) {
         if (isViewAttached()) {
             getView().changeInvitationToPending(position);
         }

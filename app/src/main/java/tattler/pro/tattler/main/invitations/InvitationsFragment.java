@@ -23,7 +23,6 @@ import tattler.pro.tattler.common.OnItemViewClickListener;
 import tattler.pro.tattler.custom_ui.MaterialToast;
 import tattler.pro.tattler.main.MainActivity;
 import tattler.pro.tattler.messages.MessageFactory;
-import tattler.pro.tattler.security.RsaCrypto;
 
 public class InvitationsFragment extends MvpFragment<InvitationsView, InvitationsPresenter>
         implements InvitationsView, OnItemViewClickListener {
@@ -56,8 +55,7 @@ public class InvitationsFragment extends MvpFragment<InvitationsView, Invitation
                 new InvitationsAdapter(activity, new ArrayList<>(), this),
                 OpenHelperManager.getHelper(activity, DatabaseManager.class),
                 activity.getPresenter(),
-                new MessageFactory(activity),
-                new RsaCrypto());
+                new MessageFactory(activity));
     }
 
     @Override

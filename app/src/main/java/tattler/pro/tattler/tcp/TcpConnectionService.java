@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.orhanobut.logger.Logger;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -76,7 +77,9 @@ public class TcpConnectionService extends Service {
         Logger.d("Destroying TcpConnectionService.");
         super.onDestroy();
         OpenHelperManager.releaseHelper();
+        stopService();
         closeConnection();
+        stopSelf();
     }
 
     @Nullable
@@ -100,14 +103,21 @@ public class TcpConnectionService extends Service {
     }
 
     private synchronized void closeConnection() {
+        try {
+            socket.close();
+            inputStream.close();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private synchronized void stopService() {
         Logger.d("Closing connection with server.");
         try {
             tcpReceiver.interrupt();
             tcpSender.interrupt();
-            socket.close();
-            inputStream.close();
-            outputStream.close();
-        } catch (IOException | NullPointerException e) {
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
@@ -124,6 +134,7 @@ public class TcpConnectionService extends Service {
                 outputStream = new ObjectOutputStream(socket.getOutputStream());
                 outputStream.flush();
                 inputStream = new ObjectInputStream(socket.getInputStream());
+                break;
             } catch (IOException e) {
                 Logger.d("Could not establish connection... Next try in " + SLEEP_MS / 1000 + " seconds.");
             }
@@ -190,8 +201,9 @@ public class TcpConnectionService extends Service {
 
                 message = messageCrypto.decryptMessage(message);
                 tcpMessageHandler.handle(message);
-            } catch (SocketException | NullPointerException e) {
+            } catch (EOFException | SocketException e) {
                 Logger.w("Exception while receiving message: " + e.getMessage());
+                closeConnection();
                 establishConnection();
             } catch (Exception e) {
                 e.printStackTrace();
