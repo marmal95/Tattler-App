@@ -34,7 +34,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         switch (viewType) {
             case ChatViewType.SENT_BY_ME:
-                View viewByMe = layoutInflater.inflate(R.layout.recycler_view_message_by_me_item, parent, false);
+                View viewByMe = layoutInflater.inflate(R.layout.recycler_view_message_to_me_item, parent, false);
                 viewHolder = new MessageByMeViewHolder(context, viewByMe);
                 break;
             case ChatViewType.SENT_TO_ME:
