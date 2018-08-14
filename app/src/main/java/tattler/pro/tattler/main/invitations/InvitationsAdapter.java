@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,6 +84,12 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
     public void removeInvitation(int position) {
         invitations.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public void removeFor(Chat chat) {
+        List<Integer> indexes = IntStream.range(0, invitations.size()).filter(
+                index -> chat.chatId == invitations.get(index).chat.chatId).boxed().collect(Collectors.toList());
+        indexes.forEach(this::removeInvitation);
     }
 
     public Invitation getInvitation(int position) {

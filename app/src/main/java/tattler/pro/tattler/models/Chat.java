@@ -34,13 +34,13 @@ public class Chat implements Serializable {
     @DatabaseField(dataType = DataType.BYTE_ARRAY)
     public byte[] chatKey;
 
-    @ForeignCollectionField
+    @ForeignCollectionField(eager = true)
     public ForeignCollection<Invitation> invitations;
 
-    @ForeignCollectionField
+    @ForeignCollectionField(eager = true)
     public ForeignCollection<Participant> participants;
 
-    @ForeignCollectionField
+    @ForeignCollectionField(eager = true)
     public ForeignCollection<Message> messages;
 
     public Chat() {

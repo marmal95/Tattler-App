@@ -65,6 +65,9 @@ public class MainMessageHandler implements ReceivedMessageCallback {
             case NEW_CHAT_CREATED:
                 presenter.handleChatCreated(message.chats.iterator().next());
                 break;
+            case CHAT_REMOVED:
+                presenter.handleChatRemoved(message.chats.iterator().next());
+                break;
         }
     }
 

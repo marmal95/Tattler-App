@@ -8,7 +8,6 @@ import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
-import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.main.MainActivity;
 
 
@@ -19,10 +18,10 @@ public class SplashActivity extends MvpActivity<SplashView, SplashPresenter> imp
         super.onCreate(savedInstanceState);
         Logger.addLogAdapter(new AndroidLogAdapter());
 
-        // FIXME: Only for tests
-        AppPreferences appPreferences = AppPreferences.getInstance(this);
-        appPreferences.put(AppPreferences.Key.USER_PHONE_NUMBER, "111");
-        appPreferences.put(AppPreferences.Key.USER_NAME, "$oNyy!");
+//        // FIXME: Only for tests
+//        AppPreferences appPreferences = AppPreferences.getInstance(this);
+//        appPreferences.put(AppPreferences.Key.USER_PHONE_NUMBER, "222");
+//        appPreferences.put(AppPreferences.Key.USER_NAME, "Emu!");
     }
 
     @NonNull

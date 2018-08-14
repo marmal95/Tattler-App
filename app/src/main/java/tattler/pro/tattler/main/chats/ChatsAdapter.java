@@ -13,6 +13,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -85,6 +87,15 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     public void removeChat(int position) {
         chats.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public void removeChat(Chat chat) {
+        OptionalInt indexOpt = IntStream.range(0, chats.size()).filter(
+                index -> chat.chatId == chats.get(index).chatId).findFirst();
+
+        if (indexOpt.isPresent()) {
+            removeChat(indexOpt.getAsInt());
+        }
     }
 
     public Chat getChat(int position) {

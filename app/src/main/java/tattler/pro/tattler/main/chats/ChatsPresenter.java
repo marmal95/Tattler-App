@@ -37,6 +37,10 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
         chatsAdapter.addChat(chat);
     }
 
+    public void handleChatRemoved(Chat chat) {
+        chatsAdapter.removeChat(chat);
+    }
+
     @SuppressWarnings("ConstantConditions")
     public void handleChatClicked(int position) {
         if (isViewAttached()) {

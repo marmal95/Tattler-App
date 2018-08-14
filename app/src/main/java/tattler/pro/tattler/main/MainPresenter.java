@@ -120,6 +120,16 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
         }
     }
 
+    public void handleChatRemoved(Chat chat) {
+        if (chatsPresenter != null) {
+            chatsPresenter.handleChatRemoved(chat);
+        }
+
+        if (invitationsPresenter != null) {
+            invitationsPresenter.handleChatRemoved(chat);
+        }
+    }
+
     public void handleInvitationReceived(Invitation invitation) {
         if (invitationsPresenter != null) {
             invitationsPresenter.handleInvitationReceived(invitation);

@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -23,7 +24,7 @@ import tattler.pro.tattler.models.Participant;
 
 public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "tattler.db";
-    private static final int DATABASE_VERSION = 69;
+    private static final int DATABASE_VERSION = 74;
 
     private Dao<Chat, Integer> chatsDao;
     private Dao<Contact, Integer> contactsDao;
@@ -58,10 +59,6 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         List<Contact> contacts = getContactsDao().queryForAll();
         Logger.d("Selected " + contacts.size() + " contacts.");
         return contacts;
-    }
-
-    public Contact selectContactByPhoneId(int phoneId) throws SQLException {
-        return getContactsDao().queryForId(phoneId);
     }
 
     public List<Chat> selectInitializedChats() throws SQLException {
@@ -154,11 +151,20 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     }
 
     public void deleteChat(Chat chat) throws SQLException {
-        if (chat.invitations != null)
-            chat.invitations.clear();
-        if (chat.participants != null)
-            chat.participants.clear();
+        DeleteBuilder<Invitation, Integer> invitationsDeleteBuilder = getInvitationsDao().deleteBuilder();
+        invitationsDeleteBuilder.where().eq("chat", chat.chatId);
+        getInvitationsDao().delete(invitationsDeleteBuilder.prepare());
+
+        DeleteBuilder<Participant, Integer> participantsDeleteBuilder = getParticipantsDao().deleteBuilder();
+        participantsDeleteBuilder.where().eq("chat", chat.chatId);
+        getParticipantsDao().delete(participantsDeleteBuilder.prepare());
+
+        DeleteBuilder<Message, Integer> messagesDeleteBuilder = getMessagesDao().deleteBuilder();
+        messagesDeleteBuilder.where().eq("chat", chat.chatId);
+        getMessagesDao().delete(messagesDeleteBuilder.prepare());
+
         getChatsDao().delete(chat);
+        Logger.d("Removed: " + chat.toString());
     }
 
     private Dao<Contact, Integer> getContactsDao() throws SQLException {

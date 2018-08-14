@@ -10,6 +10,7 @@ import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.main.MainPresenter;
 import tattler.pro.tattler.messages.ChatInvitationResponse;
 import tattler.pro.tattler.messages.MessageFactory;
+import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Invitation;
 
 public class InvitationsPresenter extends MvpBasePresenter<InvitationsView> {
@@ -44,19 +45,30 @@ public class InvitationsPresenter extends MvpBasePresenter<InvitationsView> {
 
     public void handleAcceptInvitation(int position) {
         Invitation invitation = invitationsAdapter.getInvitation(position);
-        sendChatInvitationResponse(invitation, invitation.chat.publicKey);
+        sendChatInvitationResponse(invitation, ChatInvitationResponse.Status.INVITATION_ACCEPTED, invitation.chat.publicKey);
         updateInvitationStateToPendingResponse(invitation);
         changeInvitationStateToPendingResponse(position);
+    }
+
+    public void handleRejectInvitation(int position) {
+        Invitation invitation = invitationsAdapter.getInvitation(position);
+        sendChatInvitationResponse(invitation, ChatInvitationResponse.Status.INVITATION_REJECTED, null);
+        invitationsAdapter.removeInvitation(position);
+        removeChat(invitation);
     }
 
     public void handleInvitationReceived(Invitation invitation) {
         invitationsAdapter.addInvitation(invitation);
     }
 
-    private void sendChatInvitationResponse(Invitation invitation, byte[] publicKey) {
+    public void handleChatRemoved(Chat chat) {
+        invitationsAdapter.removeFor(chat);
+    }
+
+    private void sendChatInvitationResponse(Invitation invitation, int status, byte[] publicKey) {
         ChatInvitationResponse invitationResponse = messageFactory.createChatInvitationResponse(
                 invitation,
-                ChatInvitationResponse.Status.INVITATION_ACCEPTED,
+                status,
                 publicKey);
         mainPresenter.sendMessage(invitationResponse);
     }
@@ -82,6 +94,14 @@ public class InvitationsPresenter extends MvpBasePresenter<InvitationsView> {
             List<Invitation> invitations = databaseManager.selectInvitations();
             invitationsAdapter.clearInvitations();
             invitationsAdapter.addInvitations(invitations);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void removeChat(Invitation invitation) {
+        try {
+            databaseManager.deleteChat(invitation.chat);
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -20,7 +19,6 @@ import butterknife.ButterKnife;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.OnItemViewClickListener;
-import tattler.pro.tattler.custom_ui.MaterialToast;
 import tattler.pro.tattler.main.MainActivity;
 import tattler.pro.tattler.messages.MessageFactory;
 
@@ -81,8 +79,7 @@ public class InvitationsFragment extends MvpFragment<InvitationsView, Invitation
         if (view.getId() == R.id.acceptChat) {
             getPresenter().handleAcceptInvitation(position);
         } else {
-            // TODO: Implement
-            MaterialToast.makeText(getContext(), "CLICK: " + position, Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show();
+            getPresenter().handleRejectInvitation(position);
         }
     }
 }

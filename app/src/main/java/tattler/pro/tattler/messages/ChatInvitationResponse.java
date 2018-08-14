@@ -30,5 +30,6 @@ public class ChatInvitationResponse extends MessageResponse {
 
     public class Status {
         public static final int INVITATION_ACCEPTED = 0;
+        public static final int INVITATION_REJECTED = 1;
     }
 }

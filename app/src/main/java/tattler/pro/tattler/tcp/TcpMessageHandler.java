@@ -131,7 +131,8 @@ public class TcpMessageHandler {
 
     private void handleCreateChatResponse(CreateChatResponse message) {
         try {
-            if (message.status == CreateChatResponse.Status.CHAT_CREATED) {
+            if (message.status == CreateChatResponse.Status.CHAT_CREATED ||
+                    message.status == CreateChatResponse.Status.CHAT_ALREADY_EXISTS) {
                 Chat chat = prepareChat(message);
                 databaseManager.insertChat(chat, message.contacts);
 
@@ -172,10 +173,23 @@ public class TcpMessageHandler {
     private void handleChatInvitationResponse(ChatInvitationResponse message) {
         try {
             Optional<Chat> optionalChat = databaseManager.selectChatById(message.chatId);
-            if (optionalChat.isPresent()) {
+            if (!optionalChat.isPresent()) {
+                Logger.e("Received ChatInvitationResponse for not existing chat.");
+                return;
+            }
+
+            Chat chat = optionalChat.get();
+            if (message.status == ChatInvitationResponse.Status.INVITATION_ACCEPTED) {
                 InitializeChatIndication initChatInd = messageFactory.createInitializeChatIndication(
                         message, optionalChat.get(), new RsaCrypto());
                 tcpConnectionService.sendMessage(initChatInd);
+            } else if (message.status == ChatInvitationResponse.Status.INVITATION_REJECTED) {
+                databaseManager.deleteChat(chat);
+
+                ChatsUpdate chatsUpdate = new ChatsUpdate();
+                chatsUpdate.reason = ChatsUpdate.Reason.CHAT_REMOVED;
+                chatsUpdate.chats.add(chat);
+                broadcastMessage(chatsUpdate);
             }
         } catch (Exception e) {
             e.printStackTrace();
