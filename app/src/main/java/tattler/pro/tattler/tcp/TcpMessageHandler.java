@@ -9,6 +9,7 @@ import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
@@ -131,8 +132,7 @@ public class TcpMessageHandler {
 
     private void handleCreateChatResponse(CreateChatResponse message) {
         try {
-            if (message.status == CreateChatResponse.Status.CHAT_CREATED ||
-                    message.status == CreateChatResponse.Status.CHAT_ALREADY_EXISTS) {
+            if (message.status == CreateChatResponse.Status.CHAT_CREATED) {
                 Chat chat = prepareChat(message);
                 databaseManager.insertChat(chat, message.contacts);
 
@@ -207,6 +207,12 @@ public class TcpMessageHandler {
                 chat.isInitialized = true;
 
                 databaseManager.updateChat(chat);
+
+                InvitationsUpdate invitationsUpdate = new InvitationsUpdate();
+                invitationsUpdate.reason = InvitationsUpdate.Reason.CHAT_INITIALIZED;
+                invitationsUpdate.invitations = chat.invitations.stream().filter(
+                        invitation -> invitation.senderId == message.senderId).collect(Collectors.toList());
+                broadcastMessage(invitationsUpdate);
             }
         } catch (SQLException | GeneralSecurityException e) {
             e.printStackTrace();

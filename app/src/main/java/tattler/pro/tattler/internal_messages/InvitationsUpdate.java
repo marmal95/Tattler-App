@@ -16,6 +16,7 @@ public class InvitationsUpdate extends InternalMessage {
     }
 
     public enum Reason {
-        NEW_INVITATION
+        NEW_INVITATION,
+        CHAT_INITIALIZED
     }
 }

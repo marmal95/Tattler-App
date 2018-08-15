@@ -76,6 +76,9 @@ public class MainMessageHandler implements ReceivedMessageCallback {
             case NEW_INVITATION:
                 presenter.handleInvitationReceived(message.invitations.iterator().next());
                 break;
+            case CHAT_INITIALIZED:
+                presenter.handleChatInitializedIndication(message.invitations);
+                break;
         }
     }
 }

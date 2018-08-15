@@ -86,6 +86,11 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
         notifyItemRemoved(position);
     }
 
+    public void removeInvitations(List<Invitation> invitations) {
+        this.invitations.removeAll(invitations);
+        notifyDataSetChanged();
+    }
+
     public void removeFor(Chat chat) {
         List<Integer> indexes = IntStream.range(0, invitations.size()).filter(
                 index -> chat.chatId == invitations.get(index).chat.chatId).boxed().collect(Collectors.toList());

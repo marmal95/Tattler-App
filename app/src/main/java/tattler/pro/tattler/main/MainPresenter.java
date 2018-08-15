@@ -136,6 +136,12 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
         }
     }
 
+    public void handleChatInitializedIndication(List<Invitation> invitations) {
+        if (invitationsPresenter != null) {
+            invitationsPresenter.handleChatInitializedIndication(invitations);
+        }
+    }
+
     public void showContactAlreadyAddedInfo() {
         if (contactsPresenter != null) {
             contactsPresenter.showContactAlreadyAddedInfo();

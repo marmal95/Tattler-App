@@ -61,6 +61,10 @@ public class InvitationsPresenter extends MvpBasePresenter<InvitationsView> {
         invitationsAdapter.addInvitation(invitation);
     }
 
+    public void handleChatInitializedIndication(List<Invitation> invitations) {
+        invitationsAdapter.removeInvitations(invitations);
+    }
+
     public void handleChatRemoved(Chat chat) {
         invitationsAdapter.removeFor(chat);
     }

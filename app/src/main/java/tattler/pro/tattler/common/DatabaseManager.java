@@ -24,7 +24,7 @@ import tattler.pro.tattler.models.Participant;
 
 public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "tattler.db";
-    private static final int DATABASE_VERSION = 74;
+    private static final int DATABASE_VERSION = 86;
 
     private Dao<Chat, Integer> chatsDao;
     private Dao<Contact, Integer> contactsDao;
@@ -84,12 +84,7 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     }
 
     public void insertChat(Chat chat, List<tattler.pro.tattler.messages.models.Contact> contacts) throws SQLException {
-        Optional<Chat> existingChat = selectChatById(chat.chatId);
-        if (existingChat.isPresent()) {
-            deleteChat(existingChat.get());
-        }
-
-        getChatsDao().create(chat);
+        getChatsDao().createIfNotExists(chat);
         Logger.d("Inserted " + chat.toString());
 
         List<Contact> contactsToAdd = new ArrayList<>(contacts.size());
