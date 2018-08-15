@@ -12,4 +12,5 @@ interface ChatView extends MvpView {
     void unregisterReceiver(MessageBroadcastReceiver receiver);
     void setMessagesAdapter(MessagesAdapter adapter);
     void setTitle(String title);
+    void scrollToPosition(int position);
 }

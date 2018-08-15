@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/chatsRecyclerItemSize"
+    android:layout_height="@dimen/recyclerItemSize"
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
@@ -9,8 +9,8 @@
     android:orientation="horizontal">
 
     <RelativeLayout
-        android:layout_width="@dimen/chatsRecyclerItemAvatarSize"
-        android:layout_height="@dimen/chatsRecyclerItemAvatarSize"
+        android:layout_width="@dimen/recyclerItemAvatarSize"
+        android:layout_height="@dimen/recyclerItemAvatarSize"
         android:layout_marginEnd="@dimen/space16">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -28,7 +28,8 @@
             android:layout_alignTop="@+id/chatAvatar"
             android:layout_margin="1dp"
             android:gravity="center"
-            android:textColor="@color/colorPrimaryLightText" />
+            android:textColor="@color/colorAvatarText"
+            android:textSize="@dimen/recyclerItemAvatarInitialsFontSize" />
 
     </RelativeLayout>
 

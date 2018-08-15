@@ -10,6 +10,7 @@
     <color name="colorSecondaryText">#455a64</color>
     <color name="colorPrimaryLightText">#f5f5f5</color>
     <color name="colorSecondaryLightText">#e0e0e0</color>
+    <color name="colorAvatarText">#80ffffff</color>
 
     <color name="colorBackground">#eeeeee</color>
 

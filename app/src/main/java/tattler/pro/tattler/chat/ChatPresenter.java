@@ -4,6 +4,7 @@ import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.orhanobut.logger.Logger;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import tattler.pro.tattler.common.DatabaseManager;
@@ -61,6 +62,7 @@ public class ChatPresenter extends MvpBasePresenter<ChatView> {
             bindTcpConnectionService();
         }
         registerReceiver();
+        messagesAdapter.addMessages(chat.messages);
     }
 
     void onDestroy() {
@@ -73,6 +75,19 @@ public class ChatPresenter extends MvpBasePresenter<ChatView> {
 
     public void handleMessagesReceived(List<Message> messages) {
         messagesAdapter.addMessages(messages);
+        scrollMessagesBottom();
+    }
+
+    public void handleSendMessage(String messageText) {
+        if (!messageText.isEmpty()) {
+            ChatMessage chatMessage = messageFactory.createChatMessage(chat, messageText.getBytes());
+            tcpServiceManager.getTcpService().sendMessage(chatMessage);
+
+            Message dbMessage = new Message(chatMessage, chat);
+            messagesAdapter.addMessage(dbMessage);
+            insertMessageToDb(dbMessage);
+            scrollMessagesBottom();
+        }
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -107,11 +122,18 @@ public class ChatPresenter extends MvpBasePresenter<ChatView> {
         }
     }
 
-    public void handleSendMessage(String messageText) {
-        ChatMessage chatMessage = messageFactory.createChatMessage(chat, messageText.getBytes());
-        tcpServiceManager.getTcpService().sendMessage(chatMessage);
+    private void insertMessageToDb(Message dbMessage) {
+        try {
+            databaseManager.insertMessage(dbMessage);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-        Message dbMessage = new Message(chatMessage, chat);
-        messagesAdapter.addMessage(dbMessage);
+    @SuppressWarnings("ConstantConditions")
+    private void scrollMessagesBottom() {
+        if (isViewAttached()) {
+            getView().scrollToPosition(messagesAdapter.getItemCount() - 1);
+        }
     }
 }

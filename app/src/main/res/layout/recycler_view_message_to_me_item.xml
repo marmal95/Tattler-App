@@ -4,11 +4,39 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
+        android:id="@+id/userAvatarLayout"
+        android:layout_width="@dimen/messageUserAvatarSize"
+        android:layout_height="@dimen/messageUserAvatarSize"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="@dimen/space4"
+        android:layout_marginStart="@dimen/space4">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/userInitials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/userAvatar"
+            android:layout_alignEnd="@+id/userAvatar"
+            android:layout_alignStart="@+id/userAvatar"
+            android:layout_alignTop="@+id/userAvatar"
+            android:layout_margin="1dp"
+            android:gravity="center"
+            android:textColor="@color/colorAvatarText"
+            android:textSize="@dimen/messageUserAvatarInitialsFontSize" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_margin="@dimen/elevation_radius"
-        android:layout_marginStart="@dimen/space16"
+        android:layout_toEndOf="@+id/userAvatarLayout"
         android:background="@drawable/background_message_to_me_item"
         android:elevation="@dimen/elevation_radius"
         android:gravity="center_vertical"

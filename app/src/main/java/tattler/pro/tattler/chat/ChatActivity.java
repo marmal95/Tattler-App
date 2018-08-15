@@ -112,6 +112,11 @@ public class ChatActivity extends MvpActivity<ChatView, ChatPresenter> implement
         Objects.requireNonNull(getSupportActionBar()).setTitle(title);
     }
 
+    @Override
+    public void scrollToPosition(int position) {
+        messagesView.post(() -> messagesView.smoothScrollToPosition(position));
+    }
+
     @OnClick(R.id.sendMessageButton)
     public void handleSendMessageClick() {
         String messageText = messageInputArea.getText().toString();

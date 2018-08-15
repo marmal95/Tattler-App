@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Collection;
 import java.util.List;
 
 import tattler.pro.tattler.R;
@@ -79,7 +80,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyDataSetChanged();
     }
 
-    public void addMessages(List<Message> messages) {
+    public void addMessages(Collection<Message> messages) {
         this.messages.addAll(messages);
         notifyDataSetChanged();
     }

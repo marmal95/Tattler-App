@@ -23,7 +23,6 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-
             <RelativeLayout
                 android:layout_width="@dimen/contactUserAvatarSize"
                 android:layout_height="@dimen/contactUserAvatarSize"
@@ -47,7 +46,7 @@
                     android:layout_alignTop="@+id/userAvatar"
                     android:layout_margin="1dp"
                     android:gravity="center"
-                    android:textColor="@color/colorPrimaryLightText"
+                    android:textColor="@color/colorAvatarText"
                     android:textSize="@dimen/contactUserAvatarInitialsFontSize"/>
             </RelativeLayout>
 

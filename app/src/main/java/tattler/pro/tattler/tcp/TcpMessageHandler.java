@@ -8,6 +8,7 @@ import com.orhanobut.logger.Logger;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,8 @@ import tattler.pro.tattler.models.Contact;
 import tattler.pro.tattler.models.Invitation;
 import tattler.pro.tattler.security.AesCrypto;
 import tattler.pro.tattler.security.RsaCrypto;
+
+import static tattler.pro.tattler.common.Util.isMessageSentByMe;
 
 public class TcpMessageHandler {
     private TcpConnectionService tcpConnectionService;
@@ -183,6 +186,10 @@ public class TcpMessageHandler {
                 InitializeChatIndication initChatInd = messageFactory.createInitializeChatIndication(
                         message, optionalChat.get(), new RsaCrypto());
                 tcpConnectionService.sendMessage(initChatInd);
+
+                clearInvitations(chat.invitations.stream().filter(
+                        invitation -> isMessageSentByMe(tcpConnectionService, invitation.senderId)).
+                        collect(Collectors.toList()));
             } else if (message.status == ChatInvitationResponse.Status.INVITATION_REJECTED) {
                 databaseManager.deleteChat(chat);
 
@@ -205,14 +212,11 @@ public class TcpMessageHandler {
 
                 chat.chatKey = rsaCrypto.decrypt(message.chatEncryptedKey, chat.privateKey);
                 chat.isInitialized = true;
-
                 databaseManager.updateChat(chat);
 
-                InvitationsUpdate invitationsUpdate = new InvitationsUpdate();
-                invitationsUpdate.reason = InvitationsUpdate.Reason.CHAT_INITIALIZED;
-                invitationsUpdate.invitations = chat.invitations.stream().filter(
-                        invitation -> invitation.senderId == message.senderId).collect(Collectors.toList());
-                broadcastMessage(invitationsUpdate);
+                clearInvitations(chat.invitations.stream().filter(
+                        invitation -> invitation.senderId == message.senderId).
+                        collect(Collectors.toList()));
             }
         } catch (SQLException | GeneralSecurityException e) {
             e.printStackTrace();
@@ -226,7 +230,6 @@ public class TcpMessageHandler {
                 Chat chat = optionalChat.get();
                 tattler.pro.tattler.models.Message dbMessage =
                         new tattler.pro.tattler.models.Message(message, chat);
-
                 databaseManager.insertMessage(dbMessage);
 
                 MessagesUpdate messagesUpdate = new MessagesUpdate();
@@ -273,5 +276,20 @@ public class TcpMessageHandler {
         Intent intent = new Intent(IntentKey.BROADCAST_MESSAGE.name());
         intent.putExtra(IntentKey.MESSAGE.name(), message);
         tcpConnectionService.sendBroadcast(intent);
+    }
+
+    private void clearInvitations(List<Invitation> invitations) {
+        InvitationsUpdate invitationsUpdate = new InvitationsUpdate();
+        invitationsUpdate.reason = InvitationsUpdate.Reason.CHAT_INITIALIZED;
+        invitationsUpdate.invitations = invitations;
+        invitationsUpdate.invitations.forEach(invitation -> {
+            try {
+                databaseManager.deleteInvitation(invitation);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
+        broadcastMessage(invitationsUpdate);
     }
 }

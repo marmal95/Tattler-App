@@ -32,7 +32,7 @@
             android:layout_alignTop="@+id/userAvatar"
             android:layout_margin="1dp"
             android:gravity="center"
-            android:textColor="@color/colorPrimaryLightText"
+            android:textColor="@color/colorAvatarText"
             android:textSize="@dimen/contactUserAvatarInitialsFontSize" />
     </RelativeLayout>
 
