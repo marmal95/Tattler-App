@@ -145,9 +145,13 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         Logger.d("Updated: " + chat.toString());
     }
 
+    public void deleteContact(Contact contact) throws SQLException {
+        getContactsDao().delete(contact);
+        Logger.d("Deleted: " + contact.toString());
+    }
+
     public void deleteInvitation(Invitation invitation) throws SQLException {
         getInvitationsDao().delete(invitation);
-        Logger.d("Deleted: " + invitation.toString());
         Logger.d("Deleted: " + invitation.toString());
     }
 

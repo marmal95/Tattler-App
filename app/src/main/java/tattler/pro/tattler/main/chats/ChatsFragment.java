@@ -89,4 +89,9 @@ public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
     public void onItemClick(int position) {
         getPresenter().handleChatClicked(position);
     }
+
+    @Override
+    public boolean onItemLongClick(int position) {
+        return false;
+    }
 }

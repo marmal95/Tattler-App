@@ -52,6 +52,7 @@ public class MainMessageHandler implements ReceivedMessageCallback {
                 presenter.handleContactAdded(message.contacts.iterator().next());
                 break;
             case CONTACT_ALREADY_ADDED:
+                presenter.handleContactAdded(message.contacts.iterator().next());
                 presenter.showContactAlreadyAddedInfo();
                 break;
             case CONTACT_NOT_EXIST:

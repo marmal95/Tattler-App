@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import tattler.pro.tattler.R;
 
 
@@ -52,7 +53,7 @@ public class MaterialToast extends Toast {
 
         switch (type) {
             case TYPE_SUCCESS:
-                icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_check_circle_white_24dp));
+                icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_check_circle));
                 view.setBackground(ContextCompat.getDrawable(context, R.drawable.custom_toast_success_background));
                 break;
             case TYPE_WARNING:

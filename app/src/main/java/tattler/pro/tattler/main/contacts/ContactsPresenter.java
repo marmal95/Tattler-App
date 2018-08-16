@@ -2,8 +2,10 @@ package tattler.pro.tattler.main.contacts;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.orhanobut.logger.Logger;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 import tattler.pro.tattler.common.DatabaseManager;
@@ -64,9 +66,15 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
 
     @SuppressWarnings("ConstantConditions")
     public void handleContactClick(int position) {
-        if (isViewAttached()) {
-            getView().startContactActivity(contactsAdapter.getContact(position), position);
+        if (contactsAdapter.isInSelectMode()) {
+            contactsAdapter.toggleSelection(position);
+        } else {
+            startContactActivity(contactsAdapter.getContact(position), position);
         }
+    }
+
+    public void handleContactLongClick(int position) {
+        contactsAdapter.toggleSelection(position);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -81,6 +89,22 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
         if (isViewAttached()) {
             getView().showContactNotExistInfo();
         }
+    }
+
+    public void handleContactsRemoveClick() {
+        List<Integer> contactsIndexes = contactsAdapter.getSelectedPositions();
+        Collections.reverse(contactsIndexes);
+        contactsIndexes.forEach(index -> {
+            Contact contact = contactsAdapter.getContact(index);
+            try {
+                contactsAdapter.removeContact(index);
+                databaseManager.deleteContact(contact);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Logger.e("Could not delete contact: " + contact.toString());
+            }
+        });
+        contactsAdapter.clearSelection();
     }
 
     private void initUserContacts() {
@@ -98,6 +122,13 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
     private void showContactAddingError() {
         if (isViewAttached()) {
             getView().showContactAddingError();
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void startContactActivity(Contact contact, int position) {
+        if (isViewAttached()) {
+            getView().startContactActivity(contact, position);
         }
     }
 

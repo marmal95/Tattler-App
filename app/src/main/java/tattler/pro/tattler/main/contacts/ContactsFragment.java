@@ -15,6 +15,9 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -78,6 +81,22 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
         getPresenter().onDestroy();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.contacts_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.contactsRemove:
+                getPresenter().handleContactsRemoveClick();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @OnClick(R.id.addContactFab)
     public void addContactsButtonClick() {
         getPresenter().handleAddContactButtonClick();
@@ -135,6 +154,12 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
     @Override
     public void onItemClick(int position) {
         getPresenter().handleContactClick(position);
+    }
+
+    @Override
+    public boolean onItemLongClick(int position) {
+        getPresenter().handleContactLongClick(position);
+        return true;
     }
 
     private void setUpContactsView() {
