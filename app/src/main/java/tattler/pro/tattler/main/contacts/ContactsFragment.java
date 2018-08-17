@@ -26,6 +26,7 @@ import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -164,15 +165,13 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
 
     private void setUpContactsView() {
         Context context = getContext();
-        assert context != null;
-        Drawable dividerDrawable = ContextCompat.getDrawable(context, R.drawable.recycler_view_divider);
-        assert dividerDrawable != null;
+        Drawable dividerDrawable = ContextCompat.getDrawable(Objects.requireNonNull(context), R.drawable.recycler_view_divider);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, layoutManager.getOrientation());
-        dividerItemDecoration.setDrawable(dividerDrawable);
+        dividerItemDecoration.setDrawable(Objects.requireNonNull(dividerDrawable));
         contactsView.setHasFixedSize(true);
         contactsView.addItemDecoration(dividerItemDecoration);
-        contactsView.setLayoutManager(new LinearLayoutManager(context));
+        contactsView.setLayoutManager(layoutManager);
     }
 }

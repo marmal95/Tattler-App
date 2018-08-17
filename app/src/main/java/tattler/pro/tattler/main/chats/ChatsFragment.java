@@ -1,9 +1,13 @@
 package tattler.pro.tattler.main.chats;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +22,7 @@ import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,8 +52,7 @@ public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chats, container, false);
         ButterKnife.bind(this, view);
-        chatsView.setHasFixedSize(true);
-        chatsView.setLayoutManager(new LinearLayoutManager(getContext()));
+        setUpChatsView();
         return view;
     }
 
@@ -112,5 +116,17 @@ public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
     public boolean onItemLongClick(int position) {
         getPresenter().handleChatLongClick(position);
         return true;
+    }
+
+    private void setUpChatsView() {
+        Context context = getActivity();
+        Drawable dividerDrawable = ContextCompat.getDrawable(Objects.requireNonNull(context), R.drawable.recycler_view_divider);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, layoutManager.getOrientation());
+        dividerItemDecoration.setDrawable(Objects.requireNonNull(dividerDrawable));
+        chatsView.setHasFixedSize(true);
+        chatsView.addItemDecoration(dividerItemDecoration);
+        chatsView.setLayoutManager(layoutManager);
     }
 }

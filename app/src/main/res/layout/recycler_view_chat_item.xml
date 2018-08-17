@@ -6,7 +6,9 @@
     android:clickable="true"
     android:focusable="true"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingEnd="@dimen/activity_padding"
+    android:paddingStart="@dimen/activity_padding">
 
     <RelativeLayout
         android:layout_width="@dimen/recyclerItemAvatarSize"
@@ -26,7 +28,6 @@
             android:layout_alignEnd="@+id/chatAvatar"
             android:layout_alignStart="@+id/chatAvatar"
             android:layout_alignTop="@+id/chatAvatar"
-            android:layout_margin="1dp"
             android:gravity="center"
             android:textColor="@color/colorAvatarText"
             android:textSize="@dimen/recyclerItemAvatarInitialsFontSize" />
