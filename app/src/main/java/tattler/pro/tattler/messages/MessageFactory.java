@@ -75,6 +75,12 @@ public class MessageFactory {
         return new ChatMessage(getMyUserNumber(), chat.chatId, content);
     }
 
+    public RemoveContactsRequest createRemoveContactRequest(List<Contact> contacts) {
+        List<Integer> contactNumbers = new ArrayList<>(contacts.size());
+        contacts.forEach(contact -> contactNumbers.add(contact.contactNumber));
+        return new RemoveContactsRequest(contactNumbers, getMyUserNumber());
+    }
+
     private int getMyUserNumber() {
         AppPreferences appPreferences = AppPreferences.getInstance(context);
         return appPreferences.getInt(AppPreferences.Key.USER_NUMBER);

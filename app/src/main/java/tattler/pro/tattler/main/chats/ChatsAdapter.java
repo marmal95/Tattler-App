@@ -12,6 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
@@ -23,6 +24,7 @@ import tattler.pro.tattler.R;
 import tattler.pro.tattler.common.OnItemClickListener;
 import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.models.Chat;
+import tattler.pro.tattler.models.Message;
 
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> {
     private Context context;
@@ -53,7 +55,10 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         holder.chatAvatar.setImageDrawable(chatNameColorDrawable);
         holder.chatInitials.setText(Util.extractUserInitials(chat.chatName));
         holder.chatName.setText(chat.chatName);
-        holder.chatLastMessage.setText("TODO: Update last message"); // TODO
+
+        if (chat.messages != null) {
+            displayLastMessageData(holder, chat);
+        }
 
         setAnimation(holder.itemView, position);
     }
@@ -109,6 +114,16 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
             lastPosition = position;
         }
     }
+
+    private void displayLastMessageData(@NonNull ViewHolder holder, Chat chat) {
+        List<Message> chatMessages = new ArrayList<>(chat.messages);
+        Message lastMessage = chatMessages.get(chatMessages.size() - 1);
+        String lastMessageContent = Util.isMessageSentByMe(context, lastMessage.senderId) ?
+                context.getString(R.string.lastMessageByMe, new String(lastMessage.content)) :
+                context.getString(R.string.lastMessageToMe, new String(lastMessage.content));
+        holder.chatLastMessage.setText(lastMessageContent);
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.chatAvatar)

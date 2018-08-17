@@ -12,6 +12,7 @@ import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.main.MainPresenter;
 import tattler.pro.tattler.messages.AddContactRequest;
 import tattler.pro.tattler.messages.MessageFactory;
+import tattler.pro.tattler.messages.RemoveContactsRequest;
 import tattler.pro.tattler.models.Contact;
 
 public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
@@ -92,18 +93,9 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
     }
 
     public void handleContactsRemoveClick() {
+        sendRemoveContactsRequest(contactsAdapter.getSelectedItems());
         List<Integer> contactsIndexes = contactsAdapter.getSelectedPositions();
-        Collections.reverse(contactsIndexes);
-        contactsIndexes.forEach(index -> {
-            Contact contact = contactsAdapter.getContact(index);
-            try {
-                contactsAdapter.removeContact(index);
-                databaseManager.deleteContact(contact);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                Logger.e("Could not delete contact: " + contact.toString());
-            }
-        });
+        removeContacts(contactsIndexes);
         contactsAdapter.clearSelection();
     }
 
@@ -135,5 +127,24 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
     private void sendAddContactRequest(int contactPhoneId) {
         AddContactRequest addContactRequest = messageFactory.createAddContactRequest(contactPhoneId);
         mainPresenter.sendMessage(addContactRequest);
+    }
+
+    private void sendRemoveContactsRequest(List<Contact> contacts) {
+        RemoveContactsRequest removeContactsRequest = messageFactory.createRemoveContactRequest(contacts);
+        mainPresenter.sendMessage(removeContactsRequest);
+    }
+
+    private void removeContacts(List<Integer> contactsIndexes) {
+        Collections.reverse(contactsIndexes);
+        contactsIndexes.forEach(index -> {
+            Contact contact = contactsAdapter.getContact(index);
+            try {
+                contactsAdapter.removeContact(index);
+                databaseManager.deleteContact(contact);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Logger.e("Could not delete contact: " + contact.toString());
+            }
+        });
     }
 }
