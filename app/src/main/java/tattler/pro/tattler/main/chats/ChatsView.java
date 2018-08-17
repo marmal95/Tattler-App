@@ -7,5 +7,5 @@ import tattler.pro.tattler.models.Chat;
 interface ChatsView extends MvpView {
     void setChatsAdapter(ChatsAdapter adapter);
     void showChatAddingError();
-    void startChat(Chat chat);
+    void startChatActivity(Chat chat);
 }

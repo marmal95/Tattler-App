@@ -7,6 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -66,6 +69,21 @@ public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
         getPresenter().onDestroy();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.chats_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.chatsRemove:
+                getPresenter().handleChatsRemoveClick();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void setChatsAdapter(ChatsAdapter adapter) {
@@ -79,7 +97,7 @@ public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
     }
 
     @Override
-    public void startChat(Chat chat) {
+    public void startChatActivity(Chat chat) {
         Intent intent = new Intent(getActivity(), ChatActivity.class);
         intent.putExtra(IntentKey.CHAT.name(), chat);
         startActivity(intent);
@@ -92,6 +110,7 @@ public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
 
     @Override
     public boolean onItemLongClick(int position) {
-        return false;
+        getPresenter().handleChatLongClick(position);
+        return true;
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +23,12 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.common.OnItemClickListener;
+import tattler.pro.tattler.common.SelectableAdapter;
 import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Message;
 
-public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> {
+public class ChatsAdapter extends SelectableAdapter<ChatsAdapter.ViewHolder, Chat> {
     private Context context;
     private List<Chat> chats;
     private OnItemClickListener clickListener;
@@ -50,11 +52,18 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Chat chat = getChat(position);
-        ColorDrawable chatNameColorDrawable = new ColorDrawable(Color.parseColor(Util.pickHexColor(context, chat.chatName)));
-
-        holder.chatAvatar.setImageDrawable(chatNameColorDrawable);
-        holder.chatInitials.setText(Util.extractUserInitials(chat.chatName));
         holder.chatName.setText(chat.chatName);
+        holder.chatAvatar.setColorFilter(Color.parseColor(Util.pickHexColor(context, chat.chatName)));
+
+        if (isSelected(position)) {
+            holder.chatInitials.setText("");
+            holder.chatAvatar.setImageDrawable(VectorDrawableCompat.create(context.getResources(),
+                    R.drawable.ic_check_circle, context.getTheme()));
+        } else {
+            ColorDrawable chatNameColorDrawable = new ColorDrawable(Color.parseColor(Util.pickHexColor(context, chat.chatName)));
+            holder.chatAvatar.setImageDrawable(chatNameColorDrawable);
+            holder.chatInitials.setText(Util.extractUserInitials(chat.chatName));
+        }
 
         if (chat.messages != null) {
             displayLastMessageData(holder, chat);
@@ -64,14 +73,21 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     }
 
     @Override
+    public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        holder.itemView.clearAnimation();
+    }
+
+    @Override
     public int getItemCount() {
         return chats.size();
     }
 
     @Override
-    public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        holder.itemView.clearAnimation();
+    public List<Chat> getSelectedItems() {
+        List<Chat> selectedChats = new ArrayList<>(getSelectedItemsCount());
+        getSelectedPositions().forEach(index -> selectedChats.add(getChat(index)));
+        return selectedChats;
     }
 
     public void addChat(Chat chat) {
@@ -142,6 +158,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(v -> clickListener.onItemClick(getAdapterPosition()));
+            itemView.setOnLongClickListener(v -> clickListener.onItemLongClick(getAdapterPosition()));
         }
     }
 }

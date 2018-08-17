@@ -41,11 +41,21 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
         chatsAdapter.removeChat(chat);
     }
 
-    @SuppressWarnings("ConstantConditions")
+
     public void handleChatClicked(int position) {
-        if (isViewAttached()) {
-            getView().startChat(chatsAdapter.getChat(position));
+        if (chatsAdapter.isInSelectMode()) {
+            chatsAdapter.toggleSelection(position);
+        } else {
+            startChatActivity(position);
         }
+    }
+
+    public void handleChatLongClick(int position) {
+        chatsAdapter.toggleSelection(position);
+    }
+
+    public void handleChatsRemoveClick() {
+        // TODO: Implement
     }
 
     private void initChats() {
@@ -63,6 +73,13 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
     private void showChatAddingError() {
         if (isViewAttached()) {
             getView().showChatAddingError();
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void startChatActivity(int position) {
+        if (isViewAttached()) {
+            getView().startChatActivity(chatsAdapter.getChat(position));
         }
     }
 }

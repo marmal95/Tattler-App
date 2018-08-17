@@ -29,6 +29,7 @@
     <string name="mute">Mute</string>
     <string name="block">Block</string>
     <string name="removeContacts">Remove contacts</string>
+    <string name="removeChats">Remove chats</string>
     <string name="lastMessageByMe">You: %1$s</string>
     <string name="lastMessageToMe">%1$s</string>
 
