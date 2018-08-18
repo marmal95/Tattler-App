@@ -133,6 +133,9 @@ public class ChatsAdapter extends SelectableAdapter<ChatsAdapter.ViewHolder, Cha
 
     private void displayLastMessageData(@NonNull ViewHolder holder, Chat chat) {
         List<Message> chatMessages = new ArrayList<>(chat.messages);
+        if (chatMessages.isEmpty())
+            return;
+
         Message lastMessage = chatMessages.get(chatMessages.size() - 1);
         String lastMessageContent = Util.isMessageSentByMe(context, lastMessage.senderId) ?
                 context.getString(R.string.lastMessageByMe, new String(lastMessage.content)) :
