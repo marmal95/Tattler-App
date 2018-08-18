@@ -32,6 +32,12 @@ public class MessageFactory {
         return new CreateChatRequest(getMyUserNumber(), chatContacts, null, false);
     }
 
+    public CreateChatRequest createCreateChatRequest(List<Contact> contacts) {
+        List<Integer> chatContacts = new ArrayList<>(contacts.size());
+        contacts.forEach(contact -> chatContacts.add(contact.contactNumber));
+        return new CreateChatRequest(getMyUserNumber(), chatContacts, null, true);
+    }
+
     public ChatInvitation createChatInvitation(CreateChatResponse chatResponse) {
         ChatInvitation chatInvitation = new ChatInvitation(
                 getMyUserNumber(),

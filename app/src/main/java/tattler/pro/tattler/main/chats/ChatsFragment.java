@@ -82,7 +82,7 @@ public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.chatsRemove:
+            case R.id.removeChatsAction:
                 getPresenter().handleChatsRemoveClick();
                 break;
         }

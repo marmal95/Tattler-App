@@ -32,6 +32,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.chat.ChatActivity;
+import tattler.pro.tattler.common.ChatsManager;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.IntentKey;
 import tattler.pro.tattler.common.OnItemClickListener;
@@ -39,6 +41,7 @@ import tattler.pro.tattler.contact.ContactActivity;
 import tattler.pro.tattler.custom_ui.MaterialToast;
 import tattler.pro.tattler.main.MainActivity;
 import tattler.pro.tattler.messages.MessageFactory;
+import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Contact;
 
 public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresenter>
@@ -73,7 +76,8 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
                 new ContactsAdapter(activity, new ArrayList<>(), this),
                 OpenHelperManager.getHelper(activity, DatabaseManager.class),
                 activity.getPresenter(),
-                new MessageFactory(activity));
+                new MessageFactory(activity),
+                new ChatsManager());
     }
 
     @Override
@@ -91,7 +95,10 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.contactsRemove:
+            case R.id.startChatAction:
+                getPresenter().handleStartChatClick();
+                break;
+            case R.id.removeContactsAction:
                 getPresenter().handleContactsRemoveClick();
                 break;
         }
@@ -132,6 +139,13 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
                 Pair.create(clickedView.findViewById(R.id.userNumber), getString(R.string.contactNumber)));
 
         startActivity(intent, options.toBundle());
+    }
+
+    @Override
+    public void startChatActivity(Chat chat) {
+        Intent intent = new Intent(getActivity(), ChatActivity.class);
+        intent.putExtra(IntentKey.CHAT.name(), chat);
+        startActivity(intent);
     }
 
     @Override

@@ -99,6 +99,7 @@ public class TcpConnectionService extends Service {
     }
 
     public void sendMessage(Message message) {
+        Logger.d("Passing new message to send: " + message.toString());
         tcpSender.queueMessage(message);
     }
 

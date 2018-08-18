@@ -2,7 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/contactsRemove"
+        android:id="@+id/startChatAction"
+        android:icon="@drawable/ic_chat"
+        android:title="@string/startChat"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/removeContactsAction"
         android:icon="@drawable/ic_delete"
         android:title="@string/removeContacts"
         app:showAsAction="ifRoom" />
