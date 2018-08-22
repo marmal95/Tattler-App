@@ -87,6 +87,12 @@ public class MessageFactory {
         return new RemoveContactsRequest(contactNumbers, getMyUserNumber());
     }
 
+    public LeaveChatsRequest createLeaveChatsRequest(List<Chat> chats) {
+        List<Integer> chatsId = new ArrayList<>(chats.size());
+        chats.forEach(chat -> chatsId.add(chat.chatId));
+        return new LeaveChatsRequest(chatsId, getMyUserNumber());
+    }
+
     private int getMyUserNumber() {
         AppPreferences appPreferences = AppPreferences.getInstance(context);
         return appPreferences.getInt(AppPreferences.Key.USER_NUMBER);

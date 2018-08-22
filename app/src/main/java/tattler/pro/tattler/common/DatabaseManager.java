@@ -24,7 +24,7 @@ import tattler.pro.tattler.models.Participant;
 
 public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "tattler.db";
-    private static final int DATABASE_VERSION = 97;
+    private static final int DATABASE_VERSION = 103;
 
     private Dao<Chat, Integer> chatsDao;
     private Dao<Contact, Integer> contactsDao;
@@ -84,21 +84,13 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     }
 
     public void insertChat(Chat chat, List<tattler.pro.tattler.messages.models.Contact> contacts) throws SQLException {
+        getChatsDao().assignEmptyForeignCollection(chat, "participants");
+        getChatsDao().assignEmptyForeignCollection(chat, "messages");
+        getChatsDao().assignEmptyForeignCollection(chat, "invitations");
+        contacts.forEach(contact -> chat.participants.add(new Participant(contact.contactNumber, contact.contactName, chat)));
+
         getChatsDao().createIfNotExists(chat);
         Logger.d("Inserted " + chat.toString());
-
-        List<Contact> contactsToAdd = new ArrayList<>(contacts.size());
-        contacts.forEach(contact -> contactsToAdd.add(new Contact(contact.contactName, contact.contactNumber)));
-
-        for (Contact contact : contactsToAdd) {
-            insertChatParticipant(chat, contact);
-        }
-    }
-
-    public void insertChatParticipant(Chat chat, Contact contact) throws SQLException {
-        Participant participant = new Participant(contact.contactNumber, contact.contactName, chat);
-        getParticipantsDao().create(participant);
-        Logger.d("Inserted " + participant.toString());
     }
 
     public void insertInvitation(Invitation invitation) throws SQLException {

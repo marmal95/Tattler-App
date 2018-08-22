@@ -33,6 +33,7 @@ import tattler.pro.tattler.common.IntentKey;
 import tattler.pro.tattler.common.OnItemClickListener;
 import tattler.pro.tattler.custom_ui.MaterialToast;
 import tattler.pro.tattler.main.MainActivity;
+import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Chat;
 
 public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
@@ -64,7 +65,8 @@ public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
         return new ChatsPresenter(
                 new ChatsAdapter(activity, new ArrayList<>(), this),
                 OpenHelperManager.getHelper(activity, DatabaseManager.class),
-                activity.getPresenter());
+                activity.getPresenter(),
+                new MessageFactory(activity));
     }
 
     @Override

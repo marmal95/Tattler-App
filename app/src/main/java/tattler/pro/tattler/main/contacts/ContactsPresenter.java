@@ -147,11 +147,6 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
         mainPresenter.sendMessage(addContactRequest);
     }
 
-    private void sendRemoveContactsRequest(List<Contact> contacts) {
-        RemoveContactsRequest removeContactsRequest = messageFactory.createRemoveContactRequest(contacts);
-        mainPresenter.sendMessage(removeContactsRequest);
-    }
-
     private void removeContacts(List<Integer> contactsIndexes) {
         Collections.reverse(contactsIndexes);
         contactsIndexes.forEach(index -> {
@@ -164,6 +159,11 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
                 Logger.e("Could not delete contact: " + contact.toString());
             }
         });
+    }
+
+    private void sendRemoveContactsRequest(List<Contact> contacts) {
+        RemoveContactsRequest removeContactsRequest = messageFactory.createRemoveContactRequest(contacts);
+        mainPresenter.sendMessage(removeContactsRequest);
     }
 
     private void startIndividualChat(Contact contact) {
