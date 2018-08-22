@@ -5,7 +5,6 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.orhanobut.logger.Logger;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,18 +37,6 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
         super.attachView(view);
         view.setChatsAdapter(chatsAdapter);
         initChats();
-
-        Chat chat1 = new Chat(100, true, "ZIOMY", true);
-        Chat chat2 = new Chat(101, true, "NOOBY", true);
-        Chat chat3 = new Chat(102, true, "LESZCZE", true);
-        try {
-            databaseManager.insertChat(chat1, new ArrayList<>());
-            databaseManager.insertChat(chat2, new ArrayList<>());
-            databaseManager.insertChat(chat3, new ArrayList<>());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
     }
 
     public void onDestroy() {
