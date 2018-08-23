@@ -28,6 +28,7 @@ import tattler.pro.tattler.messages.ChatInvitationResponse;
 import tattler.pro.tattler.messages.ChatMessage;
 import tattler.pro.tattler.messages.CreateChatResponse;
 import tattler.pro.tattler.messages.InitializeChatIndication;
+import tattler.pro.tattler.messages.LeaveChatIndication;
 import tattler.pro.tattler.messages.LoginResponse;
 import tattler.pro.tattler.messages.Message;
 import tattler.pro.tattler.messages.MessageFactory;
@@ -76,6 +77,9 @@ public class TcpMessageHandler {
                 break;
             case Message.Type.CHAT_MESSAGE:
                 handleChatMessage((ChatMessage) message);
+                break;
+            case Message.Type.LEAVE_CHAT_INDICATION:
+                handleLeaveChatIndication((LeaveChatIndication) message);
                 break;
             default:
                 Logger.e("Message not handled: " + message.toString());
@@ -249,6 +253,21 @@ public class TcpMessageHandler {
                 broadcastMessage(messagesUpdate);
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void handleLeaveChatIndication(LeaveChatIndication message) {
+        try {
+            Optional<Chat> optionalChat = databaseManager.selectChatById(message.chatId);
+            if (optionalChat.isPresent()) {
+                Chat chat = optionalChat.get();
+                chat.participants.removeIf(participant ->
+                        participant.contactNumber == message.leavingUserNumber);
+                databaseManager.updateChat(chat);
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
