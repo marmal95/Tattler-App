@@ -13,4 +13,5 @@ interface ChatView extends MvpView {
     void setMessagesAdapter(MessagesAdapter adapter);
     void setTitle(String title);
     void scrollToPosition(int position);
+    void pickImage();
 }

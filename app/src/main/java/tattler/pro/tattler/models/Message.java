@@ -41,7 +41,7 @@ public class Message implements Serializable {
         this.chat = chat;
         this.senderId = chatMessage.senderId;
         this.content = chatMessage.content;
-        this.contentType = ContentType.TEXT;
+        this.contentType = convertToMessageContentType(chatMessage.contentType);
         this.messageTime = chatMessage.messageTime;
     }
 
@@ -49,10 +49,19 @@ public class Message implements Serializable {
         return new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(new Date(messageTime));
     }
 
+    private ContentType convertToMessageContentType(ChatMessage.ContentType contentType) {
+        switch (contentType) {
+            case TEXT:
+                return ContentType.TEXT;
+            case IMAGE:
+                return ContentType.PHOTO;
+        }
+        return null;
+    }
+
     public enum ContentType {
         TEXT,
-        PHOTO,
-        ATTACHMENT
+        PHOTO
     }
 
     @Override

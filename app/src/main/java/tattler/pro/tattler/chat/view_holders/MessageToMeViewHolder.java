@@ -1,10 +1,13 @@
 package tattler.pro.tattler.chat.view_holders;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Optional;
@@ -29,6 +32,9 @@ public class MessageToMeViewHolder extends RecyclerView.ViewHolder implements Me
 
     @BindView(R.id.messageContent)
     TextView messageContent;
+
+    @BindView(R.id.messageImage)
+    ImageView messageImage;
 
     private Context context;
 
@@ -61,6 +67,14 @@ public class MessageToMeViewHolder extends RecyclerView.ViewHolder implements Me
         switch (message.contentType) {
             case TEXT:
                 messageContent.setText(new String(message.content));
+                messageContent.setVisibility(View.VISIBLE);
+                messageImage.setVisibility(View.GONE);
+                break;
+            case PHOTO:
+                Bitmap bitmap = BitmapFactory.decodeByteArray(message.content, 0, message.content.length);
+                messageImage.setImageBitmap(bitmap);
+                messageImage.setVisibility(View.VISIBLE);
+                messageContent.setVisibility(View.GONE);
                 break;
         }
     }

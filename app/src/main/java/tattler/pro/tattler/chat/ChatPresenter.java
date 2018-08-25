@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import tattler.pro.tattler.common.DatabaseManager;
+import tattler.pro.tattler.common.PickedImageView;
 import tattler.pro.tattler.messages.ChatMessage;
 import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Chat;
@@ -88,6 +89,23 @@ public class ChatPresenter extends MvpBasePresenter<ChatView> {
             insertMessageToDb(dbMessage);
             scrollMessagesBottom();
         }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public void handleSendAttachment() {
+        if (isViewAttached()) {
+            getView().pickImage();
+        }
+    }
+
+    public void onImagePicked(PickedImageView pickedImageView) {
+        ChatMessage chatMessage = messageFactory.createChatMessage(chat, pickedImageView);
+        tcpServiceManager.getTcpService().sendMessage(chatMessage);
+
+        Message dbMessage = new Message(chatMessage, chat);
+        messagesAdapter.addMessage(dbMessage);
+        insertMessageToDb(dbMessage);
+        scrollMessagesBottom();
     }
 
     @SuppressWarnings("ConstantConditions")

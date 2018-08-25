@@ -137,12 +137,26 @@ public class ChatsAdapter extends SelectableAdapter<ChatsAdapter.ViewHolder, Cha
             return;
 
         Message lastMessage = chatMessages.get(chatMessages.size() - 1);
-        String lastMessageContent = Util.isMessageSentByMe(context, lastMessage.senderId) ?
-                context.getString(R.string.lastMessageByMe, new String(lastMessage.content)) :
-                context.getString(R.string.lastMessageToMe, new String(lastMessage.content));
+        String lastMessageContent = getLastMessageContent(lastMessage);
         holder.chatLastMessage.setText(lastMessageContent);
+        if (lastMessage.contentType == Message.ContentType.PHOTO) {
+            holder.chatLastMessage.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_image, 0);
+        }
     }
 
+    @NonNull
+    private String getLastMessageContent(Message lastMessage) {
+        switch (lastMessage.contentType) {
+            case TEXT:
+                return Util.isMessageSentByMe(context, lastMessage.senderId) ?
+                        context.getString(R.string.lastMessageByMe, new String(lastMessage.content)) :
+                        context.getString(R.string.lastMessageToMe, new String(lastMessage.content));
+            default:
+                return Util.isMessageSentByMe(context, lastMessage.senderId) ?
+                        context.getString(R.string.lastMessageByMe, "") :
+                        context.getString(R.string.lastMessageToMe, "");
+        }
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.chatAvatar)

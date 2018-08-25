@@ -14,19 +14,35 @@
         android:orientation="horizontal"
         android:padding="@dimen/space10">
 
-        <TextView
-            android:id="@+id/messageContent"
+        <RelativeLayout
+            android:id="@+id/messageContentGroup"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxWidth="@dimen/max_chat_message_view_width"
-            android:textColor="@color/colorPrimaryText"
-            android:textSize="@dimen/primaryRecyclerItemFontSize" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/messageContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="@dimen/max_chat_message_view_width"
+                android:textColor="@color/colorPrimaryText"
+                android:textSize="@dimen/primaryRecyclerItemFontSize" />
+
+            <ImageView
+                android:id="@+id/messageImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:maxHeight="@dimen/max_chat_view_height"
+                android:maxWidth="@dimen/max_chat_message_view_width"
+                android:scaleType="fitCenter" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/messageTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/messageContent"
+            android:layout_below="@id/messageContentGroup"
             android:layout_marginTop="@dimen/space4"
             android:textColor="@color/colorSecondaryText"
             android:textSize="@dimen/secondaryRecyclerItemFontSize" />

@@ -33,6 +33,7 @@
     <string name="startChat">Start chat</string>
     <string name="lastMessageByMe">You: %1$s</string>
     <string name="lastMessageToMe">%1$s</string>
+    <string name="photo">Photo</string>
 
     <!--Toasts-->
     <string name="authenticationError">Authentication error: %1$s</string>

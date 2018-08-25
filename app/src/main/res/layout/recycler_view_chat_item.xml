@@ -50,6 +50,7 @@
             android:id="@+id/chatLastMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableTint="@color/colorPrimary"
             android:textSize="@dimen/secondaryRecyclerItemFontSize" />
 
     </LinearLayout>

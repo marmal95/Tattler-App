@@ -22,6 +22,8 @@ import butterknife.OnClick;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.IntentKey;
+import tattler.pro.tattler.common.PickedImageView;
+import tattler.pro.tattler.common.RequestCode;
 import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.tcp.MessageBroadcastReceiver;
@@ -42,6 +44,9 @@ public class ChatActivity extends MvpActivity<ChatView, ChatPresenter> implement
 
     @BindView(R.id.sendMessageButton)
     ImageButton sendMessageButton;
+
+    @BindView(R.id.addAttachmentButton)
+    ImageButton addAttachmentButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,11 +122,33 @@ public class ChatActivity extends MvpActivity<ChatView, ChatPresenter> implement
         messagesView.post(() -> messagesView.smoothScrollToPosition(position));
     }
 
+    @Override
+    public void pickImage() {
+        Intent image = new Intent(Intent.ACTION_GET_CONTENT);
+        image.setType("image/*");
+        startActivityForResult(image, RequestCode.PICK_IMAGE);
+    }
+
     @OnClick(R.id.sendMessageButton)
     public void handleSendMessageClick() {
         String messageText = messageInputArea.getText().toString();
         messageInputArea.getText().clear();
         getPresenter().handleSendMessage(messageText);
+    }
+
+    @OnClick(R.id.addAttachmentButton)
+    public void handleAddAttachmentClick() {
+        getPresenter().handleSendAttachment();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCode.PICK_IMAGE) {
+            if (data != null) {
+                getPresenter().onImagePicked(new PickedImageView(this, data.getData()));
+            }
+        }
     }
 
     private void setUpMessagesView() {

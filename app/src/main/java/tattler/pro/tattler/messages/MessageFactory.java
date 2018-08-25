@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tattler.pro.tattler.common.AppPreferences;
+import tattler.pro.tattler.common.PickedImageView;
 import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Contact;
 import tattler.pro.tattler.models.Invitation;
@@ -78,7 +79,11 @@ public class MessageFactory {
     }
 
     public ChatMessage createChatMessage(Chat chat, byte[] content) {
-        return new ChatMessage(getMyUserNumber(), chat.chatId, content);
+        return new ChatMessage(getMyUserNumber(), chat.chatId, content, ChatMessage.ContentType.TEXT);
+    }
+
+    public ChatMessage createChatMessage(Chat chat, PickedImageView imageView) {
+        return new ChatMessage(getMyUserNumber(), chat.chatId, imageView.getImageBytes(), ChatMessage.ContentType.IMAGE);
     }
 
     public RemoveContactsRequest createRemoveContactRequest(List<Contact> contacts) {

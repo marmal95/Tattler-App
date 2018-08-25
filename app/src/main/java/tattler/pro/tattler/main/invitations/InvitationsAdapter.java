@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.OptionalInt;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -88,13 +87,14 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
     }
 
     public void removeInvitations(List<Invitation> invitations) {
-        invitations.forEach(invitation -> {
-            OptionalInt invitationIndex = IntStream.range(0, invitations.size()).filter(
-                    index -> invitation.invitationId == invitations.get(index).invitationId).findFirst();
-            if (invitationIndex.isPresent()) {
-                removeInvitation(invitationIndex.getAsInt());
-            }
-        });
+        // FIXME: Crash
+//        invitations.forEach(invitation -> {
+//            OptionalInt invitationIndex = IntStream.range(0, invitations.size()).filter(
+//                    index -> invitation.invitationId == invitations.get(index).invitationId).findFirst();
+//            if (invitationIndex.isPresent()) {
+//                removeInvitation(invitationIndex.getAsInt());
+//            }
+//        });
 
         notifyDataSetChanged();
     }
