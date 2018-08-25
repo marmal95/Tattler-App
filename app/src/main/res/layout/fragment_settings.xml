@@ -21,31 +21,4 @@
         android:text="@string/notificationsLabel"
         android:textColor="@color/colorPrimaryText" />
 
-    <Switch
-        android:id="@+id/notificationsSound"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space10"
-        android:checked="true"
-        android:text="@string/notificationsSound"
-        android:textColor="@color/colorPrimaryText" />
-
-    <Switch
-        android:id="@+id/notificationsVibration"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space10"
-        android:checked="true"
-        android:text="@string/notificationsVibration"
-        android:textColor="@color/colorPrimaryText" />
-
-    <Switch
-        android:id="@+id/notificationsLight"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space10"
-        android:checked="true"
-        android:text="@string/notificationsLight"
-        android:textColor="@color/colorPrimaryText" />
-
 </LinearLayout>

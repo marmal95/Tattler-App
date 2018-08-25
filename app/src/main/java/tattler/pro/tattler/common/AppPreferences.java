@@ -142,9 +142,6 @@ public class AppPreferences {
         USER_NAME,
         USER_NUMBER,
 
-        IS_NOTIFICATION_ON,
-        IS_NOTIFICATION_SOUND_ON,
-        IS_NOTIFICATION_VIBRATION_ON,
-        IS_NOTIFICATION_LIGHT_ON,
+        IS_NOTIFICATION_ON
     }
 }

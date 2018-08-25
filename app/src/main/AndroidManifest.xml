@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -35,6 +36,7 @@
         <service
             android:name=".tcp.TcpConnectionService"
             android:exported="false" />
+
     </application>
 
 </manifest>

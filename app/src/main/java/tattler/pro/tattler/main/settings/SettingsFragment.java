@@ -21,15 +21,6 @@ public class SettingsFragment extends MvpFragment<SettingsView, SettingsPresente
     @BindView(R.id.notificationsOn)
     Switch notificationsSwitch;
 
-    @BindView(R.id.notificationsSound)
-    Switch notificationsSoundSwitch;
-
-    @BindView(R.id.notificationsVibration)
-    Switch notificationsVibrationSwitch;
-
-    @BindView(R.id.notificationsLight)
-    Switch notificationsLightSwitch;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,29 +47,8 @@ public class SettingsFragment extends MvpFragment<SettingsView, SettingsPresente
         notificationsSwitch.setChecked(isEnabled);
     }
 
-    @Override
-    public void setNotificationSoundState(boolean isEnabled) {
-        notificationsSoundSwitch.setChecked(isEnabled);
-    }
-
-    @Override
-    public void setNotificationVibrationState(boolean isEnabled) {
-        notificationsVibrationSwitch.setChecked(isEnabled);
-    }
-
-    @Override
-    public void setNotificationLightState(boolean isEnabled) {
-        notificationsLightSwitch.setChecked(isEnabled);
-    }
-
     private void setListeners() {
         notificationsSwitch.setOnCheckedChangeListener(
                 (buttonView, isChecked) -> getPresenter().onNotificationStateChange(isChecked));
-        notificationsSoundSwitch.setOnCheckedChangeListener(
-                (buttonView, isChecked) -> getPresenter().onNotificationSoundStateChange(isChecked));
-        notificationsVibrationSwitch.setOnCheckedChangeListener(
-                (buttonView, isChecked) -> getPresenter().onNotificationVibrationStateChanged(isChecked));
-        notificationsLightSwitch.setOnCheckedChangeListener(
-                (buttonView, isChecked) -> getPresenter().onNotificationLightStateChanged(isChecked));
     }
 }

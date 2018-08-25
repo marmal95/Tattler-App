@@ -1,6 +1,7 @@
 package tattler.pro.tattler.tcp;
 
 
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -20,6 +21,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
+import tattler.pro.tattler.common.NotificationBroadcastReceiver;
+import tattler.pro.tattler.common.NotificationBuilder;
 import tattler.pro.tattler.messages.Message;
 import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.security.MessageCrypto;
@@ -38,7 +41,6 @@ public class TcpConnectionService extends Service {
     private ServerReader tcpReceiver;
 
     private TcpServiceBinder tcpServiceBinder;
-    private DatabaseManager databaseManager;
     private MessageFactory messageFactory;
     private TcpMessageHandler tcpMessageHandler;
     private MessageCrypto messageCrypto;
@@ -60,10 +62,27 @@ public class TcpConnectionService extends Service {
         tcpSender = new ServerWriter();
 
         tcpServiceBinder = new TcpServiceBinder();
-        databaseManager = OpenHelperManager.getHelper(this, DatabaseManager.class);
+        DatabaseManager databaseManager = OpenHelperManager.getHelper(this, DatabaseManager.class);
         messageFactory = new MessageFactory(this);
-        tcpMessageHandler = new TcpMessageHandler(this, AppPreferences.getInstance(this), databaseManager, messageFactory);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationBuilder notificationBuilder = new NotificationBuilder(this, databaseManager);
+
+        tcpMessageHandler = new TcpMessageHandler(
+                this,
+                AppPreferences.getInstance(this),
+                databaseManager,
+                messageFactory,
+                notificationBuilder,
+                notificationManager);
+
         messageCrypto = new MessageCrypto(databaseManager);
+
+        NotificationBroadcastReceiver broadcastReceiver = new NotificationBroadcastReceiver(
+                this,
+                databaseManager,
+                messageFactory);
+        registerReceiver(broadcastReceiver, broadcastReceiver.createBroadcastIntentFilter());
 
         new Thread(() -> {
             establishConnection();

@@ -1,5 +1,7 @@
 package tattler.pro.tattler.tcp;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.IntentKey;
+import tattler.pro.tattler.common.NotificationBuilder;
 import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.internal_messages.ChatsUpdate;
 import tattler.pro.tattler.internal_messages.ContactsUpdate;
@@ -45,13 +48,22 @@ public class TcpMessageHandler {
     private AppPreferences appPreferences;
     private DatabaseManager databaseManager;
     private MessageFactory messageFactory;
+    private NotificationBuilder notificationBuilder;
+    private NotificationManager notificationManager;
 
-    TcpMessageHandler(TcpConnectionService tcpConnectionService, AppPreferences appPreferences,
-            DatabaseManager databaseManager, MessageFactory messageFactory) {
+    TcpMessageHandler(
+            TcpConnectionService tcpConnectionService,
+            AppPreferences appPreferences,
+            DatabaseManager databaseManager,
+            MessageFactory messageFactory,
+            NotificationBuilder notificationBuilder,
+            NotificationManager notificationManager) {
         this.tcpConnectionService = tcpConnectionService;
         this.appPreferences = appPreferences;
         this.databaseManager = databaseManager;
         this.messageFactory = messageFactory;
+        this.notificationBuilder = notificationBuilder;
+        this.notificationManager = notificationManager;
     }
 
     public void handle(Message message) {
@@ -251,6 +263,8 @@ public class TcpMessageHandler {
                 messagesUpdate.reason = MessagesUpdate.Reason.NEW_MESSAGE_RECEIVED;
                 messagesUpdate.messages.add(dbMessage);
                 broadcastMessage(messagesUpdate);
+
+                sendNotificationWhenEnabled(chat, message);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -324,5 +338,13 @@ public class TcpMessageHandler {
         chatsUpdate.reason = ChatsUpdate.Reason.CHAT_REMOVED;
         chatsUpdate.chats.add(chat);
         broadcastMessage(chatsUpdate);
+    }
+
+    private void sendNotificationWhenEnabled(Chat chat, ChatMessage message) {
+        boolean isNotificationEnabled = appPreferences.getBoolean(AppPreferences.Key.IS_NOTIFICATION_ON);
+        if (isNotificationEnabled) {
+            Notification notification = notificationBuilder.build(message);
+            notificationManager.notify(chat.chatId, notification);
+        }
     }
 }
