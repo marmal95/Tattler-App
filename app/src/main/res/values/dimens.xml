@@ -20,8 +20,10 @@
 
     <dimen name="primaryDialogTitleViewHeight">64dp</dimen>
 
-    <dimen name="primaryLabelFontSize">28sp</dimen>
-    <dimen name="secondaryLabelFontSize">22sp</dimen>
+    <dimen name="primaryBigTitleFontSize">28sp</dimen>
+    <dimen name="secondaryBigTitleFontSize">22sp</dimen>
+
+    <dimen name="primaryLabelFontSize">22sp</dimen>
 
     <dimen name="recyclerItemSize">64dp</dimen>
     <dimen name="recyclerItemAvatarSize">48dp</dimen>

@@ -140,6 +140,11 @@ public class AppPreferences {
         IS_FIRST_LAUNCH,
         USER_PHONE_NUMBER,
         USER_NAME,
-        USER_NUMBER
+        USER_NUMBER,
+
+        IS_NOTIFICATION_ON,
+        IS_NOTIFICATION_SOUND_ON,
+        IS_NOTIFICATION_VIBRATION_ON,
+        IS_NOTIFICATION_LIGHT_ON,
     }
 }

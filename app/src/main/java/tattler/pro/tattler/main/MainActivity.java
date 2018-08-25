@@ -33,6 +33,7 @@ import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.main.chats.ChatsFragment;
 import tattler.pro.tattler.main.contacts.ContactsFragment;
 import tattler.pro.tattler.main.invitations.InvitationsFragment;
+import tattler.pro.tattler.main.settings.SettingsFragment;
 import tattler.pro.tattler.tcp.MessageBroadcastReceiver;
 import tattler.pro.tattler.tcp.TcpConnectionService;
 import tattler.pro.tattler.tcp.TcpServiceConnector;
@@ -114,6 +115,10 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
                 break;
             case R.id.navInvitationsFragment:
                 getPresenter().handleNavInvitationsClick();
+                break;
+            case R.id.navSettingsFragment:
+                getPresenter().handleNavSettingsClick();
+                break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
@@ -133,35 +138,30 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
 
     @Override
     public void startContactsFragment() {
-        FragmentTransaction fragmentTransaction;
         activeFragment = new ContactsFragment();
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-        fragmentTransaction = fragmentTransaction.replace(R.id.contentFrame, activeFragment);
-        fragmentTransaction = fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        replaceFragment();
+        changeTitle(getString(R.string.contacts));
     }
 
     @Override
     public void startChatsFragment() {
-        FragmentTransaction fragmentTransaction;
         activeFragment = new ChatsFragment();
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-        fragmentTransaction = fragmentTransaction.replace(R.id.contentFrame, activeFragment);
-        fragmentTransaction = fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        replaceFragment();
+        changeTitle(getString(R.string.chats));
     }
 
     @Override
     public void startInvitationsFragment() {
-        FragmentTransaction fragmentTransaction;
         activeFragment = new InvitationsFragment();
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-        fragmentTransaction = fragmentTransaction.replace(R.id.contentFrame, activeFragment);
-        fragmentTransaction = fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        replaceFragment();
+        changeTitle(getString(R.string.invitations));
+    }
+
+    @Override
+    public void startSettingsFragment() {
+        activeFragment = new SettingsFragment();
+        replaceFragment();
+        changeTitle(getString(R.string.settings));
     }
 
     @Override
@@ -190,6 +190,11 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
         super.unregisterReceiver(receiver);
     }
 
+    @Override
+    public void changeTitle(String title) {
+        Objects.requireNonNull(getSupportActionBar()).setTitle(title);
+    }
+
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -202,5 +207,13 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
 
     private ActionBarDrawerToggle setupDrawerToggle() {
         return new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawerOpen, R.string.drawerClose);
+    }
+
+    private void replaceFragment() {
+        FragmentTransaction fragmentTransaction;
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        fragmentTransaction = fragmentTransaction.replace(R.id.contentFrame, activeFragment);
+        fragmentTransaction.commit();
     }
 }

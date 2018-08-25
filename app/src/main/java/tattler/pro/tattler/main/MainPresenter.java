@@ -94,6 +94,13 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
+    public void handleNavSettingsClick() {
+        if (isViewAttached()) {
+            getView().startSettingsFragment();
+        }
+    }
+
     public void sendMessage(Message message) {
         tcpServiceManager.getTcpService().sendMessage(message);
     }

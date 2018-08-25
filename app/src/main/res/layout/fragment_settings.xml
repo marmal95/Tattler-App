@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/space10">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space16"
+        android:text="@string/notificationsSettings"
+        android:theme="@style/PrimaryLabel" />
+
+    <Switch
+        android:id="@+id/notificationsOn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space10"
+        android:checked="true"
+        android:text="@string/notificationsLabel"
+        android:textColor="@color/colorPrimaryText" />
+
+    <Switch
+        android:id="@+id/notificationsSound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space10"
+        android:checked="true"
+        android:text="@string/notificationsSound"
+        android:textColor="@color/colorPrimaryText" />
+
+    <Switch
+        android:id="@+id/notificationsVibration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space10"
+        android:checked="true"
+        android:text="@string/notificationsVibration"
+        android:textColor="@color/colorPrimaryText" />
+
+    <Switch
+        android:id="@+id/notificationsLight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space10"
+        android:checked="true"
+        android:text="@string/notificationsLight"
+        android:textColor="@color/colorPrimaryText" />
+
+</LinearLayout>

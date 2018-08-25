@@ -38,14 +38,19 @@
         <item name="android:textColorHint">@color/colorHintText</item>
     </style>
 
-    <style name="PrimaryTextViewLabel">
+    <style name="PrimaryBigTitle">
         <item name="android:textColor">@color/colorPrimaryText</item>
-        <item name="android:textSize">@dimen/primaryLabelFontSize</item>
+        <item name="android:textSize">@dimen/primaryBigTitleFontSize</item>
     </style>
 
-    <style name="SecondaryTextViewLabel">
+    <style name="SecondaryBigTitle">
         <item name="android:textColor">@color/colorSecondaryText</item>
-        <item name="android:textSize">@dimen/secondaryLabelFontSize</item>
+        <item name="android:textSize">@dimen/secondaryBigTitleFontSize</item>
+    </style>
+
+    <style name="PrimaryLabel">
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textSize">@dimen/primaryLabelFontSize</item>
     </style>
 
     <style name="PrimaryButtonStyle" parent="Widget.AppCompat.Button.Colored">
@@ -72,7 +77,8 @@
         <item name="android:windowMinWidthMinor">90%</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
