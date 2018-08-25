@@ -55,7 +55,7 @@ public class TcpMessageHandler {
     }
 
     public void handle(Message message) {
-        Logger.d("Received Message: " + message.toString());
+        Logger.d("Handling Message: " + message.toString());
         switch (message.messageType) {
             case Message.Type.LOGIN_RESPONSE:
                 handleLoginResponse((LoginResponse) message);
@@ -265,6 +265,9 @@ public class TcpMessageHandler {
                 Chat chat = optionalChat.get();
                 chat.participants.removeIf(participant ->
                         participant.contactNumber == message.leavingUserNumber);
+                if (chat.participants.isEmpty()) {
+                    chat.isInitialized = false;
+                }
                 databaseManager.updateChat(chat);
             }
         } catch (SQLException e) {

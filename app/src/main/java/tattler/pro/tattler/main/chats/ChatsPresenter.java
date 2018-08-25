@@ -66,9 +66,9 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
 
     public void handleChatsRemoveClick() {
         sendLeaveChatsRequest(chatsAdapter.getSelectedItems());
-//        List<Integer> chatsIndexes = chatsAdapter.getSelectedPositions();
-//        removeChats(chatsIndexes);
-//        chatsAdapter.clearSelection();
+        List<Integer> chatsIndexes = chatsAdapter.getSelectedPositions();
+        removeChats(chatsIndexes);
+        chatsAdapter.clearSelection();
     }
 
     private void initChats() {

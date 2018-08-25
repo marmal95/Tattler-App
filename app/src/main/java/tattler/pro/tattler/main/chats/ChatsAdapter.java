@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -67,6 +68,10 @@ public class ChatsAdapter extends SelectableAdapter<ChatsAdapter.ViewHolder, Cha
 
         if (chat.messages != null) {
             displayLastMessageData(holder, chat);
+        }
+
+        if (!chat.isInitialized) {
+            holder.chatNotInitializedIndicator.setVisibility(View.VISIBLE);
         }
 
         setAnimation(holder.itemView, position);
@@ -170,6 +175,9 @@ public class ChatsAdapter extends SelectableAdapter<ChatsAdapter.ViewHolder, Cha
 
         @BindView(R.id.chatLastMessage)
         TextView chatLastMessage;
+
+        @BindView(R.id.chatNotInitializedIndicator)
+        ImageView chatNotInitializedIndicator;
 
         ViewHolder(View itemView) {
             super(itemView);

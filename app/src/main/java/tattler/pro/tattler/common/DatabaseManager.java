@@ -24,7 +24,7 @@ import tattler.pro.tattler.models.Participant;
 
 public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "tattler.db";
-    private static final int DATABASE_VERSION = 112;
+    private static final int DATABASE_VERSION = 113;
 
     private Dao<Chat, Integer> chatsDao;
     private Dao<Contact, Integer> contactsDao;
@@ -62,7 +62,7 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     }
 
     public List<Chat> selectInitializedChats() throws SQLException {
-        List<Chat> chats = getChatsDao().queryBuilder().where().eq("is_initialized", true).query();
+        List<Chat> chats = getChatsDao().queryForAll();
         Logger.d("Selected " + chats.size() + " chats.");
         return chats;
     }

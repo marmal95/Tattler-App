@@ -31,29 +31,50 @@
             android:gravity="center"
             android:textColor="@color/colorAvatarText"
             android:textSize="@dimen/recyclerItemAvatarInitialsFontSize" />
-
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/chatName"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space4"
-            android:textSize="@dimen/primaryRecyclerItemFontSize" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/chatLastMessage"
+            <TextView
+                android:id="@+id/chatName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space4"
+                android:textSize="@dimen/primaryRecyclerItemFontSize" />
+
+            <TextView
+                android:id="@+id/chatLastMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTint="@color/colorPrimary"
+                android:textSize="@dimen/secondaryRecyclerItemFontSize" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/iconsGroupLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableTint="@color/colorPrimary"
-            android:textSize="@dimen/secondaryRecyclerItemFontSize" />
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/chatNotInitializedIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/space4"
+                android:src="@drawable/ic_not_interested"
+                android:tint="@color/colorTextError"
+                android:visibility="gone" />
+        </LinearLayout>
 
+    </RelativeLayout>
 
 </LinearLayout>

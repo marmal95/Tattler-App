@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -127,6 +128,13 @@ public class ChatActivity extends MvpActivity<ChatView, ChatPresenter> implement
         Intent image = new Intent(Intent.ACTION_GET_CONTENT);
         image.setType("image/*");
         startActivityForResult(image, RequestCode.PICK_IMAGE);
+    }
+
+    @Override
+    public void disableChat() {
+        messageInputArea.setVisibility(View.GONE);
+        sendMessageButton.setVisibility(View.GONE);
+        addAttachmentButton.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.sendMessageButton)

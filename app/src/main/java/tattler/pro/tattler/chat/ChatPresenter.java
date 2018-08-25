@@ -59,6 +59,10 @@ public class ChatPresenter extends MvpBasePresenter<ChatView> {
             getView().setTitle(chat.chatName);
         }
 
+        if (!chat.isInitialized && isViewAttached()) {
+            getView().disableChat();
+        }
+
         if (!tcpServiceManager.isServiceBound()) {
             bindTcpConnectionService();
         }
