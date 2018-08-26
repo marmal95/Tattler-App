@@ -25,10 +25,10 @@ public class ContactPresenter extends MvpBasePresenter<ContactView> {
     private Contact contact;
 
     ContactPresenter(TcpServiceManager tcpManager,
-                     TcpServiceConnectorFactory serviceConnectorFactory,
-                     DatabaseManager databaseManager,
-                     ChatsManager chatsManager,
-                     MessageFactory messageFactory) {
+            TcpServiceConnectorFactory serviceConnectorFactory,
+            DatabaseManager databaseManager,
+            ChatsManager chatsManager,
+            MessageFactory messageFactory) {
         this.tcpServiceManager = tcpManager;
         this.tcpServiceConnector = serviceConnectorFactory.create(tcpServiceManager);
         this.chatsManager = chatsManager;

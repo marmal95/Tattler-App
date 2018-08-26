@@ -66,11 +66,29 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/chatMutedIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/space4"
+                android:src="@drawable/ic_speaker_notes"
+                android:tint="@color/colorTextWarning"
+                android:visibility="gone" />
+
+            <ImageView
                 android:id="@+id/chatNotInitializedIndicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/space4"
-                android:src="@drawable/ic_not_interested"
+                android:src="@drawable/ic_timelapse"
+                android:tint="@color/colorTextWarning"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/chatBlockedIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/space4"
+                android:src="@drawable/ic_block"
                 android:tint="@color/colorTextError"
                 android:visibility="gone" />
         </LinearLayout>

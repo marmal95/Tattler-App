@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Contact;
+import tattler.pro.tattler.models.Message;
 
 public class ChatsManager {
     private DatabaseManager databaseManager;
@@ -61,6 +62,15 @@ public class ChatsManager {
         });
     }
 
+    public void removeChat(Chat chat) {
+        try {
+            databaseManager.deleteChat(chat);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Logger.e("Error occurred while deleting chat.");
+        }
+    }
+
     public List<Chat> retrieveInitializedChats() {
         try {
             return databaseManager.selectInitializedChats();
@@ -68,6 +78,15 @@ public class ChatsManager {
             e.printStackTrace();
             Logger.e("Exception occurred while selecting chats.");
             return new ArrayList<>();
+        }
+    }
+
+    public void addMessage(Chat chat, Message message) {
+        try {
+            chat.messages.add(message);
+            databaseManager.updateChat(chat);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

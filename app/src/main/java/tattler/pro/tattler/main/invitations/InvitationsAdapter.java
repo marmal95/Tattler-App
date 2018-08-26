@@ -182,13 +182,13 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
             rejectChat.setOnClickListener(v -> clickListener.onItemViewClick(getAdapterPosition(), rejectChat));
         }
 
-        public void changeStateToPendingReaction() {
+        void changeStateToPendingReaction() {
             acceptChat.setVisibility(View.VISIBLE);
             rejectChat.setVisibility(View.VISIBLE);
             invitationPendingIcon.setVisibility(View.GONE);
         }
 
-        public void changeStateToPendingResponse() {
+        void changeStateToPendingResponse() {
             acceptChat.setVisibility(View.GONE);
             rejectChat.setVisibility(View.GONE);
             invitationPendingIcon.setVisibility(View.VISIBLE);

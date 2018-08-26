@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.common.ChatsManager;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.OnItemViewClickListener;
 import tattler.pro.tattler.main.MainActivity;
@@ -53,7 +54,8 @@ public class InvitationsFragment extends MvpFragment<InvitationsView, Invitation
                 new InvitationsAdapter(activity, new ArrayList<>(), this),
                 OpenHelperManager.getHelper(activity, DatabaseManager.class),
                 activity.getPresenter(),
-                new MessageFactory(activity));
+                new MessageFactory(activity),
+                new ChatsManager());
     }
 
     @Override
@@ -68,17 +70,10 @@ public class InvitationsFragment extends MvpFragment<InvitationsView, Invitation
     }
 
     @Override
-    public void changeInvitationToPending(int position) {
-        InvitationsAdapter.ViewHolder viewHolder = (InvitationsAdapter.ViewHolder)
-                invitationsView.findViewHolderForAdapterPosition(position);
-        viewHolder.changeStateToPendingResponse();
-    }
-
-    @Override
     public void onItemViewClick(int position, View view) {
         if (view.getId() == R.id.acceptChat) {
             getPresenter().handleAcceptInvitation(position);
-        } else {
+        } else if (view.getId() == R.id.rejectChat) {
             getPresenter().handleRejectInvitation(position);
         }
     }

@@ -16,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -32,7 +31,6 @@ import tattler.pro.tattler.common.ChatsManager;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.IntentKey;
 import tattler.pro.tattler.common.OnItemClickListener;
-import tattler.pro.tattler.custom_ui.MaterialToast;
 import tattler.pro.tattler.main.MainActivity;
 import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Chat;
@@ -103,12 +101,6 @@ public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
     @Override
     public void setChatsAdapter(ChatsAdapter adapter) {
         chatsView.setAdapter(adapter);
-    }
-
-    @Override
-    public void showChatAddingError() {
-        MaterialToast.makeText(getActivity(), getString(R.string.chatCreatingError),
-                Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show();
     }
 
     @Override

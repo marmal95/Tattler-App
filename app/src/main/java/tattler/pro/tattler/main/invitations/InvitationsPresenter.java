@@ -6,6 +6,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import java.sql.SQLException;
 import java.util.List;
 
+import tattler.pro.tattler.common.ChatsManager;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.main.MainPresenter;
 import tattler.pro.tattler.messages.ChatInvitationResponse;
@@ -18,18 +19,22 @@ public class InvitationsPresenter extends MvpBasePresenter<InvitationsView> {
     private DatabaseManager databaseManager;
     private MainPresenter mainPresenter;
     private MessageFactory messageFactory;
+    private ChatsManager chatsManager;
 
     InvitationsPresenter(
             InvitationsAdapter
                     invitationsAdapter,
             DatabaseManager databaseManager,
             MainPresenter mainPresenter,
-            MessageFactory messageFactory) {
+            MessageFactory messageFactory,
+            ChatsManager chatsManager) {
         this.invitationsAdapter = invitationsAdapter;
         this.databaseManager = databaseManager;
         this.mainPresenter = mainPresenter;
         this.mainPresenter.setInvitationsPresenter(this);
         this.messageFactory = messageFactory;
+        this.chatsManager = chatsManager;
+        this.chatsManager.setDatabaseManager(databaseManager);
     }
 
     @Override
@@ -47,7 +52,6 @@ public class InvitationsPresenter extends MvpBasePresenter<InvitationsView> {
         Invitation invitation = invitationsAdapter.getInvitation(position);
         sendChatInvitationResponse(invitation, ChatInvitationResponse.Status.INVITATION_ACCEPTED, invitation.chat.publicKey);
         updateInvitationStateToPendingResponse(invitation);
-        changeInvitationStateToPendingResponse(position);
     }
 
     public void handleRejectInvitation(int position) {
@@ -80,16 +84,9 @@ public class InvitationsPresenter extends MvpBasePresenter<InvitationsView> {
     private void updateInvitationStateToPendingResponse(Invitation invitation) {
         try {
             invitation.state = Invitation.State.PENDING_FOR_RESPONSE;
-            databaseManager.insertInvitation(invitation);
+            databaseManager.updateInvitation(invitation);
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private void changeInvitationStateToPendingResponse(int position) {
-        if (isViewAttached()) {
-            getView().changeInvitationToPending(position);
         }
     }
 
@@ -104,10 +101,6 @@ public class InvitationsPresenter extends MvpBasePresenter<InvitationsView> {
     }
 
     private void removeChat(Invitation invitation) {
-        try {
-            databaseManager.deleteChat(invitation.chat);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        chatsManager.removeChat(invitation.chat);
     }
 }

@@ -70,10 +70,7 @@ public class ChatsAdapter extends SelectableAdapter<ChatsAdapter.ViewHolder, Cha
             displayLastMessageData(holder, chat);
         }
 
-        if (!chat.isInitialized) {
-            holder.chatNotInitializedIndicator.setVisibility(View.VISIBLE);
-        }
-
+        displayChatStatusIcons(holder, chat);
         setAnimation(holder.itemView, position);
     }
 
@@ -128,6 +125,26 @@ public class ChatsAdapter extends SelectableAdapter<ChatsAdapter.ViewHolder, Cha
         return chats.get(position);
     }
 
+    private void displayChatStatusIcons(@NonNull ViewHolder holder, Chat chat) {
+        if (chat.isMuted) {
+            holder.chatMutedIndicator.setVisibility(View.VISIBLE);
+        } else {
+            holder.chatMutedIndicator.setVisibility(View.GONE);
+        }
+
+        if (!chat.isInitialized) {
+            holder.chatNotInitializedIndicator.setVisibility(View.VISIBLE);
+        } else {
+            holder.chatNotInitializedIndicator.setVisibility(View.GONE);
+        }
+
+        if (chat.isBlocked) {
+            holder.chatBlockedIndicator.setVisibility(View.VISIBLE);
+        } else {
+            holder.chatBlockedIndicator.setVisibility(View.GONE);
+        }
+    }
+
     private void setAnimation(View viewToAnimate, int position) {
         if (position > lastPosition) {
             Animation animation = AnimationUtils.loadAnimation(context, R.anim.item_animation_from_right);
@@ -176,8 +193,14 @@ public class ChatsAdapter extends SelectableAdapter<ChatsAdapter.ViewHolder, Cha
         @BindView(R.id.chatLastMessage)
         TextView chatLastMessage;
 
+        @BindView(R.id.chatMutedIndicator)
+        ImageView chatMutedIndicator;
+
         @BindView(R.id.chatNotInitializedIndicator)
         ImageView chatNotInitializedIndicator;
+
+        @BindView(R.id.chatBlockedIndicator)
+        ImageView chatBlockedIndicator;
 
         ViewHolder(View itemView) {
             super(itemView);

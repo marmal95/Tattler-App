@@ -21,6 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.common.ChatsManager;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.IntentKey;
 import tattler.pro.tattler.common.PickedImageView;
@@ -83,7 +84,8 @@ public class ChatActivity extends MvpActivity<ChatView, ChatPresenter> implement
                 new MessagesAdapter(this, new ArrayList<>()),
                 new MessageFactory(this),
                 chat,
-                OpenHelperManager.getHelper(this, DatabaseManager.class));
+                OpenHelperManager.getHelper(this, DatabaseManager.class),
+                new ChatsManager());
     }
 
     @Override

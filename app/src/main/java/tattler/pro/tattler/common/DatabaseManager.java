@@ -93,14 +93,9 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         Logger.d("Inserted " + chat.toString());
     }
 
-    public void insertInvitation(Invitation invitation) throws SQLException {
-        getInvitationsDao().createOrUpdate(invitation);
+    public void updateInvitation(Invitation invitation) throws SQLException {
+        getInvitationsDao().update(invitation);
         Logger.d("Inserted " + invitation.toString());
-    }
-
-    public void insertMessage(Message message) throws SQLException {
-        getMessagesDao().create(message);
-        Logger.d("Inserted: " + message.toString());
     }
 
     public Optional<Chat> getIndividualChat(Contact contact) throws SQLException {
@@ -140,11 +135,6 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     public void deleteContact(Contact contact) throws SQLException {
         getContactsDao().delete(contact);
         Logger.d("Deleted: " + contact.toString());
-    }
-
-    public void deleteInvitation(Invitation invitation) throws SQLException {
-        getInvitationsDao().delete(invitation);
-        Logger.d("Deleted: " + invitation.toString());
     }
 
     public void deleteChat(Chat chat) throws SQLException {

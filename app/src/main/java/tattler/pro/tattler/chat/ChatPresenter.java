@@ -4,9 +4,9 @@ import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.orhanobut.logger.Logger;
 
-import java.sql.SQLException;
 import java.util.List;
 
+import tattler.pro.tattler.common.ChatsManager;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.PickedImageView;
 import tattler.pro.tattler.messages.ChatMessage;
@@ -28,7 +28,7 @@ public class ChatPresenter extends MvpBasePresenter<ChatView> {
     private Chat chat;
     private MessagesAdapter messagesAdapter;
     private MessageFactory messageFactory;
-    private DatabaseManager databaseManager;
+    private ChatsManager chatsManager;
 
     ChatPresenter(
             TcpServiceManager tcpManager,
@@ -38,7 +38,8 @@ public class ChatPresenter extends MvpBasePresenter<ChatView> {
             MessagesAdapter messagesAdapter,
             MessageFactory messageFactory,
             Chat chat,
-            DatabaseManager databaseManager) {
+            DatabaseManager databaseManager,
+            ChatsManager chatsManager) {
         this.tcpServiceManager = tcpManager;
         this.tcpServiceConnector = serviceConnectorFactory.create(tcpServiceManager);
         this.messageHandler = messageHandler;
@@ -46,10 +47,11 @@ public class ChatPresenter extends MvpBasePresenter<ChatView> {
         this.messagesAdapter = messagesAdapter;
         this.messageFactory = messageFactory;
         this.chat = chat;
-        this.databaseManager = databaseManager;
 
         this.messageHandler.setPresenter(this);
         this.broadcastReceiver.setReceivedMessageCallback(messageHandler);
+        this.chatsManager = chatsManager;
+        this.chatsManager.setDatabaseManager(databaseManager);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -59,7 +61,7 @@ public class ChatPresenter extends MvpBasePresenter<ChatView> {
             getView().setTitle(chat.chatName);
         }
 
-        if (!chat.isInitialized && isViewAttached()) {
+        if (isChatNotReady() && isViewAttached()) {
             getView().disableChat();
         }
 
@@ -144,12 +146,8 @@ public class ChatPresenter extends MvpBasePresenter<ChatView> {
         }
     }
 
-    private void insertMessageToDb(Message dbMessage) {
-        try {
-            databaseManager.insertMessage(dbMessage);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    private void insertMessageToDb(Message message) {
+        chatsManager.addMessage(chat, message);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -157,5 +155,9 @@ public class ChatPresenter extends MvpBasePresenter<ChatView> {
         if (isViewAttached()) {
             getView().scrollToPosition(messagesAdapter.getItemCount() - 1);
         }
+    }
+
+    private boolean isChatNotReady() {
+        return !chat.isInitialized || chat.isBlocked;
     }
 }
