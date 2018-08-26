@@ -2,12 +2,11 @@ package tattler.pro.tattler.main.chats;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.orhanobut.logger.Logger;
 
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
+import tattler.pro.tattler.common.ChatsManager;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.main.MainPresenter;
 import tattler.pro.tattler.messages.LeaveChatsRequest;
@@ -16,20 +15,22 @@ import tattler.pro.tattler.models.Chat;
 
 public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
     private ChatsAdapter chatsAdapter;
-    private DatabaseManager databaseManager;
     private MainPresenter mainPresenter;
     private MessageFactory messageFactory;
+    private ChatsManager chatsManager;
 
     ChatsPresenter(
             ChatsAdapter chatsAdapter,
             DatabaseManager databaseManager,
             MainPresenter mainPresenter,
-            MessageFactory messageFactory) {
+            MessageFactory messageFactory,
+            ChatsManager chatsManager) {
         this.chatsAdapter = chatsAdapter;
-        this.databaseManager = databaseManager;
         this.mainPresenter = mainPresenter;
         this.mainPresenter.setChatsPresenter(this);
         this.messageFactory = messageFactory;
+        this.chatsManager = chatsManager;
+        this.chatsManager.setDatabaseManager(databaseManager);
     }
 
     @Override
@@ -65,28 +66,30 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
     }
 
     public void handleChatsRemoveClick() {
-        sendLeaveChatsRequest(chatsAdapter.getSelectedItems());
+        List<Chat> selectedChats = chatsAdapter.getSelectedItems();
         List<Integer> chatsIndexes = chatsAdapter.getSelectedPositions();
-        removeChats(chatsIndexes);
+
+        sendLeaveChatsRequest(selectedChats);
+        removeChatsFromView(chatsIndexes);
+
+        chatsManager.removeChats(selectedChats);
+        chatsAdapter.clearSelection();
+    }
+
+    public void handleMuteChatsClick() {
+        chatsManager.toggleMuteChats(chatsAdapter.getSelectedItems());
+        chatsAdapter.clearSelection();
+    }
+
+    public void handleBlockChatsClick() {
+        chatsManager.toggleBlockChats(chatsAdapter.getSelectedItems());
         chatsAdapter.clearSelection();
     }
 
     private void initChats() {
-        try {
-            List<Chat> chats = databaseManager.selectInitializedChats();
-            chatsAdapter.clearChats();
-            chatsAdapter.addChats(chats);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showChatAddingError();
-        }
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private void showChatAddingError() {
-        if (isViewAttached()) {
-            getView().showChatAddingError();
-        }
+        List<Chat> chats = chatsManager.retrieveInitializedChats();
+        chatsAdapter.clearChats();
+        chatsAdapter.addChats(chats);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -96,18 +99,9 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
         }
     }
 
-    private void removeChats(List<Integer> chatsIndexes) {
+    private void removeChatsFromView(List<Integer> chatsIndexes) {
         Collections.reverse(chatsIndexes);
-        chatsIndexes.forEach(index -> {
-            Chat chat = chatsAdapter.getChat(index);
-            try {
-                chatsAdapter.removeChat(index);
-                databaseManager.deleteChat(chat);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                Logger.e("Could not delete chat: " + chat.toString());
-            }
-        });
+        chatsIndexes.forEach(index -> chatsAdapter.removeChat(index));
     }
 
     private void sendLeaveChatsRequest(List<Chat> selectedItems) {

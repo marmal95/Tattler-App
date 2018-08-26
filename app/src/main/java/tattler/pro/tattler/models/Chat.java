@@ -25,6 +25,12 @@ public class Chat implements Serializable {
     @DatabaseField(columnName = "is_initialized")
     public boolean isInitialized;
 
+    @DatabaseField(columnName = "is_muted")
+    public boolean isMuted;
+
+    @DatabaseField(columnName = "is_blocked")
+    public boolean isBlocked;
+
     @DatabaseField(dataType = DataType.BYTE_ARRAY)
     public byte[] publicKey;
 
@@ -43,24 +49,13 @@ public class Chat implements Serializable {
     @ForeignCollectionField(eager = true)
     public ForeignCollection<Message> messages;
 
-    public Chat() {
-        this.chatId = 0;
-        this.isGroupChat = false;
-        this.chatName = null;
-        this.isInitialized = false;
-        this.publicKey = null;
-        this.privateKey = null;
-        this.chatKey = null;
-    }
+    public Chat() {}
 
     public Chat(int chatId, boolean isGroupChat, String chatName, boolean isInitialized) {
         this.chatId = chatId;
         this.isGroupChat = isGroupChat;
         this.chatName = chatName;
         this.isInitialized = isInitialized;
-        this.publicKey = null;
-        this.privateKey = null;
-        this.chatKey = null;
     }
 
     @Override
@@ -74,6 +69,8 @@ public class Chat implements Serializable {
                 ", chatName='" + chatName + '\'' +
                 ", isGroupChat=" + isGroupChat +
                 ", isInitialized=" + isInitialized +
+                ", isMuted=" + isMuted +
+                ", isBlocked=" + isBlocked +
                 ", publicKey=" + Arrays.toString(publicKey) +
                 ", privateKey=" + Arrays.toString(privateKey) +
                 ", chatKey=" + Arrays.toString(chatKey) +

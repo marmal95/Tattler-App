@@ -2,6 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/muteChatsAction"
+        android:icon="@drawable/ic_notifications"
+        android:title="@string/muteToggle"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/blockChatsAction"
+        android:icon="@drawable/ic_block"
+        android:title="@string/blockToggle"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/removeChatsAction"
         android:icon="@drawable/ic_delete"
         android:title="@string/removeChats"

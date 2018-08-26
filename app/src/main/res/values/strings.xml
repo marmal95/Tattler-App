@@ -41,6 +41,8 @@
     <string name="notificationsSound">Notifications sound</string>
     <string name="notificationsVibration">Notifications vibration</string>
     <string name="notificationsLight">Notifications light</string>
+    <string name="muteToggle">Toggle mute</string>
+    <string name="blockToggle">Toggle block</string>
 
     <!--Toasts-->
     <string name="authenticationError">Authentication error: %1$s</string>

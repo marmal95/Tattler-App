@@ -28,6 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import tattler.pro.tattler.R;
 import tattler.pro.tattler.chat.ChatActivity;
+import tattler.pro.tattler.common.ChatsManager;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.IntentKey;
 import tattler.pro.tattler.common.OnItemClickListener;
@@ -66,7 +67,8 @@ public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
                 new ChatsAdapter(activity, new ArrayList<>(), this),
                 OpenHelperManager.getHelper(activity, DatabaseManager.class),
                 activity.getPresenter(),
-                new MessageFactory(activity));
+                new MessageFactory(activity),
+                new ChatsManager());
     }
 
     @Override
@@ -87,6 +89,13 @@ public class ChatsFragment extends MvpFragment<ChatsView, ChatsPresenter>
             case R.id.removeChatsAction:
                 getPresenter().handleChatsRemoveClick();
                 break;
+            case R.id.muteChatsAction:
+                getPresenter().handleMuteChatsClick();
+                break;
+            case R.id.blockChatsAction:
+                getPresenter().handleBlockChatsClick();
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }

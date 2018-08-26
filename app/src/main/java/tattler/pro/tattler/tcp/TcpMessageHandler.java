@@ -254,6 +254,11 @@ public class TcpMessageHandler {
             Optional<Chat> optionalChat = databaseManager.selectChatById(message.chatId);
             if (optionalChat.isPresent()) {
                 Chat chat = optionalChat.get();
+                if (chat.isBlocked) {
+                    Logger.d("Chat is blocked. Ignoring message: " + message.toString());
+                    return;
+                }
+
                 tattler.pro.tattler.models.Message dbMessage =
                         new tattler.pro.tattler.models.Message(message, chat);
                 chat.messages.add(dbMessage);
@@ -342,7 +347,7 @@ public class TcpMessageHandler {
 
     private void sendNotificationWhenEnabled(Chat chat, ChatMessage message) {
         boolean isNotificationEnabled = appPreferences.getBoolean(AppPreferences.Key.IS_NOTIFICATION_ON);
-        if (isNotificationEnabled) {
+        if (isNotificationEnabled && !chat.isMuted) {
             Notification notification = notificationBuilder.build(message);
             notificationManager.notify(chat.chatId, notification);
         }
