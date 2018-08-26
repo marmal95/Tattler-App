@@ -43,6 +43,7 @@
     <string name="notificationsLight">Notifications light</string>
     <string name="muteToggle">Toggle mute</string>
     <string name="blockToggle">Toggle block</string>
+    <string name="logout">Logout</string>
 
     <!--Toasts-->
     <string name="authenticationError">Authentication error: %1$s</string>

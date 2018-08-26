@@ -16,4 +16,5 @@ interface MainView extends MvpView {
     void registerReceiver(MessageBroadcastReceiver receiver);
     void unregisterReceiver(MessageBroadcastReceiver receiver);
     void changeTitle(String title);
+    void startRegisterActivity();
 }

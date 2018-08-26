@@ -34,13 +34,15 @@ import tattler.pro.tattler.main.chats.ChatsFragment;
 import tattler.pro.tattler.main.contacts.ContactsFragment;
 import tattler.pro.tattler.main.invitations.InvitationsFragment;
 import tattler.pro.tattler.main.settings.SettingsFragment;
+import tattler.pro.tattler.register.RegisterActivity;
 import tattler.pro.tattler.tcp.MessageBroadcastReceiver;
 import tattler.pro.tattler.tcp.TcpConnectionService;
 import tattler.pro.tattler.tcp.TcpServiceConnector;
 import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
 import tattler.pro.tattler.tcp.TcpServiceManager;
 
-public class MainActivity extends MvpActivity<MainView, MainPresenter> implements MainView, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends MvpActivity<MainView, MainPresenter>
+        implements MainView, NavigationView.OnNavigationItemSelectedListener {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -119,6 +121,9 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
             case R.id.navSettingsFragment:
                 getPresenter().handleNavSettingsClick();
                 break;
+            case R.id.navLogout:
+                getPresenter().handleLogoutClick();
+                break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
@@ -193,6 +198,14 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
     @Override
     public void changeTitle(String title) {
         Objects.requireNonNull(getSupportActionBar()).setTitle(title);
+    }
+
+    @Override
+    public void startRegisterActivity() {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void setUpToolbar() {

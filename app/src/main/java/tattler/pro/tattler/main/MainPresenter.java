@@ -101,6 +101,13 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
+    public void handleLogoutClick() {
+        if (isViewAttached()) {
+            getView().startRegisterActivity();
+        }
+    }
+
     public void sendMessage(Message message) {
         tcpServiceManager.getTcpService().sendMessage(message);
     }
