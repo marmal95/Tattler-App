@@ -18,19 +18,29 @@ public class Invitation implements Serializable {
     @DatabaseField(columnName = "sender_id", uniqueCombo = true)
     public int senderId;
 
+    @DatabaseField(columnName = "receiver_id", uniqueCombo = true)
+    public int receiverId;
+
     @DatabaseField(columnName = "invitation_message_id")
     public long invitationMessageId;
 
     @DatabaseField(columnName = "invitation_status")
     public State state;
 
+    @SuppressWarnings("unused")
     public Invitation() {}
 
-    public Invitation(Chat chat, int senderId, long invitationMessageId, State state) {
+    public Invitation(Chat chat, int senderId, int receiverId, long invitationMessageId, State state) {
         this.chat = chat;
         this.senderId = senderId;
+        this.receiverId = receiverId;
         this.invitationMessageId = invitationMessageId;
         this.state = state;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Invitation && invitationId == ((Invitation) obj).invitationId;
     }
 
     @Override

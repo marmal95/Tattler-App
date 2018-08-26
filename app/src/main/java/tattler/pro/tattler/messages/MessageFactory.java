@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.PickedImageView;
@@ -39,16 +40,23 @@ public class MessageFactory {
         return new CreateChatRequest(getMyUserNumber(), chatContacts, null, true);
     }
 
-    public ChatInvitation createChatInvitation(CreateChatResponse chatResponse) {
-        ChatInvitation chatInvitation = new ChatInvitation(
-                getMyUserNumber(),
-                0,
-                chatResponse.chatId,
-                chatResponse.isGroupChat,
-                chatResponse.chatName);
-        chatInvitation.chatContacts.addAll(chatResponse.contacts);
-        chatInvitation.chatContacts.add(new tattler.pro.tattler.messages.models.Contact(getMyUserNumber(), getMyUserName()));
-        return chatInvitation;
+    public List<ChatInvitation> createChatInvitations(CreateChatResponse chatResponse) {
+        List<ChatInvitation> invitations = new ArrayList<>(chatResponse.contacts.size());
+        chatResponse.contacts.forEach(currentContact -> {
+            ChatInvitation chatInvitation = new ChatInvitation(
+                    getMyUserNumber(),
+                    currentContact.contactNumber,
+                    chatResponse.chatId,
+                    chatResponse.isGroupChat,
+                    chatResponse.chatName);
+            chatInvitation.chatContacts.addAll(
+                    chatResponse.contacts.stream().filter(
+                            chatContact -> chatContact.contactNumber != currentContact.contactNumber)
+                            .collect(Collectors.toList()));
+            chatInvitation.chatContacts.add(new tattler.pro.tattler.messages.models.Contact(getMyUserNumber(), getMyUserName()));
+            invitations.add(chatInvitation);
+        });
+        return invitations;
     }
 
     public AddContactRequest createAddContactRequest(int contactPhoneId) {

@@ -63,8 +63,8 @@ public class MainMessageHandler implements ReceivedMessageCallback {
 
     private void handleChatsUpdate(ChatsUpdate message) {
         switch (message.reason) {
-            case NEW_CHAT_CREATED:
-                presenter.handleChatCreated(message.chats.iterator().next());
+            case CHAT_MODIFIED:
+                presenter.handleChatModified(message.chats.iterator().next());
                 break;
             case CHAT_REMOVED:
                 presenter.handleChatRemoved(message.chats.iterator().next());

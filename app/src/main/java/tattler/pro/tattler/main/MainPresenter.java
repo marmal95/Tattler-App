@@ -121,9 +121,9 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
         }
     }
 
-    public void handleChatCreated(Chat chat) {
+    public void handleChatModified(Chat chat) {
         if (chatsPresenter != null) {
-            chatsPresenter.handleChatCreated(chat);
+            chatsPresenter.handleChatModified(chat);
         }
     }
 

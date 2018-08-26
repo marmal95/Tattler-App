@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import tattler.pro.tattler.common.AppPreferences;
+import tattler.pro.tattler.common.ChatsManager;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.IntentKey;
 import tattler.pro.tattler.common.NotificationBuilder;
@@ -41,8 +42,6 @@ import tattler.pro.tattler.models.Invitation;
 import tattler.pro.tattler.security.AesCrypto;
 import tattler.pro.tattler.security.RsaCrypto;
 
-import static tattler.pro.tattler.common.Util.isMessageSentByMe;
-
 public class TcpMessageHandler {
     private TcpConnectionService tcpConnectionService;
     private AppPreferences appPreferences;
@@ -50,6 +49,7 @@ public class TcpMessageHandler {
     private MessageFactory messageFactory;
     private NotificationBuilder notificationBuilder;
     private NotificationManager notificationManager;
+    private ChatsManager chatsManager;
 
     TcpMessageHandler(
             TcpConnectionService tcpConnectionService,
@@ -57,13 +57,15 @@ public class TcpMessageHandler {
             DatabaseManager databaseManager,
             MessageFactory messageFactory,
             NotificationBuilder notificationBuilder,
-            NotificationManager notificationManager) {
+            NotificationManager notificationManager,
+            ChatsManager chatsManager) {
         this.tcpConnectionService = tcpConnectionService;
         this.appPreferences = appPreferences;
         this.databaseManager = databaseManager;
         this.messageFactory = messageFactory;
         this.notificationBuilder = notificationBuilder;
         this.notificationManager = notificationManager;
+        this.chatsManager = chatsManager;
     }
 
     public void handle(Message message) {
@@ -155,16 +157,12 @@ public class TcpMessageHandler {
                 Chat chat = prepareChat(message);
                 databaseManager.insertChat(chat, message.contacts);
 
-                ChatInvitation chatInvitation = messageFactory.createChatInvitation(message);
-                Invitation invitation = prepareInvitation(message, chat, chatInvitation);
-                chat.invitations.add(invitation);
-                databaseManager.updateChat(chat);
-                tcpConnectionService.sendMessage(chatInvitation);
-
-                ChatsUpdate chatsUpdate = new ChatsUpdate();
-                chatsUpdate.reason = ChatsUpdate.Reason.NEW_CHAT_CREATED;
-                chatsUpdate.chats.add(chat);
-                broadcastMessage(chatsUpdate);
+                List<ChatInvitation> chatInvitations = messageFactory.createChatInvitations(message);
+                chatInvitations.forEach(chatInvitation -> {
+                    Invitation invitation = prepareInvitationByMe(chat, chatInvitation);
+                    chatsManager.addInvitation(chat, invitation);
+                    tcpConnectionService.sendMessage(chatInvitation);
+                });
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -177,7 +175,7 @@ public class TcpMessageHandler {
             Chat chat = prepareChat(message, rsaKeyPair);
             databaseManager.insertChat(chat, message.chatContacts);
 
-            Invitation invitation = prepareInvitation(message, chat);
+            Invitation invitation = prepareInvitationToMe(chat, message);
             chat.invitations.add(invitation);
             databaseManager.updateChat(chat);
 
@@ -214,16 +212,21 @@ public class TcpMessageHandler {
                 message, chat, new RsaCrypto());
         tcpConnectionService.sendMessage(initChatInd);
 
-        clearInvitations(chat, chat.invitations.stream().filter(
-                invitation -> isMessageSentByMe(tcpConnectionService, invitation.senderId)).
-                collect(Collectors.toList()));
+        List<Invitation> invitationsToRemove = chat.invitations.stream().filter(
+                invitation -> invitation.receiverId == message.senderId).
+                collect(Collectors.toList());
+        broadcastInvitationsRemoveUpdate(invitationsToRemove);
+
+        chat.isInitialized = true;
+        chat.invitations.removeAll(invitationsToRemove);
         databaseManager.updateChat(chat);
+        broadcastChatModifiedUpdate(chat);
     }
 
-    private void handleInvitationRejected(ChatInvitationResponse message, Chat chat) throws SQLException {
+    private void handleInvitationRejected(ChatInvitationResponse message, Chat chat) {
         chat.participants.removeIf(participant -> participant.contactNumber == message.senderId);
         if (chat.participants.size() < 2) {
-            databaseManager.deleteChat(chat);
+            chatsManager.removeChat(chat);
             broadcastChatRemoveUpdate(chat);
         }
     }
@@ -239,9 +242,13 @@ public class TcpMessageHandler {
                 chat.isInitialized = true;
                 databaseManager.updateChat(chat);
 
-                clearInvitations(chat, chat.invitations.stream().filter(
+                List<Invitation> invitationsToRemove = chat.invitations.stream().filter(
                         invitation -> invitation.senderId == message.senderId).
-                        collect(Collectors.toList()));
+                        collect(Collectors.toList());
+                broadcastInvitationsRemoveUpdate(invitationsToRemove);
+                broadcastChatModifiedUpdate(chat);
+
+                chat.invitations.removeAll(invitationsToRemove);
                 databaseManager.updateChat(chat);
             }
         } catch (SQLException | GeneralSecurityException e) {
@@ -286,6 +293,7 @@ public class TcpMessageHandler {
                         participant.contactNumber == message.leavingUserNumber);
                 if (chat.participants.isEmpty()) {
                     chat.isInitialized = false;
+                    broadcastChatModifiedUpdate(chat);
                 }
                 databaseManager.updateChat(chat);
             }
@@ -299,7 +307,7 @@ public class TcpMessageHandler {
         Chat chat = new Chat(message.chatId, message.isGroupChat, message.chatName, false);
         chat.chatName = chat.chatName == null ? Util.generateChatName(message.contacts) : chat.chatName;
         chat.chatKey = new AesCrypto().generateAesKey();
-        chat.isInitialized = true;
+        chat.isInitialized = false;
         return chat;
     }
 
@@ -313,14 +321,14 @@ public class TcpMessageHandler {
     }
 
     @NonNull
-    private Invitation prepareInvitation(ChatInvitation message, Chat chat) {
+    private Invitation prepareInvitationToMe(Chat chat, ChatInvitation message) {
         return new Invitation(
-                chat, message.senderId, message.messageId, Invitation.State.PENDING_FOR_REACTION);
+                chat, message.senderId, message.receiverId, message.messageId, Invitation.State.PENDING_FOR_REACTION);
     }
 
     @NonNull
-    private Invitation prepareInvitation(CreateChatResponse message, Chat chat, ChatInvitation chatInvitation) {
-        return new Invitation(chat, message.receiverId,
+    private Invitation prepareInvitationByMe(Chat chat, ChatInvitation chatInvitation) {
+        return new Invitation(chat, chatInvitation.senderId, chatInvitation.receiverId,
                 chatInvitation.messageId, Invitation.State.PENDING_FOR_RESPONSE);
     }
 
@@ -330,11 +338,17 @@ public class TcpMessageHandler {
         tcpConnectionService.sendBroadcast(intent);
     }
 
-    private void clearInvitations(Chat chat, List<Invitation> invitations) {
+    private void broadcastChatModifiedUpdate(Chat chat) {
+        ChatsUpdate chatsUpdate = new ChatsUpdate();
+        chatsUpdate.reason = ChatsUpdate.Reason.CHAT_MODIFIED;
+        chatsUpdate.chats.add(chat);
+        broadcastMessage(chatsUpdate);
+    }
+
+    private void broadcastInvitationsRemoveUpdate(List<Invitation> invitations) {
         InvitationsUpdate invitationsUpdate = new InvitationsUpdate();
         invitationsUpdate.reason = InvitationsUpdate.Reason.CHAT_INITIALIZED;
         invitationsUpdate.invitations = invitations;
-        chat.invitations.removeAll(invitations);
         broadcastMessage(invitationsUpdate);
     }
 

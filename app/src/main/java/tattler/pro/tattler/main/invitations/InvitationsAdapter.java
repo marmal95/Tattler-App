@@ -87,21 +87,14 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
     }
 
     public void removeInvitations(List<Invitation> invitations) {
-        // FIXME: Crash
-//        invitations.forEach(invitation -> {
-//            OptionalInt invitationIndex = IntStream.range(0, invitations.size()).filter(
-//                    index -> invitation.invitationId == invitations.get(index).invitationId).findFirst();
-//            if (invitationIndex.isPresent()) {
-//                removeInvitation(invitationIndex.getAsInt());
-//            }
-//        });
-
+        this.invitations.removeAll(invitations);
         notifyDataSetChanged();
     }
 
     public void removeFor(Chat chat) {
-        List<Integer> indexes = IntStream.range(0, invitations.size()).filter(
-                index -> chat.chatId == invitations.get(index).chat.chatId).boxed().collect(Collectors.toList());
+        List<Integer> indexes = IntStream.range(0, invitations.size())
+                .filter(index -> chat.chatId == invitations.get(index).chat.chatId)
+                .boxed().collect(Collectors.toList());
         indexes.forEach(this::removeInvitation);
     }
 

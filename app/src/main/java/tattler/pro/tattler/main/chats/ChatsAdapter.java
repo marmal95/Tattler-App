@@ -92,14 +92,14 @@ public class ChatsAdapter extends SelectableAdapter<ChatsAdapter.ViewHolder, Cha
         return selectedChats;
     }
 
-    public void addChat(Chat chat) {
-        chats.add(chat);
-        notifyDataSetChanged();
-    }
-
     public void addChats(List<Chat> chats) {
         this.chats.addAll(chats);
         notifyDataSetChanged();
+    }
+
+    public void replaceChat(Chat modifiedChat, int position) {
+        chats.set(position, modifiedChat);
+        notifyItemChanged(position);
     }
 
     public void clearChats() {
@@ -110,6 +110,11 @@ public class ChatsAdapter extends SelectableAdapter<ChatsAdapter.ViewHolder, Cha
     public void removeChat(int position) {
         chats.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public OptionalInt getPosition(Chat chat) {
+        int position = chats.indexOf(chat);
+        return position == -1 ? OptionalInt.empty() : OptionalInt.of(position);
     }
 
     public void removeChat(Chat chat) {

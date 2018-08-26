@@ -59,6 +59,11 @@ public class Chat implements Serializable {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Chat && chatId == ((Chat) obj).chatId;
+    }
+
+    @Override
     public String toString() {
         int invitationsSize = invitations == null ? 0 : invitations.size();
         int participantsSize = participants == null ? 0 : participants.size();

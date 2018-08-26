@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Contact;
+import tattler.pro.tattler.models.Invitation;
 import tattler.pro.tattler.models.Message;
 
 public class ChatsManager {
@@ -87,6 +88,17 @@ public class ChatsManager {
             databaseManager.updateChat(chat);
         } catch (SQLException e) {
             e.printStackTrace();
+            Logger.e("Error occurred while updating chat.");
+        }
+    }
+
+    public void addInvitation(Chat chat, Invitation invitation) {
+        try {
+            chat.invitations.add(invitation);
+            databaseManager.updateChat(chat);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Logger.e("Error occurred while updating chat.");
         }
     }
 }

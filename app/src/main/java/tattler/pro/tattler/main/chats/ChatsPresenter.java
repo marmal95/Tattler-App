@@ -5,6 +5,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.OptionalInt;
 
 import tattler.pro.tattler.common.ChatsManager;
 import tattler.pro.tattler.common.DatabaseManager;
@@ -44,14 +45,16 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
         OpenHelperManager.releaseHelper();
     }
 
-    public void handleChatCreated(Chat chat) {
-        chatsAdapter.addChat(chat);
+    public void handleChatModified(Chat modifiedChat) {
+        OptionalInt chatPositionOpt = chatsAdapter.getPosition(modifiedChat);
+        if (chatPositionOpt.isPresent()) {
+            chatsAdapter.replaceChat(modifiedChat, chatPositionOpt.getAsInt());
+        }
     }
 
     public void handleChatRemoved(Chat chat) {
         chatsAdapter.removeChat(chat);
     }
-
 
     public void handleChatClicked(int position) {
         if (chatsAdapter.isInSelectMode()) {

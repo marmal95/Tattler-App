@@ -20,6 +20,7 @@ import java.net.SocketException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import tattler.pro.tattler.common.AppPreferences;
+import tattler.pro.tattler.common.ChatsManager;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.NotificationBroadcastReceiver;
 import tattler.pro.tattler.common.NotificationBuilder;
@@ -67,6 +68,8 @@ public class TcpConnectionService extends Service {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationBuilder notificationBuilder = new NotificationBuilder(this, databaseManager);
+        ChatsManager chatsManager = new ChatsManager();
+        chatsManager.setDatabaseManager(databaseManager);
 
         tcpMessageHandler = new TcpMessageHandler(
                 this,
@@ -74,7 +77,8 @@ public class TcpConnectionService extends Service {
                 databaseManager,
                 messageFactory,
                 notificationBuilder,
-                notificationManager);
+                notificationManager,
+                chatsManager);
 
         messageCrypto = new MessageCrypto(databaseManager);
 
@@ -227,6 +231,7 @@ public class TcpConnectionService extends Service {
                 establishConnection();
             } catch (Exception e) {
                 e.printStackTrace();
+                Logger.e("Uncaught exception occurred: " + e.getMessage());
             }
         }
 

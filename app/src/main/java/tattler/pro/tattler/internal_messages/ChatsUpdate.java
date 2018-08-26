@@ -16,7 +16,8 @@ public class ChatsUpdate extends InternalMessage {
     }
 
     public enum Reason {
-        NEW_CHAT_CREATED,
-        CHAT_REMOVED
+        CHAT_MODIFIED,
+        CHAT_REMOVED,
+        NO_PARTICIPANTS
     }
 }
