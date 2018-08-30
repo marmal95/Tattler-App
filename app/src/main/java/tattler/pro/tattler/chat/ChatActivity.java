@@ -34,7 +34,8 @@ import tattler.pro.tattler.tcp.TcpServiceConnector;
 import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
 import tattler.pro.tattler.tcp.TcpServiceManager;
 
-public class ChatActivity extends MvpActivity<ChatView, ChatPresenter> implements ChatView {
+public class ChatActivity extends MvpActivity<ChatView, ChatPresenter>
+        implements ChatView {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 

@@ -6,13 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.hannesdorfmann.mosby.mvp.MvpFragment;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.custom_ui.MaterialToast;
 
-public class PhoneAuthenticationFragment extends MvpFragment<PhoneAuthenticationView, PhoneAuthenticationPresenter> {
+public class PhoneAuthenticationFragment extends MvpFragment<PhoneAuthenticationView, PhoneAuthenticationPresenter>
+        implements PhoneAuthenticationView {
     @BindView(R.id.phoneNumberEditText)
     EditText phoneNumberArea;
 
@@ -38,7 +43,18 @@ public class PhoneAuthenticationFragment extends MvpFragment<PhoneAuthentication
     public void verifyPhoneNumber() {
         String phoneNumber = phoneNumberArea.getText().toString().trim();
         String userName = userNameArea.getText().toString().trim();
-        getPresenter().rememberUserData(phoneNumber, userName);
-        getPresenter().verifyPhoneNumber(phoneNumber);
+        getPresenter().verifyPhoneNumber(phoneNumber, userName);
+    }
+
+    @Override
+    public void showEmptyDataError() {
+        MaterialToast.makeText(getActivity(), getString(R.string.fillAllRequiredAreasInfo),
+                Toast.LENGTH_LONG, MaterialToast.TYPE_WARNING).show();
+    }
+
+    @Override
+    public void showPhoneNumberInvalidError() {
+        MaterialToast.makeText(getActivity(), getString(R.string.phoneNumberInvalid),
+                Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show();
     }
 }

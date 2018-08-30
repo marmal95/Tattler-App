@@ -65,6 +65,8 @@
     <string name="invalidVerificationCodeError">Given verification code is invalid</string>
     <string name="contactAlreadyAddedInfo">Contact already added but was updated</string>
     <string name="contactNotExist">Such contact does not exist</string>
+    <string name="phoneNumberInvalid">Phone number verification failed. Given data may be incorrect.</string>
+    <string name="fillAllRequiredAreasInfo">Please fill all required areas and try again.</string>
 
     <string-array name="avatarsColors">
         <item>#F8B195</item>

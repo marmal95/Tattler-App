@@ -43,7 +43,13 @@ public class CodeVerificationFragment extends MvpFragment<CodeVerificationView, 
     }
 
     @Override
-    public void showCodeInvalidOrEmptyError() {
+    public void showEmptyDataError() {
+        MaterialToast.makeText(getActivity(), getString(R.string.fillAllRequiredAreasInfo),
+                Toast.LENGTH_LONG, MaterialToast.TYPE_WARNING).show();
+    }
+
+    @Override
+    public void showCodeInvalidError() {
         MaterialToast.makeText(getActivity(), getString(R.string.invalidVerificationCodeError),
                 Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show();
     }

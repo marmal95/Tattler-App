@@ -149,6 +149,12 @@ public class ContactsFragment extends MvpFragment<ContactsView, ContactsPresente
     }
 
     @Override
+    public void showEmptyDataError() {
+        MaterialToast.makeText(getActivity(), getString(R.string.fillAllRequiredAreasInfo),
+                Toast.LENGTH_LONG, MaterialToast.TYPE_WARNING).show();
+    }
+
+    @Override
     public void showContactAddingError() {
         MaterialToast.makeText(getActivity(), getString(R.string.contactCreatingError),
                 Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show();

@@ -10,6 +10,7 @@ interface ContactsView extends MvpView {
     void startAddContactDialog();
     void startContactActivity(Contact contact, int position);
     void startChatActivity(Chat chat);
+    void showEmptyDataError();
     void showContactAddingError();
     void showContactAlreadyAddedInfo();
     void showContactNotExistInfo();

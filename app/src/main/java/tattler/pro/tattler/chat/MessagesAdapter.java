@@ -17,7 +17,6 @@ import tattler.pro.tattler.chat.view_holders.MessageViewHolder;
 import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.models.Message;
 
-
 public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<Message> messages;
@@ -26,7 +25,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.context = context;
         this.messages = messages;
     }
-
 
     @NonNull
     @Override

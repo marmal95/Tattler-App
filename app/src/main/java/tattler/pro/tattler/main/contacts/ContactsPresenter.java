@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import tattler.pro.tattler.common.ChatsManager;
 import tattler.pro.tattler.common.DatabaseManager;
+import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.main.MainPresenter;
 import tattler.pro.tattler.messages.AddContactRequest;
 import tattler.pro.tattler.messages.CreateChatRequest;
@@ -60,6 +61,10 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
     }
 
     public void handleAddNewContact(String contactNumber) {
+        if (!isDataFilledCorrectly(contactNumber)) {
+            return;
+        }
+
         int contactPhoneId = Integer.parseInt(contactNumber);
         sendAddContactRequest(contactPhoneId);
     }
@@ -102,6 +107,11 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
 
     public void handleStartChatClick() {
         List<Contact> selectedContacts = contactsAdapter.getSelectedItems();
+        if (selectedContacts.isEmpty()) {
+            Logger.d("No contacts selected to start chat. ");
+            return;
+        }
+
         contactsAdapter.clearSelection();
         if (selectedContacts.size() == 1) {
             startIndividualChat(selectedContacts.iterator().next());
@@ -111,10 +121,27 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
     }
 
     public void handleContactsRemoveClick() {
-        sendRemoveContactsRequest(contactsAdapter.getSelectedItems());
+        List<Contact> selectedItems = contactsAdapter.getSelectedItems();
+        if (selectedItems.isEmpty()) {
+            Logger.d("No contacts selected to remove. ");
+            return;
+        }
+
+        sendRemoveContactsRequest(selectedItems);
         List<Integer> contactsIndexes = contactsAdapter.getSelectedPositions();
         removeContacts(contactsIndexes);
         contactsAdapter.clearSelection();
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private boolean isDataFilledCorrectly(String contactNumber) {
+        if (Util.isDataNotFilled(contactNumber)) {
+            if (isViewAttached()) {
+                getView().showEmptyDataError();
+            }
+            return false;
+        }
+        return true;
     }
 
     private void initUserContacts() {

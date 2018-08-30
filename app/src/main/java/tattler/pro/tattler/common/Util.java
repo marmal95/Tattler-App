@@ -31,4 +31,14 @@ public class Util {
     public static String generateChatName(List<Contact> contacts) {
         return contacts.stream().map(contact -> contact.contactName).collect(Collectors.joining(" - "));
     }
+
+    public static boolean isDataNotFilled(String... data) {
+        for (String elem : data) {
+            if (elem == null || elem.isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

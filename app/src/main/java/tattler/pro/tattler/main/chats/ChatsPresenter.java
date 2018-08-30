@@ -2,6 +2,7 @@ package tattler.pro.tattler.main.chats;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.orhanobut.logger.Logger;
 
 import java.util.Collections;
 import java.util.List;
@@ -72,6 +73,11 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
         List<Chat> selectedChats = chatsAdapter.getSelectedItems();
         List<Integer> chatsIndexes = chatsAdapter.getSelectedPositions();
 
+        if (selectedChats.isEmpty()) {
+            Logger.d("No chats selected to remove. ");
+            return;
+        }
+
         sendLeaveChatsRequest(selectedChats);
         removeChatsFromView(chatsIndexes);
 
@@ -80,12 +86,24 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
     }
 
     public void handleMuteChatsClick() {
-        chatsManager.toggleMuteChats(chatsAdapter.getSelectedItems());
+        List<Chat> selectedChats = chatsAdapter.getSelectedItems();
+        if (selectedChats.isEmpty()) {
+            Logger.d("No chats selected to mute. ");
+            return;
+        }
+
+        chatsManager.toggleMuteChats(selectedChats);
         chatsAdapter.clearSelection();
     }
 
     public void handleBlockChatsClick() {
-        chatsManager.toggleBlockChats(chatsAdapter.getSelectedItems());
+        List<Chat> selectedChats = chatsAdapter.getSelectedItems();
+        if (selectedChats.isEmpty()) {
+            Logger.d("No chats selected to block. ");
+            return;
+        }
+
+        chatsManager.toggleBlockChats(selectedChats);
         chatsAdapter.clearSelection();
     }
 
