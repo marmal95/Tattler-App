@@ -16,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.common.OnItemClickListener;
 import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.models.Message;
 import tattler.pro.tattler.models.Participant;
@@ -38,10 +39,11 @@ public class MessageToMeViewHolder extends RecyclerView.ViewHolder implements Me
 
     private Context context;
 
-    public MessageToMeViewHolder(Context context, View itemView) {
+    public MessageToMeViewHolder(Context context, View itemView, OnItemClickListener clickListener) {
         super(itemView);
         this.context = context;
         ButterKnife.bind(this, itemView);
+        itemView.setOnClickListener(v -> clickListener.onItemClick(getAdapterPosition()));
     }
 
     @Override

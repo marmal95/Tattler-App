@@ -2,6 +2,7 @@ package tattler.pro.tattler.chat;
 
 import com.hannesdorfmann.mosby.mvp.MvpView;
 
+import tattler.pro.tattler.models.Message;
 import tattler.pro.tattler.tcp.MessageBroadcastReceiver;
 import tattler.pro.tattler.tcp.TcpServiceConnector;
 
@@ -15,4 +16,5 @@ interface ChatView extends MvpView {
     void scrollToPosition(int position);
     void pickImage();
     void disableChat();
+    void showImagePreview(Message message);
 }

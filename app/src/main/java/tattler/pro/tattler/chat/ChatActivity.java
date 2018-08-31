@@ -24,10 +24,12 @@ import tattler.pro.tattler.R;
 import tattler.pro.tattler.common.ChatsManager;
 import tattler.pro.tattler.common.DatabaseManager;
 import tattler.pro.tattler.common.IntentKey;
+import tattler.pro.tattler.common.OnItemClickListener;
 import tattler.pro.tattler.common.PickedImageView;
 import tattler.pro.tattler.common.RequestCode;
 import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Chat;
+import tattler.pro.tattler.models.Message;
 import tattler.pro.tattler.tcp.MessageBroadcastReceiver;
 import tattler.pro.tattler.tcp.TcpConnectionService;
 import tattler.pro.tattler.tcp.TcpServiceConnector;
@@ -35,7 +37,7 @@ import tattler.pro.tattler.tcp.TcpServiceConnectorFactory;
 import tattler.pro.tattler.tcp.TcpServiceManager;
 
 public class ChatActivity extends MvpActivity<ChatView, ChatPresenter>
-        implements ChatView {
+        implements ChatView, OnItemClickListener {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -82,7 +84,7 @@ public class ChatActivity extends MvpActivity<ChatView, ChatPresenter>
                 new TcpServiceConnectorFactory(),
                 new ChatMessageHandler(),
                 new MessageBroadcastReceiver(),
-                new MessagesAdapter(this, new ArrayList<>()),
+                new MessagesAdapter(this, new ArrayList<>(), this),
                 new MessageFactory(this),
                 chat,
                 OpenHelperManager.getHelper(this, DatabaseManager.class),
@@ -140,6 +142,13 @@ public class ChatActivity extends MvpActivity<ChatView, ChatPresenter>
         addAttachmentButton.setVisibility(View.GONE);
     }
 
+    @Override
+    public void showImagePreview(Message message) {
+        Intent intent = new Intent(this, FullScreenImageActivity.class);
+        intent.putExtra(IntentKey.IMAGE_MESSAGE.name(), message);
+        startActivity(intent);
+    }
+
     @OnClick(R.id.sendMessageButton)
     public void handleSendMessageClick() {
         String messageText = messageInputArea.getText().toString();
@@ -172,5 +181,15 @@ public class ChatActivity extends MvpActivity<ChatView, ChatPresenter>
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        getPresenter().handleMessageClick(position);
+    }
+
+    @Override
+    public boolean onItemLongClick(int position) {
+        return false;
     }
 }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.common.OnItemClickListener;
 import tattler.pro.tattler.models.Message;
 
 public class MessageByMeViewHolder extends RecyclerView.ViewHolder implements MessageViewHolder {
@@ -24,9 +25,10 @@ public class MessageByMeViewHolder extends RecyclerView.ViewHolder implements Me
     @BindView(R.id.messageImage)
     ImageView messageImage;
 
-    public MessageByMeViewHolder(Context context, View itemView) {
+    public MessageByMeViewHolder(Context context, View itemView, OnItemClickListener listener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+        itemView.setOnClickListener(v -> listener.onItemClick(getAdapterPosition()));
     }
 
     @Override

@@ -14,16 +14,19 @@ import tattler.pro.tattler.R;
 import tattler.pro.tattler.chat.view_holders.MessageByMeViewHolder;
 import tattler.pro.tattler.chat.view_holders.MessageToMeViewHolder;
 import tattler.pro.tattler.chat.view_holders.MessageViewHolder;
+import tattler.pro.tattler.common.OnItemClickListener;
 import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.models.Message;
 
 public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<Message> messages;
+    private OnItemClickListener clickListener;
 
-    MessagesAdapter(Context context, List<Message> messages) {
+    MessagesAdapter(Context context, List<Message> messages, OnItemClickListener clickListener) {
         this.context = context;
         this.messages = messages;
+        this.clickListener = clickListener;
     }
 
     @NonNull
@@ -35,11 +38,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         switch (viewType) {
             case ChatViewType.SENT_BY_ME:
                 View viewByMe = layoutInflater.inflate(R.layout.recycler_view_message_by_me_item, parent, false);
-                viewHolder = new MessageByMeViewHolder(context, viewByMe);
+                viewHolder = new MessageByMeViewHolder(context, viewByMe, clickListener);
                 break;
             case ChatViewType.SENT_TO_ME:
                 View viewToMe = layoutInflater.inflate(R.layout.recycler_view_message_to_me_item, parent, false);
-                viewHolder = new MessageToMeViewHolder(context, viewToMe);
+                viewHolder = new MessageToMeViewHolder(context, viewToMe, clickListener);
                 break;
         }
 

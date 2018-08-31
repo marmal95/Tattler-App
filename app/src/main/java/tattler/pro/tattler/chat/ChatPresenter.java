@@ -114,6 +114,13 @@ public class ChatPresenter extends MvpBasePresenter<ChatView> {
         scrollMessagesBottom();
     }
 
+    public void handleMessageClick(int position) {
+        Message message = messagesAdapter.getMessage(position);
+        if (message.contentType == Message.ContentType.PHOTO) {
+            showImagePreview(message);
+        }
+    }
+
     @SuppressWarnings("ConstantConditions")
     private void bindTcpConnectionService() {
         if (isViewAttached()) {
@@ -159,5 +166,12 @@ public class ChatPresenter extends MvpBasePresenter<ChatView> {
 
     private boolean isChatNotReady() {
         return !chat.isInitialized || chat.isBlocked;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void showImagePreview(Message message) {
+        if (isViewAttached()) {
+            getView().showImagePreview(message);
+        }
     }
 }

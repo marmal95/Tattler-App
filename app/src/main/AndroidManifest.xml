@@ -26,6 +26,7 @@
         <activity android:name=".register.RegisterActivity" />
         <activity android:name=".login.FingerprintLoginActivity" />
         <activity android:name=".main.MainActivity" />
+        <activity android:name=".chat.FullScreenImageActivity" />
         <activity
             android:name=".contact.ContactActivity"
             android:parentActivityName=".main.MainActivity" />

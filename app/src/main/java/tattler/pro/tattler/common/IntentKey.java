@@ -6,5 +6,6 @@ public enum IntentKey {
     LOGIN_REQUEST_FACTORY,
     MESSAGE,
     CONTACT,
-    CHAT
+    CHAT,
+    IMAGE_MESSAGE
 }
