@@ -50,7 +50,7 @@ public class CodeVerificationFragment extends MvpFragment<CodeVerificationView, 
 
     @Override
     public void showCodeInvalidError() {
-        MaterialToast.makeText(getActivity(), getString(R.string.invalidVerificationCodeError),
+        MaterialToast.makeText(getActivity(), getString(R.string.verificationCodeIncorrect),
                 Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show();
     }
 }
