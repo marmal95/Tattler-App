@@ -1,6 +1,7 @@
 package tattler.pro.tattler.authentication;
 
 import android.content.Context;
+
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -8,16 +9,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.orhanobut.logger.Logger;
-import tattler.pro.tattler.R;
-import tattler.pro.tattler.register.PhoneAuthCallback;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import tattler.pro.tattler.R;
+import tattler.pro.tattler.register.PhoneAuthCallback;
+
 public class PhoneAuthenticator {
     private FirebaseAuth firebaseAuth;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks authCallbacks;
-    private PhoneAuthProvider.ForceResendingToken authResendToken;
 
     private PhoneAuthCallback phoneAuthCallback;
     private Context context;
@@ -78,7 +79,7 @@ public class PhoneAuthenticator {
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
-            Logger.d("Phone number verification failed.");
+            Logger.d("Phone number verification failed. Reason: " + e.getMessage() + ", cause: " + e.getCause());
             isAuthInProgress = false;
             phoneAuthCallback.onVerificationFailed(context.getString(R.string.phoneAuthenticationFail));
         }
@@ -88,7 +89,6 @@ public class PhoneAuthenticator {
             Logger.d("Verification code sent.");
             super.onCodeSent(verificationId, forceResendingToken);
             PhoneAuthenticator.this.verificationId = verificationId;
-            authResendToken = forceResendingToken;
             phoneAuthCallback.onVerificationCodeSent();
         }
     }

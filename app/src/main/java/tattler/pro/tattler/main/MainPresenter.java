@@ -6,6 +6,7 @@ import com.orhanobut.logger.Logger;
 import java.util.List;
 
 import tattler.pro.tattler.common.AppPreferences;
+import tattler.pro.tattler.common.Util;
 import tattler.pro.tattler.internal_messages.UserInfoUpdate;
 import tattler.pro.tattler.main.chats.ChatsPresenter;
 import tattler.pro.tattler.main.contacts.ContactsPresenter;
@@ -103,6 +104,8 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
 
     @SuppressWarnings("ConstantConditions")
     public void handleLogoutClick() {
+        stopTcpConnectionService();
+        clearUserData();
         if (isViewAttached()) {
             getView().startRegisterActivity();
         }
@@ -203,6 +206,10 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
     private void displayUserInfo() {
         String userName = appPreferences.getString(AppPreferences.Key.USER_NAME);
         String userNumber = String.valueOf(appPreferences.getInt(AppPreferences.Key.USER_NUMBER));
+        if (Util.isDataNotFilled(userName, userNumber)) {
+            Logger.e("Not found user name or user number to display.");
+            return;
+        }
         displayUserInfo(userName, userNumber);
     }
 
@@ -211,5 +218,16 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
         if (isViewAttached()) {
             getView().displayUserData(userName, userNumber);
         }
+    }
+
+    private void stopTcpConnectionService() {
+        tcpServiceManager.getTcpService().stopTcpService();
+    }
+
+    private void clearUserData() {
+        appPreferences.remove(
+                AppPreferences.Key.USER_NAME,
+                AppPreferences.Key.USER_NUMBER,
+                AppPreferences.Key.USER_PHONE_NUMBER);
     }
 }

@@ -45,6 +45,9 @@ public class TcpConnectionService extends Service {
     private MessageFactory messageFactory;
     private TcpMessageHandler tcpMessageHandler;
     private MessageCrypto messageCrypto;
+    private NotificationBroadcastReceiver notificationBroadcastReceiver;
+
+    private boolean isRunning;
 
     public TcpConnectionService() {
         super();
@@ -82,12 +85,13 @@ public class TcpConnectionService extends Service {
 
         messageCrypto = new MessageCrypto(databaseManager);
 
-        NotificationBroadcastReceiver broadcastReceiver = new NotificationBroadcastReceiver(
+        notificationBroadcastReceiver = new NotificationBroadcastReceiver(
                 this,
                 databaseManager,
                 messageFactory);
-        registerReceiver(broadcastReceiver, broadcastReceiver.createBroadcastIntentFilter());
+        registerReceiver(notificationBroadcastReceiver, notificationBroadcastReceiver.createBroadcastIntentFilter());
 
+        isRunning = true;
         new Thread(() -> {
             establishConnection();
             tcpReceiver.start();
@@ -99,10 +103,11 @@ public class TcpConnectionService extends Service {
     public void onDestroy() {
         Logger.d("Destroying TcpConnectionService.");
         super.onDestroy();
+        isRunning = false;
+        unregisterReceiver(notificationBroadcastReceiver);
         OpenHelperManager.releaseHelper();
-        stopService();
+        stopThreads();
         closeConnection();
-        stopSelf();
     }
 
     @Nullable
@@ -126,21 +131,27 @@ public class TcpConnectionService extends Service {
         tcpSender.queueMessage(message);
     }
 
+    public void stopTcpService() {
+        Logger.d("Stopping TcpConnectionService.");
+        stopSelf();
+    }
+
     private synchronized void closeConnection() {
         try {
             socket.close();
             inputStream.close();
             outputStream.close();
         } catch (IOException e) {
+            Logger.e("Error while closing connection.");
             e.printStackTrace();
         }
     }
 
-    private synchronized void stopService() {
+    private synchronized void stopThreads() {
         Logger.d("Closing connection with server.");
         try {
-            tcpReceiver.interrupt();
-            tcpSender.interrupt();
+            tcpReceiver.stopReader();
+            tcpSender.stopWriter();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -151,7 +162,7 @@ public class TcpConnectionService extends Service {
     }
 
     private synchronized void establishConnection() {
-        while (!isConnected()) {
+        while (!isConnected() && isRunning) {
             Logger.d("Trying to establish connection with server.");
             try {
                 socket = new Socket(SERVER_IP, SERVER_PORT);
@@ -168,8 +179,10 @@ public class TcpConnectionService extends Service {
             } catch (InterruptedException ignored) {}
         }
 
-        Logger.d("Connection has been already established.");
-        sendMessage(messageFactory.createLoginRequest());
+        if (isRunning) {
+            Logger.d("Connection has been already established.");
+            sendMessage(messageFactory.createLoginRequest());
+        }
     }
 
     public class TcpServiceBinder extends Binder {
@@ -180,14 +193,17 @@ public class TcpConnectionService extends Service {
 
     private class ServerWriter extends Thread {
         private final ConcurrentLinkedQueue<Message> messages;
+        private boolean isRunning;
 
         private ServerWriter() {
             messages = new ConcurrentLinkedQueue<>();
+            isRunning = false;
         }
 
         @Override
         public void run() {
-            while (!Thread.currentThread().isInterrupted()) {
+            isRunning = true;
+            while (isRunning) {
                 if (!isConnected()) {
                     establishConnection();
                     continue;
@@ -198,6 +214,8 @@ public class TcpConnectionService extends Service {
                     sendMessage(message);
                 }
             }
+
+            Logger.d("ServerWriter has finished work.");
         }
 
         private void sendMessage(Message message) {
@@ -214,9 +232,33 @@ public class TcpConnectionService extends Service {
         private void queueMessage(Message message) {
             messages.add(message);
         }
+
+        private void stopWriter() {
+            isRunning = false;
+        }
     }
 
     private class ServerReader extends Thread {
+        private boolean isRunning = false;
+
+        private void stopReader() {
+            isRunning = false;
+        }
+
+        @Override
+        public void run() {
+            isRunning = true;
+            while (isRunning) {
+                if (!isConnected()) {
+                    establishConnection();
+                    continue;
+                }
+                readAndHandleMessage();
+            }
+
+            Logger.d("ServerReader has finished work.");
+        }
+
         private void readAndHandleMessage() {
             Message message;
             try {
@@ -232,17 +274,6 @@ public class TcpConnectionService extends Service {
             } catch (Exception e) {
                 e.printStackTrace();
                 Logger.e("Uncaught exception occurred: " + e.getMessage());
-            }
-        }
-
-        @Override
-        public void run() {
-            while (!Thread.currentThread().isInterrupted()) {
-                if (!isConnected()) {
-                    establishConnection();
-                    continue;
-                }
-                readAndHandleMessage();
             }
         }
 

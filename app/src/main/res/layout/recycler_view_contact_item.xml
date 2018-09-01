@@ -11,6 +11,7 @@
     android:paddingStart="@dimen/activity_padding">
 
     <RelativeLayout
+        android:id="@+id/userAvatarLayout"
         android:layout_width="@dimen/recyclerItemAvatarSize"
         android:layout_height="@dimen/recyclerItemAvatarSize"
         android:layout_marginEnd="@dimen/space16">
@@ -32,6 +33,15 @@
             android:gravity="center"
             android:textColor="@color/colorAvatarText"
             android:textSize="@dimen/recyclerItemAvatarInitialsFontSize" />
+
+        <View
+            android:id="@+id/userOnlineIndicator"
+            android:layout_width="@dimen/space16"
+            android:layout_height="@dimen/space16"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/background_online"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 
