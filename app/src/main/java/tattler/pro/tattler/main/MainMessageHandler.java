@@ -7,6 +7,7 @@ import tattler.pro.tattler.internal_messages.ChatsUpdate;
 import tattler.pro.tattler.internal_messages.ContactsUpdate;
 import tattler.pro.tattler.internal_messages.InternalMessage;
 import tattler.pro.tattler.internal_messages.InvitationsUpdate;
+import tattler.pro.tattler.internal_messages.MessagesUpdate;
 import tattler.pro.tattler.internal_messages.UserInfoUpdate;
 
 public class MainMessageHandler implements ReceivedMessageCallback {
@@ -27,6 +28,9 @@ public class MainMessageHandler implements ReceivedMessageCallback {
                 break;
             case INVITATIONS_UPDATE:
                 handleInvitationsUpdate((InvitationsUpdate) message);
+                break;
+            case MESSAGES_UPDATE:
+                handleMessagesUpdate((MessagesUpdate) message);
                 break;
         }
     }
@@ -82,6 +86,14 @@ public class MainMessageHandler implements ReceivedMessageCallback {
                 break;
             case CHAT_INITIALIZED:
                 presenter.handleChatInitializedIndication(message.invitations);
+                break;
+        }
+    }
+
+    private void handleMessagesUpdate(MessagesUpdate message) {
+        switch (message.reason) {
+            case NEW_MESSAGE_RECEIVED:
+                presenter.handleChatMessageReceived(message.messages.iterator().next());
                 break;
         }
     }

@@ -177,6 +177,12 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
         }
     }
 
+    public void handleChatMessageReceived(tattler.pro.tattler.models.Message message) {
+        if (chatsPresenter != null) {
+            chatsPresenter.handleChatMessageReceived(message);
+        }
+    }
+
     @SuppressWarnings("ConstantConditions")
     private void bindTcpConnectionService() {
         if (isViewAttached()) {

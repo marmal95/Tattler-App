@@ -65,6 +65,11 @@ public class Message implements Serializable {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Message && messageId == ((Message) obj).messageId;
+    }
+
+    @Override
     public String toString() {
         return "Message{" +
                 "messageId=" + messageId +

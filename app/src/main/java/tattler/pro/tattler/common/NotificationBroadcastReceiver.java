@@ -44,8 +44,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
     private void insertMessageToDb(Chat chat, ChatMessage chatMessage) {
         try {
-            chat.messages.add(new Message(chatMessage, chat));
-            databaseManager.updateChat(chat);
+            databaseManager.insertMessage(new Message(chatMessage, chat));
         } catch (SQLException e) {
             e.printStackTrace();
         }

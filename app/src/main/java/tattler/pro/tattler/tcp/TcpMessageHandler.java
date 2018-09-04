@@ -272,8 +272,7 @@ public class TcpMessageHandler {
 
                 tattler.pro.tattler.models.Message dbMessage =
                         new tattler.pro.tattler.models.Message(message, chat);
-                chat.messages.add(dbMessage);
-                databaseManager.updateChat(chat);
+                databaseManager.insertMessage(dbMessage);
 
                 MessagesUpdate messagesUpdate = new MessagesUpdate();
                 messagesUpdate.reason = MessagesUpdate.Reason.NEW_MESSAGE_RECEIVED;

@@ -82,13 +82,11 @@ public class ChatsManager {
         }
     }
 
-    public void addMessage(Chat chat, Message message) {
+    public void addMessage(Message message) {
         try {
-            chat.messages.add(message);
-            databaseManager.updateChat(chat);
+            databaseManager.insertMessage(message);
         } catch (SQLException e) {
             e.printStackTrace();
-            Logger.e("Error occurred while updating chat.");
         }
     }
 

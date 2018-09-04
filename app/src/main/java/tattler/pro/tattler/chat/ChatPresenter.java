@@ -154,7 +154,7 @@ public class ChatPresenter extends MvpBasePresenter<ChatView> {
     }
 
     private void insertMessageToDb(Message message) {
-        chatsManager.addMessage(chat, message);
+        chatsManager.addMessage(message);
     }
 
     @SuppressWarnings("ConstantConditions")

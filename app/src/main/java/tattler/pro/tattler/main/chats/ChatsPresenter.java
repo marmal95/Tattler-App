@@ -6,6 +6,7 @@ import com.orhanobut.logger.Logger;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 import tattler.pro.tattler.common.ChatsManager;
@@ -14,6 +15,7 @@ import tattler.pro.tattler.main.MainPresenter;
 import tattler.pro.tattler.messages.LeaveChatsRequest;
 import tattler.pro.tattler.messages.MessageFactory;
 import tattler.pro.tattler.models.Chat;
+import tattler.pro.tattler.models.Message;
 
 public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
     private ChatsAdapter chatsAdapter;
@@ -55,6 +57,15 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
 
     public void handleChatRemoved(Chat chat) {
         chatsAdapter.removeChat(chat);
+    }
+
+    public void handleChatMessageReceived(Message message) {
+        Optional<Chat> optionalChat = chatsAdapter.getChatById(message.chat.chatId);
+        if (optionalChat.isPresent()) {
+            Chat chat = optionalChat.get();
+            chat.messages.add(message);
+            chatsAdapter.notifyDataSetChanged();
+        }
     }
 
     public void handleChatClicked(int position) {

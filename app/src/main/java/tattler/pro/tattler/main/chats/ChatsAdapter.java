@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
@@ -128,6 +129,10 @@ public class ChatsAdapter extends SelectableAdapter<ChatsAdapter.ViewHolder, Cha
 
     public Chat getChat(int position) {
         return chats.get(position);
+    }
+
+    public Optional<Chat> getChatById(int chatId) {
+        return chats.stream().filter(chat -> chat.chatId == chatId).findFirst();
     }
 
     private void displayChatStatusIcons(@NonNull ViewHolder holder, Chat chat) {
