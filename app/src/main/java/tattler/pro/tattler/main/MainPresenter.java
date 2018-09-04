@@ -171,6 +171,12 @@ public class MainPresenter extends MvpBasePresenter<MainView> {
         }
     }
 
+    public void handleOnlineStatusUpdate(List<Contact> onlineContacts) {
+        if (contactsPresenter != null) {
+            contactsPresenter.handleOnlineStatusUpdate(onlineContacts);
+        }
+    }
+
     @SuppressWarnings("ConstantConditions")
     private void bindTcpConnectionService() {
         if (isViewAttached()) {

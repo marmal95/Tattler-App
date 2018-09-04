@@ -105,6 +105,16 @@ public class ContactsPresenter extends MvpBasePresenter<ContactsView> {
         }
     }
 
+    public void handleOnlineStatusUpdate(List<Contact> onlineContacts) {
+        List<Contact> contacts = contactsAdapter.getContacts();
+        contacts.forEach(contact -> {
+            Optional<Contact> foundOnlineContact = onlineContacts.stream().filter(onlineContact ->
+                    contact.contactNumber == onlineContact.contactNumber).findFirst();
+            contact.isOnline = foundOnlineContact.isPresent();
+        });
+        contactsAdapter.notifyDataSetChanged();
+    }
+
     public void handleStartChatClick() {
         List<Contact> selectedContacts = contactsAdapter.getSelectedItems();
         if (selectedContacts.isEmpty()) {

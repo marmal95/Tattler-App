@@ -19,6 +19,7 @@ public class ContactsUpdate extends InternalMessage {
         ALL_CONTACTS_UPDATE,
         NEW_CONTACT_ADDED,
         CONTACT_ALREADY_ADDED,
-        CONTACT_NOT_EXIST
+        CONTACT_NOT_EXIST,
+        ONLINE_STATUS_UPDATE
     }
 }

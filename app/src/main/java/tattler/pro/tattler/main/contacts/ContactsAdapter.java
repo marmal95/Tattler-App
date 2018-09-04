@@ -64,6 +64,7 @@ public class ContactsAdapter extends SelectableAdapter<ContactsAdapter.ViewHolde
             holder.userAvatar.setImageDrawable(userNameColorDrawable);
         }
 
+        checkUserOnlineIndicator(holder, contact);
         setAnimation(holder.itemView, position);
     }
 
@@ -100,6 +101,10 @@ public class ContactsAdapter extends SelectableAdapter<ContactsAdapter.ViewHolde
         notifyDataSetChanged();
     }
 
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+
     public void removeContact(Contact contact) {
         OptionalInt contactPosition = IntStream.range(0, contacts.size()).filter(
                 index -> contact.contactNumber == getContact(index).contactNumber).findFirst();
@@ -116,6 +121,14 @@ public class ContactsAdapter extends SelectableAdapter<ContactsAdapter.ViewHolde
 
     public Contact getContact(int position) {
         return contacts.get(position);
+    }
+
+    private void checkUserOnlineIndicator(ViewHolder holder, Contact contact) {
+        if (contact.isOnline) {
+            holder.userOnlineIndicator.setVisibility(View.VISIBLE);
+        } else {
+            holder.userOnlineIndicator.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setAnimation(View viewToAnimate, int position) {
@@ -138,6 +151,9 @@ public class ContactsAdapter extends SelectableAdapter<ContactsAdapter.ViewHolde
 
         @BindView(R.id.userNumber)
         TextView contactNumber;
+
+        @BindView(R.id.userOnlineIndicator)
+        View userOnlineIndicator;
 
         ViewHolder(View itemView) {
             super(itemView);

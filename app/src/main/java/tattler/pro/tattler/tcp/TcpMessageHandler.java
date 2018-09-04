@@ -36,6 +36,7 @@ import tattler.pro.tattler.messages.LeaveChatIndication;
 import tattler.pro.tattler.messages.LoginResponse;
 import tattler.pro.tattler.messages.Message;
 import tattler.pro.tattler.messages.MessageFactory;
+import tattler.pro.tattler.messages.OnlineContactsIndication;
 import tattler.pro.tattler.models.Chat;
 import tattler.pro.tattler.models.Contact;
 import tattler.pro.tattler.models.Invitation;
@@ -94,6 +95,9 @@ public class TcpMessageHandler {
                 break;
             case Message.Type.LEAVE_CHAT_INDICATION:
                 handleLeaveChatIndication((LeaveChatIndication) message);
+                break;
+            case Message.Type.ONLINE_CONTACTS_INDICATION:
+                handleOnlineContactsIndication((OnlineContactsIndication) message);
                 break;
             default:
                 Logger.e("Message not handled: " + message.toString());
@@ -300,6 +304,14 @@ public class TcpMessageHandler {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void handleOnlineContactsIndication(OnlineContactsIndication message) {
+        ContactsUpdate contactsUpdate = new ContactsUpdate();
+        contactsUpdate.reason = ContactsUpdate.Reason.ONLINE_STATUS_UPDATE;
+        message.contactNumbers.forEach(contactNumber ->
+                contactsUpdate.contacts.add(new Contact(null, contactNumber)));
+        broadcastMessage(contactsUpdate);
     }
 
     @NonNull

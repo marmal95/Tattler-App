@@ -15,6 +15,8 @@ public class Contact implements Serializable {
     @DatabaseField(columnName = "contact_name")
     public String contactName;
 
+    public boolean isOnline;
+
     public Contact() {}
 
     public Contact(String contactName, int contactNumber) {

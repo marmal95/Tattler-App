@@ -58,6 +58,9 @@ public class MainMessageHandler implements ReceivedMessageCallback {
             case CONTACT_NOT_EXIST:
                 presenter.showContactNotExistInfo();
                 break;
+            case ONLINE_STATUS_UPDATE:
+                presenter.handleOnlineStatusUpdate(message.contacts);
+                break;
         }
     }
 

@@ -33,5 +33,6 @@ public abstract class Message implements Serializable {
         public static final int REMOVE_CONTACT_REQUEST = 11;
         public static final int REMOVE_CHATS_REQUEST = 12;
         public static final int LEAVE_CHAT_INDICATION = 13;
+        public static final int ONLINE_CONTACTS_INDICATION = 14;
     }
 }

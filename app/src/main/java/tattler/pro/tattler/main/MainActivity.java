@@ -132,7 +132,7 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter>
     @Override
     public void bindTcpConnectionService(TcpServiceConnector serviceConnector) {
         Intent intent = new Intent(this, TcpConnectionService.class);
-        startService(intent);
+        // startService(intent);
         bindService(intent, serviceConnector, Context.BIND_AUTO_CREATE);
     }
 
