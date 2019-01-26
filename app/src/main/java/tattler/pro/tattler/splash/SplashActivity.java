@@ -12,8 +12,10 @@ import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
 import tattler.pro.tattler.R;
+import tattler.pro.tattler.common.AppPreferences;
 import tattler.pro.tattler.common.NotificationBuilder;
-import tattler.pro.tattler.main.MainActivity;
+import tattler.pro.tattler.login.FingerprintLoginActivity;
+import tattler.pro.tattler.register.RegisterActivity;
 
 
 public class SplashActivity extends MvpActivity<SplashView, SplashPresenter> implements SplashView {
@@ -22,6 +24,12 @@ public class SplashActivity extends MvpActivity<SplashView, SplashPresenter> imp
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Logger.addLogAdapter(new AndroidLogAdapter());
+
+//        AppPreferences.getInstance(this).clear();
+//        AppPreferences.getInstance(this).put(AppPreferences.Key.USER_NAME, "Stefan");
+//        AppPreferences.getInstance(this).put(AppPreferences.Key.USER_PHONE_NUMBER, "+48518834914");
+//        AppPreferences.getInstance(this).put(AppPreferences.Key.USER_NUMBER, 6286375);
+
         createNotificationChannel();
     }
 
@@ -33,8 +41,7 @@ public class SplashActivity extends MvpActivity<SplashView, SplashPresenter> imp
 
     @Override
     public void startRegisterActivity() {
-        // FIXME: Change to RegisterActivity after tests
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, RegisterActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
@@ -42,8 +49,7 @@ public class SplashActivity extends MvpActivity<SplashView, SplashPresenter> imp
 
     @Override
     public void startFingerAuthActivity() {
-        // FIXME: Change to FingerAuthActivity after tests
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, FingerprintLoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

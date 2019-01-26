@@ -68,6 +68,10 @@ public class ContactPresenter extends MvpBasePresenter<ContactView> {
         }
     }
 
+    public void muteContact() {
+
+    }
+
     @SuppressWarnings("ConstantConditions")
     private void bindTcpConnectionService() {
         if (isViewAttached()) {

@@ -121,16 +121,10 @@ public class ContactActivity extends MvpActivity<ContactView, ContactPresenter> 
     }
 
     @OnClick(R.id.muteContact)
-    public void muteContact() {
-        // TODO: Implement
-        MaterialToast.makeText(this, "MUTE_CONTACT", Toast.LENGTH_LONG, MaterialToast.TYPE_WARNING).show();
-    }
+    public void muteContact() {}
 
     @OnClick(R.id.blockContact)
-    public void blockContact() {
-        // TODO: Implement
-        MaterialToast.makeText(this, "BLOCK_CONTACT", Toast.LENGTH_LONG, MaterialToast.TYPE_ERROR).show();
-    }
+    public void blockContact() {}
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);

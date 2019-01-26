@@ -23,6 +23,22 @@
           }
         },
         {
+          "client_id": "912907126481-k6g7l39ifu90v0ge6qtd0m06oubi87sg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tattler.pro.tattler",
+            "certificate_hash": "4d3222fb77705d98d21442796d60d493e1a45380"
+          }
+        },
+        {
+          "client_id": "912907126481-7l4ck9pe99fe102jhmsm5kfl8jfqaekk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tattler.pro.tattler",
+            "certificate_hash": "5d928c1d5c4a51db9d6c5fd05d40cf7c388e6dc3"
+          }
+        },
+        {
           "client_id": "912907126481-u14srk3p21lrbni9sd43ah54itt87qgs.apps.googleusercontent.com",
           "client_type": 3
         }

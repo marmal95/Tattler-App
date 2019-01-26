@@ -20,7 +20,6 @@ public class RegisterPresenter extends MvpBasePresenter<RegisterView> implements
     @SuppressWarnings("ConstantConditions")
     public void onVerificationCompleted(String phoneNumber) {
         logWhenPhoneNumberNotEqual(phoneNumber);
-        // FIXME: Improve concept to retrieve first LoginResponse then open AuthActivity
         appPreferences.put(AppPreferences.Key.USER_PHONE_NUMBER, phoneNumber);
         appPreferences.put(AppPreferences.Key.USER_NAME, userRegisterData.userName);
         if (isViewAttached()) {

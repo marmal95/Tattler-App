@@ -83,6 +83,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void addMessages(Collection<Message> messages) {
+        // this.messages.clear();
         this.messages.addAll(messages);
         notifyDataSetChanged();
     }

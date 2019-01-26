@@ -63,7 +63,7 @@ public class ChatsPresenter extends MvpBasePresenter<ChatsView> {
         Optional<Chat> optionalChat = chatsAdapter.getChatById(message.chat.chatId);
         if (optionalChat.isPresent()) {
             Chat chat = optionalChat.get();
-            chat.messages.add(message);
+            // chat.messages.add(message); HALO
             chatsAdapter.notifyDataSetChanged();
         }
     }
