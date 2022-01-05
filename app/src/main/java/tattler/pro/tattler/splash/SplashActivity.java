@@ -24,12 +24,6 @@ public class SplashActivity extends MvpActivity<SplashView, SplashPresenter> imp
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Logger.addLogAdapter(new AndroidLogAdapter());
-
-//        AppPreferences.getInstance(this).clear();
-//        AppPreferences.getInstance(this).put(AppPreferences.Key.USER_NAME, "Stefan");
-//        AppPreferences.getInstance(this).put(AppPreferences.Key.USER_PHONE_NUMBER, "+48518834914");
-//        AppPreferences.getInstance(this).put(AppPreferences.Key.USER_NUMBER, 6286375);
-
         createNotificationChannel();
     }
 
